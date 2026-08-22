@@ -95,11 +95,10 @@ export function Chatbot() {
   function answer(topicId: string, userText?: string) {
     const topic = topics[topicId];
     if (!topic) return;
-    setMessages((m) => [
-      ...m,
-      { from: "user", text: userText ?? topic.label },
-      { from: "bot", text: topic.answer, links: topic.links },
-    ]);
+    const botMsg: Msg = topic.links
+      ? { from: "bot", text: topic.answer, links: topic.links }
+      : { from: "bot", text: topic.answer };
+    setMessages((m) => [...m, { from: "user", text: userText ?? topic.label }, botMsg]);
     setSuggestions(
       (topic.follow ?? starters).concat(starters.filter((s) => s !== topicId)).filter((v, i, a) => a.indexOf(v) === i).slice(0, 4),
     );
