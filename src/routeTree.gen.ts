@@ -11,7 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnnuaireRouteImport } from './routes/annuaire'
+import { Route as MediathequeRouteImport } from './routes/mediatheque'
+import { Route as PartenairesRouteImport } from './routes/partenaires'
 import { Route as ProjetsRouteImport } from './routes/projets'
+import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
+import { Route as ArticlesSlugRouteImport } from './routes/articles.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,40 +27,98 @@ const AnnuaireRoute = AnnuaireRouteImport.update({
   path: '/annuaire',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MediathequeRoute = MediathequeRouteImport.update({
+  id: '/mediatheque',
+  path: '/mediatheque',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartenairesRoute = PartenairesRouteImport.update({
+  id: '/partenaires',
+  path: '/partenaires',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjetsRoute = ProjetsRouteImport.update({
   id: '/projets',
   path: '/projets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
+  id: '/articles/',
+  path: '/articles/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
+  id: '/articles/$slug',
+  path: '/articles/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/annuaire': typeof AnnuaireRoute
+  '/mediatheque': typeof MediathequeRoute
+  '/partenaires': typeof PartenairesRoute
   '/projets': typeof ProjetsRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
+  '/articles/': typeof ArticlesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/annuaire': typeof AnnuaireRoute
+  '/mediatheque': typeof MediathequeRoute
+  '/partenaires': typeof PartenairesRoute
   '/projets': typeof ProjetsRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
+  '/articles': typeof ArticlesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/annuaire': typeof AnnuaireRoute
+  '/mediatheque': typeof MediathequeRoute
+  '/partenaires': typeof PartenairesRoute
   '/projets': typeof ProjetsRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
+  '/articles/': typeof ArticlesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/annuaire' | '/projets'
+  fullPaths:
+    | '/'
+    | '/annuaire'
+    | '/mediatheque'
+    | '/partenaires'
+    | '/projets'
+    | '/articles/$slug'
+    | '/articles/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/annuaire' | '/projets'
-  id: '__root__' | '/' | '/annuaire' | '/projets'
+  to:
+    | '/'
+    | '/annuaire'
+    | '/mediatheque'
+    | '/partenaires'
+    | '/projets'
+    | '/articles/$slug'
+    | '/articles'
+  id:
+    | '__root__'
+    | '/'
+    | '/annuaire'
+    | '/mediatheque'
+    | '/partenaires'
+    | '/projets'
+    | '/articles/$slug'
+    | '/articles/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnnuaireRoute: typeof AnnuaireRoute
+  MediathequeRoute: typeof MediathequeRoute
+  PartenairesRoute: typeof PartenairesRoute
   ProjetsRoute: typeof ProjetsRoute
+  ArticlesSlugRoute: typeof ArticlesSlugRoute
+  ArticlesIndexRoute: typeof ArticlesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,11 +137,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnnuaireRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mediatheque': {
+      id: '/mediatheque'
+      path: '/mediatheque'
+      fullPath: '/mediatheque'
+      preLoaderRoute: typeof MediathequeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partenaires': {
+      id: '/partenaires'
+      path: '/partenaires'
+      fullPath: '/partenaires'
+      preLoaderRoute: typeof PartenairesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projets': {
       id: '/projets'
       path: '/projets'
       fullPath: '/projets'
       preLoaderRoute: typeof ProjetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/articles/': {
+      id: '/articles/'
+      path: '/articles'
+      fullPath: '/articles/'
+      preLoaderRoute: typeof ArticlesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/articles/$slug': {
+      id: '/articles/$slug'
+      path: '/articles/$slug'
+      fullPath: '/articles/$slug'
+      preLoaderRoute: typeof ArticlesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -88,7 +178,11 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnnuaireRoute: AnnuaireRoute,
+  MediathequeRoute: MediathequeRoute,
+  PartenairesRoute: PartenairesRoute,
   ProjetsRoute: ProjetsRoute,
+  ArticlesSlugRoute: ArticlesSlugRoute,
+  ArticlesIndexRoute: ArticlesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
