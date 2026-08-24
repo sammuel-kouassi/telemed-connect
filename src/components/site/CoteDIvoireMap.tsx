@@ -67,7 +67,7 @@ export function CoteDIvoireMap({
 }) {
   return (
     <svg
-      viewBox={`0 0 ${W} ${H}`}
+      viewBox={`-20 -10 ${W + PAD_R} ${H + 20}`}
       className="h-auto w-full"
       role="img"
       aria-label="Carte des sites de télémédecine en Côte d'Ivoire"
