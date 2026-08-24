@@ -125,17 +125,9 @@ function MediathequePage() {
       </section>
 
       <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
-        <DialogContent className="max-w-3xl overflow-hidden p-0" showCloseButton={false}>
+        <DialogContent className="max-w-3xl overflow-hidden p-0">
           {selected && (
             <>
-              <button
-                type="button"
-                onClick={() => setSelected(null)}
-                className="absolute top-3 right-3 z-10 rounded-full bg-background/85 p-2 backdrop-blur transition-colors hover:bg-background"
-                aria-label="Fermer"
-              >
-                <X className="h-4 w-4" />
-              </button>
               <img
                 src={selected.image}
                 alt={selected.title}

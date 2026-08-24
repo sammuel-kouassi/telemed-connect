@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnnuaireRouteImport } from './routes/annuaire'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as MediathequeRouteImport } from './routes/mediatheque'
 import { Route as PartenairesRouteImport } from './routes/partenaires'
 import { Route as ProjetsRouteImport } from './routes/projets'
@@ -25,6 +27,16 @@ const IndexRoute = IndexRouteImport.update({
 const AnnuaireRoute = AnnuaireRouteImport.update({
   id: '/annuaire',
   path: '/annuaire',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MediathequeRoute = MediathequeRouteImport.update({
@@ -56,6 +68,8 @@ const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/annuaire': typeof AnnuaireRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/mediatheque': typeof MediathequeRoute
   '/partenaires': typeof PartenairesRoute
   '/projets': typeof ProjetsRoute
@@ -65,6 +79,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/annuaire': typeof AnnuaireRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/mediatheque': typeof MediathequeRoute
   '/partenaires': typeof PartenairesRoute
   '/projets': typeof ProjetsRoute
@@ -75,6 +91,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/annuaire': typeof AnnuaireRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/mediatheque': typeof MediathequeRoute
   '/partenaires': typeof PartenairesRoute
   '/projets': typeof ProjetsRoute
@@ -86,6 +104,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/annuaire'
+    | '/contact'
+    | '/faq'
     | '/mediatheque'
     | '/partenaires'
     | '/projets'
@@ -95,6 +115,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/annuaire'
+    | '/contact'
+    | '/faq'
     | '/mediatheque'
     | '/partenaires'
     | '/projets'
@@ -104,6 +126,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/annuaire'
+    | '/contact'
+    | '/faq'
     | '/mediatheque'
     | '/partenaires'
     | '/projets'
@@ -114,6 +138,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnnuaireRoute: typeof AnnuaireRoute
+  ContactRoute: typeof ContactRoute
+  FaqRoute: typeof FaqRoute
   MediathequeRoute: typeof MediathequeRoute
   PartenairesRoute: typeof PartenairesRoute
   ProjetsRoute: typeof ProjetsRoute
@@ -135,6 +161,20 @@ declare module '@tanstack/react-router' {
       path: '/annuaire'
       fullPath: '/annuaire'
       preLoaderRoute: typeof AnnuaireRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mediatheque': {
@@ -178,6 +218,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnnuaireRoute: AnnuaireRoute,
+  ContactRoute: ContactRoute,
+  FaqRoute: FaqRoute,
   MediathequeRoute: MediathequeRoute,
   PartenairesRoute: PartenairesRoute,
   ProjetsRoute: ProjetsRoute,
