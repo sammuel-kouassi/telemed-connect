@@ -40,6 +40,7 @@ const outline: [number, number][] = [
 const BOUNDS = { minLon: -8.7, maxLon: -2.5, minLat: 4.2, maxLat: 10.85 };
 const W = 620;
 const H = 700;
+const PAD_R = 120; // marge pour les libellés placés à droite des marqueurs
 
 function project(lon: number, lat: number) {
   const x = ((lon - BOUNDS.minLon) / (BOUNDS.maxLon - BOUNDS.minLon)) * W;
