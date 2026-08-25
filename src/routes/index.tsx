@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import {
   Activity,
   ArrowRight,
@@ -15,8 +15,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CoteDIvoireMap } from "@/components/site/CoteDIvoireMap";
+import { ClientOnly } from "@tanstack/react-router";
+import { projectSites } from "@/data/site";
 import { articles, images, stats, team, testimonials } from "@/data/site";
+
+const HomeLeafletMap = lazy(() => import("@/components/site/LeafletMap"));
+
+function HomeMapSkeleton() {
+  return (
+    <div className="flex h-[460px] w-full items-center justify-center rounded-xl border border-border bg-secondary/50 text-sm text-muted-foreground sm:h-[560px]">
+      Chargement de la carte…
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -254,7 +265,11 @@ function Home() {
             </Button>
           </div>
           <div className="rounded-2xl border border-border bg-card p-4 shadow-soft sm:p-6">
-            <CoteDIvoireMap />
+            <ClientOnly fallback={<HomeMapSkeleton />}>
+              <Suspense fallback={<HomeMapSkeleton />}>
+                <HomeLeafletMap sites={projectSites} />
+              </Suspense>
+            </ClientOnly>
           </div>
         </div>
       </section>

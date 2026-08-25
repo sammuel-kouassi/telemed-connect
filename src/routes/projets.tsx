@@ -1,12 +1,23 @@
-import { useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { ClientOnly } from "@tanstack/react-router";
 import { CalendarClock, Building2, MapPin } from "lucide-react";
-import { CoteDIvoireMap } from "@/components/site/CoteDIvoireMap";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { projectSites, programColors, type ProjectSite } from "@/data/site";
 import { cn } from "@/lib/utils";
+
+const LeafletMap = lazy(() => import("@/components/site/LeafletMap"));
+
+function MapSkeleton() {
+  return (
+    <div className="flex h-[460px] w-full items-center justify-center rounded-xl border border-border bg-secondary/50 text-sm text-muted-foreground sm:h-[560px]">
+      Chargement de la carte…
+    </div>
+  );
+}
+
 
 export const Route = createFileRoute("/projets")({
   head: () => ({
@@ -69,7 +80,15 @@ function ProjetsPage() {
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1.15fr_1fr]">
           <div className="rounded-2xl border border-border bg-card p-4 shadow-soft sm:p-6">
-            <CoteDIvoireMap sites={sites} activeId={active?.id ?? null} onSelect={(s) => setActiveId(s.id)} />
+            <ClientOnly fallback={<MapSkeleton />}>
+              <Suspense fallback={<MapSkeleton />}>
+                <LeafletMap
+                  sites={sites}
+                  activeId={active?.id ?? null}
+                  onSelect={(s: ProjectSite) => setActiveId(s.id)}
+                />
+              </Suspense>
+            </ClientOnly>
             <div className="mt-4 flex flex-wrap gap-4 border-t border-border pt-4 text-xs text-muted-foreground">
               {(Object.keys(programColors) as ProjectSite["program"][]).map((p) => (
                 <span key={p} className="flex items-center gap-2">
