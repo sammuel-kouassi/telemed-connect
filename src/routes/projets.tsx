@@ -1,12 +1,23 @@
-import { useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { ClientOnly } from "@tanstack/react-router";
 import { CalendarClock, Building2, MapPin } from "lucide-react";
-import { CoteDIvoireMap } from "@/components/site/CoteDIvoireMap";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { projectSites, programColors, type ProjectSite } from "@/data/site";
 import { cn } from "@/lib/utils";
+
+const LeafletMap = lazy(() => import("@/components/site/LeafletMap"));
+
+function MapSkeleton() {
+  return (
+    <div className="flex h-[460px] w-full items-center justify-center rounded-xl border border-border bg-secondary/50 text-sm text-muted-foreground sm:h-[560px]">
+      Chargement de la carte…
+    </div>
+  );
+}
+
 
 export const Route = createFileRoute("/projets")({
   head: () => ({
