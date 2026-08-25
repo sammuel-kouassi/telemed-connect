@@ -80,7 +80,15 @@ function ProjetsPage() {
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1.15fr_1fr]">
           <div className="rounded-2xl border border-border bg-card p-4 shadow-soft sm:p-6">
-            <CoteDIvoireMap sites={sites} activeId={active?.id ?? null} onSelect={(s) => setActiveId(s.id)} />
+            <ClientOnly fallback={<MapSkeleton />}>
+              <Suspense fallback={<MapSkeleton />}>
+                <LeafletMap
+                  sites={sites}
+                  activeId={active?.id ?? null}
+                  onSelect={(s: ProjectSite) => setActiveId(s.id)}
+                />
+              </Suspense>
+            </ClientOnly>
             <div className="mt-4 flex flex-wrap gap-4 border-t border-border pt-4 text-xs text-muted-foreground">
               {(Object.keys(programColors) as ProjectSite["program"][]).map((p) => (
                 <span key={p} className="flex items-center gap-2">
