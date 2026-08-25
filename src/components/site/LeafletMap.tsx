@@ -2,6 +2,12 @@ import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { programColors, type ProjectSite } from "@/data/site";
+import civBoundaryJson from "@/data/civ-boundary.json";
+
+type PolyCoords = number[][][];
+const civBoundary = civBoundaryJson as unknown as {
+  geometry: { type: "Polygon" | "MultiPolygon"; coordinates: PolyCoords | PolyCoords[] };
+};
 
 function markerIcon(color: string, active: boolean) {
   const size = active ? 26 : 18;
@@ -48,22 +54,45 @@ export default function LeafletMap({
     }).addTo(map);
     mapRef.current = map;
 
-    // Contour de la Côte d'Ivoire (GeoJSON public)
-    fetch("https://raw.githubusercontent.com/johan/world.geo.json/master/countries/CIV.geo.json")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((geo) => {
-        if (!geo || !mapRef.current) return;
-        const layer = L.geoJSON(geo, {
-          style: {
-            color: "#0f766e",
-            weight: 2,
-            fillColor: "#14b8a6",
-            fillOpacity: 0.08,
-          },
-        }).addTo(mapRef.current);
-        mapRef.current.fitBounds(layer.getBounds(), { padding: [16, 16] });
-      })
-      .catch(() => undefined);
+    // Délimitation exacte de la Côte d'Ivoire (geoBoundaries ADM0, domaine public)
+    const border = L.geoJSON(civBoundary as never, {
+      style: {
+        color: "#0f766e",
+        weight: 2.5,
+        opacity: 1,
+        fillColor: "#14b8a6",
+        fillOpacity: 0.07,
+        lineJoin: "round",
+      },
+      interactive: false,
+    }).addTo(map);
+
+    // Masque : assombrit tout ce qui est hors du territoire ivoirien
+    const geom = civBoundary.geometry;
+    const rings: L.LatLngExpression[][] = [
+      [
+        [-90, -360],
+        [90, -360],
+        [90, 360],
+        [-90, 360],
+      ],
+    ];
+    const polys: PolyCoords[] =
+      geom.type === "MultiPolygon" ? (geom.coordinates as PolyCoords[]) : [geom.coordinates as PolyCoords];
+    polys.forEach((poly) => {
+      rings.push(poly[0]!.map(([lon, lat]) => [lat, lon] as L.LatLngExpression));
+    });
+    L.polygon(rings, {
+      stroke: false,
+      fillColor: "#0b1b23",
+      fillOpacity: 0.35,
+      interactive: false,
+    }).addTo(map);
+
+    const bounds = border.getBounds();
+    map.fitBounds(bounds, { padding: [16, 16] });
+    map.setMaxBounds(bounds.pad(0.6));
+    map.setMinZoom(map.getBoundsZoom(bounds) - 1);
 
     return () => {
       map.remove();
