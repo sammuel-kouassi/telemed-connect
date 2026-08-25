@@ -2,6 +2,12 @@ import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { programColors, type ProjectSite } from "@/data/site";
+import civBoundaryJson from "@/data/civ-boundary.json";
+
+type PolyCoords = number[][][];
+const civBoundary = civBoundaryJson as unknown as {
+  geometry: { type: "Polygon" | "MultiPolygon"; coordinates: PolyCoords | PolyCoords[] };
+};
 
 function markerIcon(color: string, active: boolean) {
   const size = active ? 26 : 18;
@@ -49,7 +55,7 @@ export default function LeafletMap({
     mapRef.current = map;
 
     // Délimitation exacte de la Côte d'Ivoire (geoBoundaries ADM0, domaine public)
-    const border = L.geoJSON(civBoundary as GeoJSON.Feature, {
+    const border = L.geoJSON(civBoundary as never, {
       style: {
         color: "#0f766e",
         weight: 2.5,
@@ -62,7 +68,7 @@ export default function LeafletMap({
     }).addTo(map);
 
     // Masque : assombrit tout ce qui est hors du territoire ivoirien
-    const geom = (civBoundary as GeoJSON.Feature).geometry;
+    const geom = civBoundary.geometry;
     const rings: L.LatLngExpression[][] = [
       [
         [-90, -360],
@@ -71,8 +77,9 @@ export default function LeafletMap({
         [-90, 360],
       ],
     ];
-    const polys = geom.type === "MultiPolygon" ? geom.coordinates : [geom.coordinates as number[][][]];
-    (polys as number[][][][]).forEach((poly) => {
+    const polys: PolyCoords[] =
+      geom.type === "MultiPolygon" ? (geom.coordinates as PolyCoords[]) : [geom.coordinates as PolyCoords];
+    polys.forEach((poly) => {
       rings.push(poly[0]!.map(([lon, lat]) => [lat, lon] as L.LatLngExpression));
     });
     L.polygon(rings, {
