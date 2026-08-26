@@ -10,16 +10,21 @@ const civBoundary = civBoundaryJson as unknown as {
 };
 
 function markerIcon(color: string, active: boolean) {
-  const size = active ? 26 : 18;
+  const size = active ? 38 : 30;
+  const dotSize = active ? 12 : 9;
   return L.divIcon({
     className: "ci-marker",
     html: `<span style="
-      display:block;width:${size}px;height:${size}px;border-radius:9999px;
-      background:${color};border:3px solid #fff;
-      box-shadow:0 0 0 ${active ? 8 : 0}px ${color}33, 0 2px 6px rgba(0,0,0,.35);
-    "></span>`,
+      display:flex;width:${size}px;height:${size}px;align-items:center;justify-content:center;
+      border:2px solid #fff;border-radius:50% 50% 50% 0;background:${color};
+      box-shadow:0 2px 6px rgba(0,0,0,.35), 0 0 0 ${active ? 7 : 0}px ${color}33;
+      transform:rotate(-45deg);
+    "><span style="
+      display:block;width:${dotSize}px;height:${dotSize}px;border-radius:9999px;
+      background:#fff;transform:rotate(45deg);
+    "></span></span>`,
     iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
+    iconAnchor: [size / 2, size],
   });
 }
 

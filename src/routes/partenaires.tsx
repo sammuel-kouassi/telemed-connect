@@ -60,7 +60,7 @@ function PartenairesPage() {
           ))}
         </div>
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="stagger-grid mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((p) => (
             <Card key={p.name} className="card-hover border-border/70">
               <CardContent className="pt-6">

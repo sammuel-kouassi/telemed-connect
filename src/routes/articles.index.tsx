@@ -97,7 +97,7 @@ function ArticlesPage() {
           </Link>
         )}
 
-        <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="stagger-grid mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {rest.map((a) => (
             <Link key={a.slug} to="/articles/$slug" params={{ slug: a.slug }} className="group">
               <Card className="card-hover h-full overflow-hidden border-border/70 pt-0">

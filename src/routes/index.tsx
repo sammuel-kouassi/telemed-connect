@@ -176,7 +176,7 @@ function Home() {
           </div>
 
           <div className="relative">
-            <div className="overflow-hidden rounded-2xl border border-primary-foreground/20 shadow-lift">
+            <div className="soft-float overflow-hidden rounded-2xl border border-primary-foreground/20 shadow-lift">
               <img
                 src={images.hero}
                 alt="Médecin ivoirien réalisant une télé-expertise cardiologique depuis un hôpital d'Abidjan"
@@ -190,6 +190,21 @@ function Home() {
               <p className="font-[family-name:var(--font-display)] text-2xl font-bold text-foreground">28 min</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="border-b border-border bg-card">
+        <div className="mx-auto grid max-w-7xl gap-px bg-border px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
+          {[
+            { label: "Réseau actif depuis", value: "2004" },
+            { label: "Structures connectées", value: "24" },
+            { label: "Délai moyen d'avis", value: "28 min" },
+          ].map((item) => (
+            <div key={item.label} className="trust-item bg-card px-5 py-5 sm:px-6">
+              <p className="eyebrow text-accent">{item.label}</p>
+              <p className="mt-1 font-[family-name:var(--font-display)] text-xl font-bold text-foreground">{item.value}</p>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -213,7 +228,7 @@ function Home() {
           </p>
         </div>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="stagger-grid mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((s) => (
             <Card key={s.title} className="card-hover border-border/70">
               <CardContent className="pt-6">
@@ -264,7 +279,7 @@ function Home() {
               </Link>
             </Button>
           </div>
-          <div className="rounded-2xl border border-border bg-card p-4 shadow-soft sm:p-6">
+          <div className="rise-in rounded-2xl border border-border bg-card p-4 shadow-soft sm:p-6">
             <ClientOnly fallback={<HomeMapSkeleton />}>
               <Suspense fallback={<HomeMapSkeleton />}>
                 <HomeLeafletMap sites={projectSites} />
@@ -286,7 +301,7 @@ function Home() {
           </Button>
         </div>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="stagger-grid mt-10 grid gap-6 md:grid-cols-3">
           {latest.map((a) => (
             <Link key={a.slug} to="/articles/$slug" params={{ slug: a.slug }} className="group">
               <Card className="card-hover h-full overflow-hidden border-border/70 pt-0">
@@ -321,7 +336,7 @@ function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <p className="eyebrow text-accent">Témoignages</p>
           <h2 className="mt-3 text-3xl font-bold sm:text-4xl">Les acteurs prennent la parole</h2>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <div className="stagger-grid mt-10 grid gap-6 md:grid-cols-3">
             {testimonials.map((t) => (
               <figure key={t.author} className="rounded-2xl border border-border bg-card p-6 shadow-soft">
                 <Quote className="h-6 w-6 text-accent" aria-hidden="true" />
@@ -340,7 +355,7 @@ function Home() {
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <p className="eyebrow text-accent">Notre équipe</p>
         <h2 className="mt-3 text-3xl font-bold sm:text-4xl">Les pionniers de la télémédecine ivoirienne</h2>
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="stagger-grid mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {team.map((m) => (
             <div key={m.name} className="card-hover rounded-2xl border border-border bg-card p-6">
               <span className="surface-hero flex h-14 w-14 items-center justify-center rounded-2xl font-[family-name:var(--font-display)] text-lg font-bold text-primary-foreground">

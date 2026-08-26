@@ -5,7 +5,7 @@ import { Logo } from "./Logo";
 export function Footer() {
   return (
     <footer className="surface-hero mt-24 text-primary-foreground">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-4 lg:px-8">
+      <div className="stagger-grid mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-4 lg:px-8">
         <div className="space-y-4">
           <Logo inverted />
           <p className="max-w-xs text-sm text-primary-foreground/75">

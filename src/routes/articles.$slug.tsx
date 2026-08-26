@@ -108,7 +108,7 @@ function ArticlePage() {
 
       <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold">À lire également</h2>
-        <div className="mt-6 grid gap-6 md:grid-cols-3">
+        <div className="stagger-grid mt-6 grid gap-6 md:grid-cols-3">
           {related.map((a) => (
             <Link key={a.slug} to="/articles/$slug" params={{ slug: a.slug }} className="group">
               <Card className="card-hover h-full overflow-hidden border-border/70 pt-0">

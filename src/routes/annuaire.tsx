@@ -109,7 +109,7 @@ function AnnuairePage() {
           {results.length} résultat{results.length > 1 ? "s" : ""}
         </p>
 
-        <div className="mt-4 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="stagger-grid mt-4 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {results.map((d) => (
             <Card key={d.name} className="card-hover border-border/70">
               <CardContent className="pt-6">

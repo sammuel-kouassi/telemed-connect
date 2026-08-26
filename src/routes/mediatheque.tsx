@@ -84,7 +84,7 @@ function MediathequePage() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="stagger-grid mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((m) => {
             const Icon = typeIcon[m.type];
             return (
