@@ -59,6 +59,7 @@ export function Footer() {
             </h4>
             <ul className="space-y-2 text-xs">
               {[
+                { to: "/a-propos", label: "À propos du RAFT" },
                 { to: "/projets", label: "Carte des 24 sites" },
                 { to: "/annuaire", label: "Annuaire des sites" },
                 { to: "/articles", label: "Actualités réseau" },

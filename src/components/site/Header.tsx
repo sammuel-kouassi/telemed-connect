@@ -20,6 +20,7 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/s
 import { cn } from "@/lib/utils";
 
 const primaryNav = [
+  { to: "/a-propos", label: "À propos" },
   { to: "/projets", label: "Projets & Carte" },
   { to: "/annuaire", label: "Annuaire des sites" },
   { to: "/articles", label: "Actualités" },

@@ -24,6 +24,10 @@ import raftCiMembres from "@/assets/raft_ci_membres.jpg";
 import formationOutilsRaft from "@/assets/formation_outils_raft.jpg";
 import projetTeleEcgCsrs from "@/assets/projet_tele_ecg_csrs.jpg";
 import projetTeleEcgMonitor from "@/assets/projet_tele_ecg_monitor.jpg";
+import aproposEquipeRaft from "@/assets/apropos_equipe_raft.jpg";
+import aproposStudioInterview from "@/assets/apropos_studio_interview.jpg";
+import aproposGeissbuhlerEhua from "@/assets/apropos_geissbuhler_ehua.jpg";
+import aproposEhuaTerrain from "@/assets/apropos_ehua_terrain.jpg";
 
 export const images = {
   hero: heroImg,
@@ -34,6 +38,10 @@ export const images = {
   logo: telemedLogo,
   cartographie: cartographieOfficielle,
   membres: raftCiMembres,
+  aproposEquipe: aproposEquipeRaft,
+  aproposStudio: aproposStudioInterview,
+  aproposGeissbuhlerEhua: aproposGeissbuhlerEhua,
+  aproposEhuaTerrain: aproposEhuaTerrain,
 };
 
 export const officialContact = {
