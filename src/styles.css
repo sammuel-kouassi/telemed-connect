@@ -120,8 +120,8 @@ button:active, a.button-active:active {
  */
 
 @theme inline {
-  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Times New Roman", Times, serif;
+  --font-sans: "Times New Roman", Times, serif;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -272,10 +272,19 @@ button:active, a.button-active:active {
     border-color: var(--color-border);
   }
 
+  html,
+  body,
+  button,
+  input,
+  select,
+  textarea {
+    font-family: "Times New Roman", Times, serif;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: var(--font-sans);
+    font-family: "Times New Roman", Times, serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -286,8 +295,7 @@ button:active, a.button-active:active {
   h4,
   h5,
   h6 {
-    font-family: var(--font-display);
-    letter-spacing: -0.025em;
+    font-family: "Times New Roman", Times, serif;
   }
 
   /* Custom sleek scrollbar */

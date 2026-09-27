@@ -1,33 +1,23 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ShieldCheck,
   Award,
   Users,
   Calendar,
-  Laptop,
   HeartPulse,
   BookOpen,
   ArrowRight,
   MapPin,
   CheckCircle2,
   Video,
-  Monitor,
-  Volume2,
   Maximize2,
   X,
   Building2,
   Network,
-  ChevronLeft,
-  ChevronRight,
-  Play,
-  Pause,
-  Layers,
-  Sparkles,
   Quote,
-  Clock,
-  Radio,
-  ExternalLink,
+  Sparkles,
+  Laptop,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -170,33 +160,8 @@ const teamPillars = [
   },
 ];
 
-const kitTeleFormation = [
-  { name: "Ordinateur portable", desc: "Poste multimédia configuré pour la réception fluide des cours interactifs", icon: Laptop },
-  { name: "Vidéoprojecteur", desc: "Projection grand format pour les séances collectives hospitalières", icon: Monitor },
-  { name: "Onduleur haute sécurité", desc: "Autonomie électrique et protection contre les variations de tension", icon: ShieldCheck },
-  { name: "Webcam HD", desc: "Prise de vue grand-angle pour l'interactivité salle-orateur", icon: Video },
-  { name: "Casque & microphone", desc: "Précision acoustique lors des séances de questions-réponses en direct", icon: Volume2 },
-  { name: "Écran de projection", desc: "Toile de rétro-projection optimisée pour les amphithéâtres régionaux", icon: Maximize2 },
-];
-
-const kitMedicoNet = [
-  { name: "Module d'acquisition ECG 12 pistes", desc: "Enregistrement numérique instantané conforme aux normes cardiologiques", icon: HeartPulse },
-  { name: "Logiciel de télé-expertise sécurisé", desc: "Transmission cryptée des tracés vers les cardiologues du CHU de Bouaké", icon: ShieldCheck },
-  { name: "Liaison de communication dédiée", desc: "Synchronisation opérationnelle même en bas débit sur réseau 3G/4G", icon: Network },
-  { name: "Station praticien périphérique", desc: "Interface simplifiée pour infirmiers et médecins de garde en district", icon: Laptop },
-];
-
 function AProposPage() {
   const [selectedPhoto, setSelectedPhoto] = useState<LightboxImage | null>(null);
-
-  // Animated Timeline State
-  const [activeStep, setActiveStep] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [progress, setProgress] = useState(0);
-  const [timelineView, setTimelineView] = useState<"interactive" | "overview">("interactive");
-
-  // Equipment active tab state
-  const [activeKitTab, setActiveKitTab] = useState<"formation" | "mediconet">("formation");
 
   const { ref: headerRef, isVisible: headerVisible } = useIntersectionObserver<HTMLDivElement>();
   const { ref: introRef, isVisible: introVisible } = useIntersectionObserver<HTMLDivElement>();
@@ -205,51 +170,9 @@ function AProposPage() {
   const { ref: eqRef, isVisible: eqVisible } = useIntersectionObserver<HTMLDivElement>();
   const { ref: timeRef, isVisible: timeVisible } = useIntersectionObserver<HTMLDivElement>();
 
-  // Timeline Auto-play Loop
-  useEffect(() => {
-    if (!isPlaying || timelineView !== "interactive") {
-      setProgress(0);
-      return;
-    }
-
-    const duration = 5000; // 5s per slide
-    const intervalTime = 50; // update progress every 50ms
-    const stepIncrement = (intervalTime / duration) * 100;
-
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          setActiveStep((curr) => (curr + 1) % timelineMilestones.length);
-          return 0;
-        }
-        return prev + stepIncrement;
-      });
-    }, intervalTime);
-
-    return () => clearInterval(interval);
-  }, [isPlaying, activeStep, timelineView]);
-
-  const handleSelectMilestone = (idx: number) => {
-    setActiveStep(idx);
-    setProgress(0);
-  };
-
-  const handleNextMilestone = () => {
-    setActiveStep((prev) => (prev + 1) % timelineMilestones.length);
-    setProgress(0);
-  };
-
-  const handlePrevMilestone = () => {
-    setActiveStep((prev) => (prev - 1 + timelineMilestones.length) % timelineMilestones.length);
-    setProgress(0);
-  };
-
-  const activeMilestone = timelineMilestones[activeStep];
-  const MilestoneIcon = activeMilestone.icon;
-
   return (
     <>
-      {/* Header Banner - Ultra-refined Designer Aesthetics */}
+      {/* Header Banner */}
       <header
         ref={headerRef}
         className={cn(
@@ -287,8 +210,8 @@ function AProposPage() {
               { href: "#histoire", label: "Origine du RAFT" },
               { href: "#equipe", label: "L'Équipe Pionnière" },
               { href: "#objectifs", label: "Objectifs & E-cours" },
-              { href: "#equipements", label: "Équipements & Kits" },
-              { href: "#chronologie", label: "Chronologie Interactive" },
+              { href: "#equipements", label: "Équipements & Déploiement" },
+              { href: "#chronologie", label: "Chronologie des 20 Ans" },
             ].map((btn) => (
               <a
                 key={btn.href}
@@ -300,7 +223,7 @@ function AProposPage() {
             ))}
           </div>
 
-          {/* Key metrics grid - Executive Card Design */}
+          {/* Key metrics grid */}
           <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-4 border-t border-primary-foreground/15 pt-8">
             <div className="rounded-2xl bg-primary-foreground/5 p-4 border border-primary-foreground/10 backdrop-blur-xs">
               <div className="text-3xl sm:text-4xl font-black text-accent tracking-tight">2003</div>
@@ -340,7 +263,6 @@ function AProposPage() {
                 Le RAFT Côte D'Ivoire
               </h2>
 
-              {/* Exact user text highlight callout */}
               <div className="relative overflow-hidden rounded-3xl border-l-4 border-[#74a638] bg-surface/90 p-6 sm:p-7 shadow-xs">
                 <Quote className="absolute right-4 top-4 h-14 w-14 text-muted-foreground/10 pointer-events-none" />
                 <p className="text-lg sm:text-xl font-semibold leading-relaxed text-foreground">
@@ -429,7 +351,6 @@ function AProposPage() {
             </p>
           </div>
 
-          {/* Text verbatim quote from Image 1 with studio card */}
           <div className="rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card to-surface/80 p-6 sm:p-10 shadow-soft">
             <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
               <div className="lg:col-span-8 space-y-5">
@@ -528,7 +449,7 @@ function AProposPage() {
         {/* SECTION 3: Objectifs Du Projet RAFT — High-res Photo Geissbuhler & Ehua */}
         <section id="objectifs" ref={objRef} className={cn("scroll-mt-24", objVisible && "animate-fade-up")}>
           <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
-            {/* New High-Res Photo: Geissbuhler & Ehua */}
+            {/* High-Res Photo: Geissbuhler & Ehua */}
             <div className="lg:col-span-5 order-2 lg:order-1">
               <div
                 onClick={() =>
@@ -618,7 +539,7 @@ function AProposPage() {
           </div>
         </section>
 
-        {/* SECTION 4: Équipements & Phase Pilote Télé-ECG — High-res Photo Ehua on the field */}
+        {/* SECTION 4: Équipements & Phase Pilote Télé-ECG — Clean Documented Narrative */}
         <section id="equipements" ref={eqRef} className={cn("scroll-mt-24", eqVisible && "animate-fade-up")}>
           <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-7 space-y-6">
@@ -639,63 +560,16 @@ function AProposPage() {
                 </p>
               </div>
 
-              <div className="rounded-3xl border border-border/80 bg-card p-6 text-sm text-foreground space-y-3 shadow-xs">
+              <div className="rounded-3xl border border-border/80 bg-card p-6 sm:p-7 text-sm text-foreground space-y-3 shadow-xs">
                 <div className="flex items-center gap-2 font-bold text-base text-[#5e8c2a] dark:text-[#8bc34a]">
                   <HeartPulse className="h-5 w-5" /> Phase Pilote 2014 au Centre de Télémédecine du CHU de Yopougon
                 </div>
-                <p className="leading-relaxed text-muted-foreground text-sm">
+                <p className="leading-relaxed text-muted-foreground text-sm sm:text-base">
                   « En 2014, après un atelier de formation au centre de télé medecine de Yopougon, neuf structures de santé été équipées en <strong>KIT MEDICO NET</strong> pour la phase pilote du projet de télé expertise en cardiologie. »
                 </p>
-              </div>
-
-              {/* Interactive Kit Switcher */}
-              <div className="space-y-4 pt-2">
-                <div className="flex items-center gap-2 border-b border-border/80 pb-3">
-                  <Button
-                    size="sm"
-                    variant={activeKitTab === "formation" ? "default" : "outline"}
-                    onClick={() => setActiveKitTab("formation")}
-                    className="rounded-full text-xs font-bold"
-                  >
-                    Kit Télé-formation (10+ structures)
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant={activeKitTab === "mediconet" ? "default" : "outline"}
-                    onClick={() => setActiveKitTab("mediconet")}
-                    className="rounded-full text-xs font-bold"
-                  >
-                    Kit Médico Net Télé-ECG (9 structures)
-                  </Button>
-                </div>
-
-                {activeKitTab === "formation" ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {kitTeleFormation.map((item) => {
-                      const Icon = item.icon;
-                      return (
-                        <div key={item.name} className="rounded-2xl border border-border/70 bg-card p-3.5 space-y-1.5 shadow-xs hover:border-[#74a638]/50 transition-colors">
-                          <Icon className="h-4 w-4 text-[#5e8c2a]" />
-                          <div className="text-xs font-bold text-foreground">{item.name}</div>
-                          <p className="text-[11px] text-muted-foreground leading-tight">{item.desc}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    {kitMedicoNet.map((item) => {
-                      const Icon = item.icon;
-                      return (
-                        <div key={item.name} className="rounded-2xl border border-border/70 bg-card p-4 space-y-1.5 shadow-xs hover:border-[#74a638]/50 transition-colors">
-                          <Icon className="h-4 w-4 text-[#5e8c2a]" />
-                          <div className="text-xs font-bold text-foreground">{item.name}</div>
-                          <p className="text-xs text-muted-foreground leading-tight">{item.desc}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                <p className="text-xs text-muted-foreground pt-1 border-t border-border/60">
+                  Cette dotation a permis le raccordement direct des centres de santé isolés aux cardiologues référents du CHU de Bouaké pour l'interprétation en urgence des électrocardiogrammes numériques.
+                </p>
               </div>
             </div>
 
@@ -743,260 +617,74 @@ function AProposPage() {
           </div>
         </section>
 
-        {/* SECTION 5: ANIMATED INTERACTIVE CHRONOLOGY — State-of-the-Art Pro Designer Experience */}
+        {/* SECTION 5: CHRONOLOGIE VERTICALE INTÉGRALE — Clean Vertical Timeline Only */}
         <section id="chronologie" ref={timeRef} className={cn("scroll-mt-24", timeVisible && "animate-fade-up")}>
           <div className="rounded-3xl border border-border/80 bg-card p-6 sm:p-10 lg:p-12 shadow-soft relative overflow-hidden">
-            {/* Background glowing decorations */}
             <div className="absolute -top-24 -right-24 h-80 w-80 rounded-full bg-[#74a638]/10 blur-3xl pointer-events-none" />
             <div className="absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
 
-            {/* Header with Controls */}
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 pb-8 border-b border-border/80">
-              <div className="space-y-2 max-w-2xl">
-                <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a]">
-                  <Radio className="h-3.5 w-3.5 animate-pulse text-[#74a638]" />
-                  <span>Chronologie Interactive & Animée</span>
-                </div>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground tracking-tight">
-                  20 Ans d'Histoire & de Jalons Majeurs
-                </h2>
-                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                  Explorez pas à pas l'évolution du réseau, de la genèse panafricaine en 2003 aux algorithmes d'IA en 2026.
-                </p>
+            {/* Header */}
+            <div className="space-y-3 max-w-3xl pb-10 border-b border-border/80">
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a]">
+                <Calendar className="h-4 w-4 text-[#74a638]" />
+                <span>Ligne du Temps</span>
               </div>
-
-              {/* View & Player Controls */}
-              <div className="flex flex-wrap items-center gap-3">
-                <div className="inline-flex rounded-full border border-border bg-muted/40 p-1">
-                  <button
-                    type="button"
-                    onClick={() => setTimelineView("interactive")}
-                    className={cn(
-                      "px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer",
-                      timelineView === "interactive"
-                        ? "bg-[#74a638] text-white shadow-xs"
-                        : "text-muted-foreground hover:text-foreground"
-                    )}
-                  >
-                    Mode Interactif
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setTimelineView("overview")}
-                    className={cn(
-                      "px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer",
-                      timelineView === "overview"
-                        ? "bg-[#74a638] text-white shadow-xs"
-                        : "text-muted-foreground hover:text-foreground"
-                    )}
-                  >
-                    Vue d'ensemble
-                  </button>
-                </div>
-
-                {timelineView === "interactive" && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setIsPlaying(!isPlaying)}
-                    className="rounded-full text-xs font-semibold gap-1.5 shadow-xs"
-                    title={isPlaying ? "Mettre en pause l'animation" : "Lancer le défilement automatique"}
-                  >
-                    {isPlaying ? <Pause className="h-3.5 w-3.5 text-[#5e8c2a]" /> : <Play className="h-3.5 w-3.5 text-[#5e8c2a]" />}
-                    <span>{isPlaying ? "Pause" : "Auto-lecture"}</span>
-                  </Button>
-                )}
-              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground tracking-tight">
+                20 Ans d'Histoire & de Jalons Majeurs
+              </h2>
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+                De la genèse panafricaine au Mali en 2003 aux algorithmes d'intelligence artificielle en 2026 : l'épopée de la santé numérique en Côte d'Ivoire.
+              </p>
             </div>
 
-            {/* INTERACTIVE MODE */}
-            {timelineView === "interactive" ? (
-              <div className="pt-8 space-y-8">
-                {/* Horizontal Stepper Track with Progress Indicator */}
-                <div className="relative">
-                  {/* Progress Line */}
-                  <div className="hidden sm:block absolute top-1/2 left-0 right-0 h-1 -translate-y-1/2 bg-border/60 rounded-full" />
-                  <div
-                    className="hidden sm:block absolute top-1/2 left-0 h-1 -translate-y-1/2 bg-[#74a638] rounded-full transition-all duration-300"
-                    style={{
-                      width: `${(activeStep / (timelineMilestones.length - 1)) * 100}%`,
-                    }}
-                  />
+            {/* Pure Vertical Timeline */}
+            <div className="pt-10">
+              <div className="relative border-l-2 border-[#74a638]/40 pl-6 sm:pl-10 space-y-10 max-w-4xl mx-auto">
+                {timelineMilestones.map((m) => {
+                  const Icon = m.icon;
+                  return (
+                    <div key={m.year} className="relative group">
+                      {/* Node indicator */}
+                      <div className="absolute -left-[31px] sm:-left-[47px] top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-background border-2 border-[#74a638] text-[#5e8c2a] shadow-xs group-hover:bg-[#74a638] group-hover:text-white transition-colors">
+                        <span className="h-2 w-2 rounded-full bg-current" />
+                      </div>
 
-                  {/* Milestones Buttons Bar */}
-                  <div className="flex items-center justify-between gap-2 overflow-x-auto pb-4 sm:pb-0 scrollbar-none">
-                    {timelineMilestones.map((m, idx) => {
-                      const isActive = idx === activeStep;
-                      const isPast = idx < activeStep;
-                      return (
-                        <button
-                          key={m.year}
-                          type="button"
-                          onClick={() => handleSelectMilestone(idx)}
-                          className={cn(
-                            "relative z-10 flex flex-col items-center gap-1.5 transition-all outline-none cursor-pointer group shrink-0 px-2 py-1",
-                            isActive ? "scale-105" : "opacity-75 hover:opacity-100"
-                          )}
-                        >
-                          <div
-                            className={cn(
-                              "flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl font-black text-xs sm:text-sm transition-all duration-300 shadow-xs",
-                              isActive
-                                ? "bg-[#74a638] text-white ring-4 ring-[#74a638]/25 shadow-md scale-110"
-                                : isPast
-                                ? "bg-card border-2 border-[#74a638] text-[#5e8c2a]"
-                                : "bg-card border-2 border-border text-muted-foreground group-hover:border-[#74a638]/60"
-                            )}
-                          >
+                      <div className="rounded-3xl border border-border/80 bg-surface/70 p-6 sm:p-8 shadow-xs hover:shadow-soft transition-all">
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                          <span className="text-2xl sm:text-3xl font-black text-[#5e8c2a] dark:text-[#8bc34a]">
                             {m.year}
-                          </div>
-                          <span
-                            className={cn(
-                              "text-[10px] sm:text-[11px] font-bold whitespace-nowrap max-w-[80px] sm:max-w-none text-center truncate",
-                              isActive ? "text-[#5e8c2a] dark:text-[#8bc34a]" : "text-muted-foreground"
-                            )}
-                          >
-                            {m.badge}
                           </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Animated Progress Bar for Auto-play */}
-                {isPlaying && (
-                  <div className="h-1 w-full bg-border/40 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-[#74a638] to-cyan-500 transition-all duration-75"
-                      style={{ width: `${progress}%` }}
-                    />
-                  </div>
-                )}
-
-                {/* Active Milestone Card — Rich Showcase */}
-                <div className="rounded-3xl border border-border/80 bg-surface/80 p-6 sm:p-10 shadow-soft transition-all duration-500 rise-in">
-                  <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
-                    <div className="lg:col-span-8 space-y-4">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <Badge className="bg-[#74a638] text-white font-bold text-xs px-3 py-1">
-                          {activeMilestone.badge}
-                        </Badge>
-                        <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5">
-                          <MapPin className="h-3.5 w-3.5 text-[#5e8c2a]" /> {activeMilestone.location}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          Étape {activeStep + 1} sur {timelineMilestones.length}
-                        </span>
-                      </div>
-
-                      <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-foreground leading-tight">
-                        {activeMilestone.title}
-                      </h3>
-
-                      <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-                        {activeMilestone.desc}
-                      </p>
-
-                      <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
-                        <div className="text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a] mb-1">
-                          Fait marquant :
-                        </div>
-                        <p className="text-sm font-medium text-foreground">
-                          {activeMilestone.fact}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Milestone Big Graphic Badge */}
-                    <div className="lg:col-span-4 flex flex-col items-center justify-center p-6 rounded-2xl bg-card border border-border/80 shadow-xs space-y-3 text-center">
-                      <div className="h-16 w-16 rounded-2xl bg-[#74a638]/15 flex items-center justify-center text-[#5e8c2a]">
-                        <MilestoneIcon className="h-8 w-8" />
-                      </div>
-                      <div className="text-4xl sm:text-5xl font-black text-foreground tracking-tight">
-                        {activeMilestone.year}
-                      </div>
-                      <p className="text-xs text-muted-foreground font-semibold">
-                        Jalon historique RAFT Côte d'Ivoire
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Navigation Buttons */}
-                  <div className="mt-8 pt-6 border-t border-border/80 flex items-center justify-between">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handlePrevMilestone}
-                      className="rounded-full gap-1.5 text-xs font-semibold"
-                    >
-                      <ChevronLeft className="h-4 w-4" /> Précédent
-                    </Button>
-
-                    <div className="flex items-center gap-1">
-                      {timelineMilestones.map((_, i) => (
-                        <button
-                          key={i}
-                          type="button"
-                          onClick={() => handleSelectMilestone(i)}
-                          className={cn(
-                            "h-2 rounded-full transition-all cursor-pointer",
-                            i === activeStep ? "w-6 bg-[#74a638]" : "w-2 bg-border hover:bg-muted-foreground"
-                          )}
-                          aria-label={`Étape ${i + 1}`}
-                        />
-                      ))}
-                    </div>
-
-                    <Button
-                      size="sm"
-                      onClick={handleNextMilestone}
-                      className="rounded-full gap-1.5 text-xs font-semibold bg-[#74a638] text-white hover:bg-[#68982f]"
-                    >
-                      Suivant <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              /* OVERVIEW MODE — Full continuous timeline list */
-              <div className="pt-10">
-                <div className="relative border-l-2 border-[#74a638]/40 pl-6 sm:pl-10 space-y-10 max-w-4xl mx-auto">
-                  {timelineMilestones.map((m) => {
-                    const Icon = m.icon;
-                    return (
-                      <div key={m.year} className="relative group">
-                        <div className="absolute -left-[31px] sm:-left-[47px] top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-background border-2 border-[#74a638] text-[#5e8c2a] shadow-xs group-hover:bg-[#74a638] group-hover:text-white transition-colors">
-                          <span className="h-2 w-2 rounded-full bg-current" />
-                        </div>
-
-                        <div className="rounded-3xl border border-border/80 bg-surface/70 p-6 sm:p-7 shadow-xs hover:shadow-soft transition-all">
-                          <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                            <span className="text-2xl font-black text-[#5e8c2a] dark:text-[#8bc34a]">
-                              {m.year}
-                            </span>
-                            <Badge variant="secondary" className="font-semibold text-xs">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="secondary" className="font-semibold text-xs px-3 py-1">
                               {m.badge}
                             </Badge>
-                          </div>
-                          <h3 className="text-xl font-bold text-foreground mb-2 flex items-center gap-2">
-                            <Icon className="h-4 w-4 text-[#5e8c2a]" /> {m.title}
-                          </h3>
-                          <p className="text-sm text-muted-foreground leading-relaxed mb-3">{m.desc}</p>
-                          <div className="rounded-xl bg-card p-3 border border-border/60 text-xs text-foreground font-medium">
-                            <span className="font-bold text-[#5e8c2a]">Fait marquant : </span>{m.fact}
+                            <span className="text-xs text-muted-foreground flex items-center gap-1 font-medium">
+                              <MapPin className="h-3 w-3 text-[#5e8c2a]" /> {m.location}
+                            </span>
                           </div>
                         </div>
+
+                        <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3 flex items-center gap-2.5">
+                          <Icon className="h-5 w-5 text-[#5e8c2a] shrink-0" /> {m.title}
+                        </h3>
+
+                        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4">
+                          {m.desc}
+                        </p>
+
+                        <div className="rounded-2xl bg-card p-4 border border-border/60 text-xs sm:text-sm text-foreground font-medium shadow-2xs">
+                          <span className="font-bold text-[#5e8c2a]">Fait marquant : </span>{m.fact}
+                        </div>
                       </div>
-                    );
-                  })}
-                </div>
+                    </div>
+                  );
+                })}
               </div>
-            )}
+            </div>
           </div>
         </section>
 
-        {/* CTA Card — High Conversion Executive Design */}
+        {/* CTA Card */}
         <section className="rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card to-surface p-8 sm:p-14 shadow-lift relative overflow-hidden">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
             <div className="space-y-4 max-w-2xl">
@@ -1005,7 +693,7 @@ function AProposPage() {
                 Rejoignez le Réseau RAFT Côte d'Ivoire
               </h3>
               <p className="text-base text-muted-foreground leading-relaxed">
-                Vous êtes médecin, directeur d'établissement ou soignant dans un centre régional ? Découvrez comment raccorder votre structure au réseau Télé-ECG, bénéficier des kits Médico Net et participer aux e-cours hebdomadaires.
+                Vous êtes médecin, directeur d'établissement ou soignant dans un centre régional ? Découvrez comment raccorder votre structure au réseau Télé-ECG, bénéficier des formations et participer aux e-cours hebdomadaires.
               </p>
             </div>
 
