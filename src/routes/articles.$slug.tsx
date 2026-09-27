@@ -1,9 +1,11 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, Clock, User } from "lucide-react";
+import { ArrowLeft, Clock, User, Calendar, Share2, ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { articles } from "@/data/site";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/articles/$slug")({
   loader: ({ params }) => {
@@ -33,10 +35,10 @@ export const Route = createFileRoute("/articles/$slug")({
 function ArticleNotFound() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-24 text-center">
-      <h1 className="text-3xl font-bold">Article introuvable</h1>
-      <p className="mt-3 text-muted-foreground">Cet article n'existe pas ou n'est plus publié.</p>
-      <Button asChild className="mt-8">
-        <Link to="/articles">Retour aux actualités</Link>
+      <h1 className="text-3xl font-extrabold text-foreground">Publication introuvable</h1>
+      <p className="mt-3 text-muted-foreground">Cet article n'existe pas ou n'est plus accessible sur le portail.</p>
+      <Button asChild className="mt-8 rounded-full">
+        <Link to="/articles">Retour aux publications</Link>
       </Button>
     </div>
   );
@@ -46,73 +48,125 @@ function ArticlePage() {
   const { article } = Route.useLoaderData();
   const related = articles.filter((a) => a.slug !== article.slug).slice(0, 3);
 
+  const { ref: headerRef, isVisible: headerVisible } = useIntersectionObserver<HTMLDivElement>();
+  const { ref: contentRef, isVisible: contentVisible } = useIntersectionObserver<HTMLDivElement>();
+  const { ref: relatedRef, isVisible: relatedVisible } = useIntersectionObserver<HTMLDivElement>();
+
   return (
     <>
-      <header className="surface-hero relative overflow-hidden text-primary-foreground">
+      {/* Header Banner */}
+      <header
+        ref={headerRef}
+        className={cn(
+          "surface-hero relative overflow-hidden text-primary-foreground py-14 sm:py-20",
+          headerVisible && "animate-fade-up",
+        )}
+      >
         <div className="grid-pattern absolute inset-0 opacity-20" aria-hidden="true" />
-        <div className="relative mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <Link
             to="/articles"
-            className="inline-flex items-center gap-1.5 text-sm text-primary-foreground/75 hover:text-primary-foreground"
+            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary-foreground/75 hover:text-primary-foreground transition-colors mb-6 group"
           >
-            <ArrowLeft className="h-4 w-4" /> Actualités
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" /> Retour aux actualités
           </Link>
-          <Badge variant="secondary" className="mt-6">
-            {article.category}
-          </Badge>
-          <h1 className="mt-4 text-3xl leading-tight font-extrabold sm:text-4xl">{article.title}</h1>
-          <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-primary-foreground/75">
-            <span className="flex items-center gap-1.5">
-              <User className="h-4 w-4" /> {article.author}
+
+          <div>
+            <Badge variant="secondary" className="font-semibold text-xs px-3 py-1">
+              {article.category}
+            </Badge>
+          </div>
+
+          <h1 className="mt-4 text-3xl font-extrabold sm:text-4xl lg:text-5xl leading-tight tracking-tight">
+            {article.title}
+          </h1>
+
+          <div className="mt-6 flex flex-wrap items-center gap-5 text-xs sm:text-sm text-primary-foreground/80 border-t border-primary-foreground/15 pt-5">
+            <span className="flex items-center gap-1.5 font-medium">
+              <User className="h-4 w-4 text-accent" /> {article.author}
             </span>
-            <time dateTime={article.date}>
-              {new Date(article.date).toLocaleDateString("fr-FR", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </time>
             <span className="flex items-center gap-1.5">
-              <Clock className="h-4 w-4" /> {article.readingTime}
+              <Calendar className="h-4 w-4 text-accent" />
+              <time dateTime={article.date}>
+                {new Date(article.date).toLocaleDateString("fr-FR", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </time>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Clock className="h-4 w-4 text-accent" /> {article.readingTime} de lecture
             </span>
           </div>
         </div>
       </header>
 
-      <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
-        <img
-          src={article.image}
-          alt={article.title}
-          loading="lazy"
-          width={1200}
-          height={800}
-          className="aspect-16/9 w-full rounded-2xl object-cover shadow-soft"
-        />
-        <p className="mt-8 border-l-2 border-accent pl-5 text-lg leading-relaxed text-foreground">{article.excerpt}</p>
-        <div className="mt-8 space-y-5 text-base leading-relaxed text-muted-foreground">
+      {/* Main Article Body */}
+      <article ref={contentRef} className={cn("mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8", contentVisible && "animate-fade-up")}>
+        <div className="overflow-hidden rounded-3xl border border-border/80 shadow-lift">
+          <img
+            src={article.image}
+            alt={article.title}
+            loading="lazy"
+            width={1200}
+            height={800}
+            className="aspect-16/9 w-full object-cover"
+          />
+        </div>
+
+        {/* Lead paragraph / chapeau */}
+        <div className="mt-10 rounded-2xl bg-surface/70 p-6 border-l-4 border-accent text-base sm:text-lg font-medium leading-relaxed text-foreground shadow-xs">
+          {article.excerpt}
+        </div>
+
+        {/* Article text content */}
+        <div className="mt-8 space-y-6 text-base sm:text-lg leading-relaxed text-muted-foreground">
           {article.body.map((p, i) => (
             <p key={i}>{p}</p>
           ))}
         </div>
 
-        <div className="mt-12 rounded-2xl border border-border bg-surface p-6">
-          <h2 className="text-lg font-semibold">Une question sur ce programme ?</h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            La coordination technique du réseau répond aux structures et aux professionnels de santé.
-          </p>
-          <Button asChild className="mt-4">
-            <Link to="/contact">Contacter la coordination</Link>
+        {/* Action card */}
+        <div className="mt-12 rounded-3xl border border-border/80 bg-card p-8 shadow-soft flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+          <div className="space-y-1 max-w-xl">
+            <h3 className="text-lg font-bold text-foreground">Une question sur ce programme ?</h3>
+            <p className="text-sm text-muted-foreground">
+              La coordination technique nationale et les référents cliniques sont à l'écoute des praticiens et des directions hospitalières.
+            </p>
+          </div>
+          <Button asChild size="lg" className="rounded-full shrink-0 font-semibold shadow-soft">
+            <Link to="/contact">
+              Écrire à la coordination
+              <ArrowRight className="ml-1.5 h-4 w-4" />
+            </Link>
           </Button>
         </div>
       </article>
 
-      <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold">À lire également</h2>
-        <div className="stagger-grid mt-6 grid gap-6 md:grid-cols-3">
-          {related.map((a) => (
-            <Link key={a.slug} to="/articles/$slug" params={{ slug: a.slug }} className="group">
-              <Card className="card-hover h-full overflow-hidden border-border/70 pt-0">
-                <div className="aspect-16/10 overflow-hidden">
+      {/* Related Articles */}
+      <section ref={relatedRef} className={cn("mx-auto max-w-7xl px-4 pt-8 pb-16 sm:px-6 lg:px-8 border-t border-border/80", relatedVisible && "animate-fade-up")}>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <span className="eyebrow text-accent">Poursuivre la lecture</span>
+            <h2 className="mt-1 text-2xl font-bold text-foreground">Publications connexes</h2>
+          </div>
+          <Button asChild variant="outline" size="sm" className="rounded-full">
+            <Link to="/articles">Toutes les publications</Link>
+          </Button>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          {related.map((a, i) => (
+            <Link
+              key={a.slug}
+              to="/articles/$slug"
+              params={{ slug: a.slug }}
+              className="card-hover group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft"
+              style={{ animationDelay: `${i * 80}ms` }}
+            >
+              <div>
+                <div className="aspect-16/10 overflow-hidden bg-muted">
                   <img
                     src={a.image}
                     alt={a.title}
@@ -122,11 +176,20 @@ function ArticlePage() {
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
-                <CardContent className="space-y-2">
-                  <Badge variant="secondary">{a.category}</Badge>
-                  <h3 className="text-base leading-snug font-semibold group-hover:text-accent">{a.title}</h3>
-                </CardContent>
-              </Card>
+                <div className="p-6 space-y-2.5">
+                  <Badge variant="secondary" className="font-semibold text-xs">
+                    {a.category}
+                  </Badge>
+                  <h3 className="text-base font-bold leading-snug text-foreground group-hover:text-accent transition-colors">
+                    {a.title}
+                  </h3>
+                </div>
+              </div>
+
+              <div className="p-6 pt-0 border-t border-border/60 mt-2 flex items-center justify-between text-xs font-semibold text-accent">
+                <span>Lire</span>
+                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+              </div>
             </Link>
           ))}
         </div>

@@ -1,7 +1,19 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Mail, MapPin, Phone, Search } from "lucide-react";
+import {
+  Mail,
+  MapPin,
+  Phone,
+  Search,
+  Building2,
+  Stethoscope,
+  Filter,
+  CheckCircle2,
+  X,
+  ExternalLink,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,6 +24,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { directory } from "@/data/site";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/annuaire")({
   head: () => ({
@@ -54,97 +68,218 @@ function AnnuairePage() {
     return matchQ && (category === "Toutes" || d.category === category) && (region === "Toutes" || d.region === region);
   });
 
+  const { ref: headerRef, isVisible: headerVisible } = useIntersectionObserver<HTMLDivElement>();
+  const { ref: listRef, isVisible: listVisible } = useIntersectionObserver<HTMLDivElement>();
+
   return (
     <>
-      <header className="surface-hero relative overflow-hidden text-primary-foreground">
+      {/* Page Header */}
+      <header
+        ref={headerRef}
+        className={cn(
+          "surface-hero relative overflow-hidden text-primary-foreground py-16 sm:py-20",
+          headerVisible && "animate-fade-up",
+        )}
+      >
         <div className="grid-pattern absolute inset-0 opacity-20" aria-hidden="true" />
-        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <p className="eyebrow text-primary-foreground/70">Annuaire</p>
-          <h1 className="mt-3 text-4xl font-extrabold sm:text-5xl">Structures & praticiens du réseau</h1>
-          <p className="mt-4 max-w-2xl text-primary-foreground/80">
-            Trouvez rapidement la structure connectée la plus proche, ou le référent en charge d'un programme.
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-2 text-xs font-semibold text-accent uppercase tracking-wider">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Répertoire Officiel</span>
+          </div>
+
+          <h1 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl max-w-3xl">
+            Annuaire des structures{" "}
+            <span className="text-transparent bg-gradient-to-r from-cyan-200 via-teal-100 to-amber-200 bg-clip-text">
+              & praticiens connectés.
+            </span>
+          </h1>
+
+          <p className="mt-5 max-w-2xl text-base sm:text-lg text-primary-foreground/85 leading-relaxed">
+            Consultez les coordonnées, filières de télé-expertise et contacts des centres hospitaliers universitaires, hôpitaux généraux et centres de santé raccordés.
           </p>
+
+          <div className="mt-8 flex flex-wrap gap-4 text-xs font-medium text-primary-foreground/80">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/10 px-3.5 py-1.5 backdrop-blur-sm border border-primary-foreground/15">
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> {directory.length} Établissements répertoriés
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/10 px-3.5 py-1.5 backdrop-blur-sm border border-primary-foreground/15">
+              <MapPin className="h-3.5 w-3.5 text-cyan-300" /> {regions.length - 1} Régions sanitaires
+            </span>
+          </div>
         </div>
       </header>
 
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-3 rounded-2xl border border-border bg-card p-4 shadow-soft sm:grid-cols-[1fr_auto_auto]">
-          <div className="relative">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Rechercher une structure, une ville, un service…"
-              className="pl-9"
-              aria-label="Rechercher"
-            />
+      {/* Filter and Content Section */}
+      <section ref={listRef} className={cn("mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8", listVisible && "animate-fade-up")}>
+        {/* Search & Filter Toolbar */}
+        <div className="rounded-3xl border border-border/80 bg-card p-5 shadow-soft">
+          <div className="grid gap-3 sm:grid-cols-1 md:grid-cols-[1fr_auto_auto]">
+            <div className="relative">
+              <Search className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Rechercher par structure, ville, spécialité (ex: Treichville, Télé-ECG, Man)..."
+                className="h-11 rounded-2xl pl-10 pr-9 border-border/80"
+                aria-label="Rechercher"
+              />
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger className="h-11 rounded-2xl md:w-52 border-border/80" aria-label="Filtrer par catégorie">
+                <SelectValue placeholder="Toutes catégories" />
+              </SelectTrigger>
+              <SelectContent className="rounded-2xl">
+                {categories.map((c) => (
+                  <SelectItem key={c} value={c} className="rounded-xl">
+                    {c}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={region} onValueChange={setRegion}>
+              <SelectTrigger className="h-11 rounded-2xl md:w-52 border-border/80" aria-label="Filtrer par région">
+                <SelectValue placeholder="Toutes régions" />
+              </SelectTrigger>
+              <SelectContent className="rounded-2xl">
+                {regions.map((r) => (
+                  <SelectItem key={r} value={r} className="rounded-xl">
+                    {r}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <Select value={category} onValueChange={setCategory}>
-            <SelectTrigger className="sm:w-48" aria-label="Filtrer par catégorie">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((c) => (
-                <SelectItem key={c} value={c}>
-                  {c}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={region} onValueChange={setRegion}>
-            <SelectTrigger className="sm:w-48" aria-label="Filtrer par région">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {regions.map((r) => (
-                <SelectItem key={r} value={r}>
-                  {r}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+
+          {/* Quick Filter Reset */}
+          {(query || category !== "Toutes" || region !== "Toutes") && (
+            <div className="mt-3 flex items-center justify-between border-t border-border/60 pt-3 text-xs">
+              <span className="text-muted-foreground">
+                Filtres actifs : {query && `"${query}" `} {category !== "Toutes" && `• ${category} `}{" "}
+                {region !== "Toutes" && `• ${region}`}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setQuery("");
+                  setCategory("Toutes");
+                  setRegion("Toutes");
+                }}
+                className="h-7 text-xs text-accent hover:text-accent font-semibold"
+              >
+                Réinitialiser les filtres
+              </Button>
+            </div>
+          )}
         </div>
 
-        <p className="mt-6 text-sm text-muted-foreground">
-          {results.length} résultat{results.length > 1 ? "s" : ""}
-        </p>
+        {/* Results Counter */}
+        <div className="mt-6 flex items-center justify-between px-1">
+          <p className="text-sm font-semibold text-foreground">
+            {results.length} structure{results.length > 1 ? "s" : ""} disponible{results.length > 1 ? "s" : ""}
+          </p>
+          <span className="text-xs text-muted-foreground flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+            Interconnexion sécurisée vérifiée
+          </span>
+        </div>
 
-        <div className="stagger-grid mt-4 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {results.map((d) => (
-            <Card key={d.name} className="card-hover border-border/70">
-              <CardContent className="pt-6">
+        {/* Structures Grid */}
+        <div className="mt-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {results.map((d, i) => (
+            <Card
+              key={d.name}
+              className="card-hover group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card p-6 shadow-soft"
+              style={{ animationDelay: `${i * 40}ms` }}
+            >
+              <div>
                 <div className="flex items-start justify-between gap-3">
-                  <h2 className="text-base leading-snug font-semibold">{d.name}</h2>
-                  <Badge variant="secondary" className="shrink-0">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-secondary text-accent font-bold group-hover:bg-accent group-hover:text-accent-foreground transition-all">
+                      <Building2 className="h-5 w-5" />
+                    </span>
+                    <div>
+                      <h2 className="text-base font-bold leading-snug text-foreground group-hover:text-accent transition-colors">
+                        {d.name}
+                      </h2>
+                      <p className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
+                        <MapPin className="h-3.5 w-3.5 text-accent shrink-0" /> {d.city} · {d.region}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4">
+                  <Badge variant="secondary" className="text-xs font-medium">
                     {d.category}
                   </Badge>
                 </div>
-                <p className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
-                  <MapPin className="h-3.5 w-3.5" /> {d.city} · {d.region}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-1.5">
+
+                {/* Services list */}
+                <div className="mt-4 flex flex-wrap gap-1.5">
                   {d.services.map((s) => (
-                    <span key={s} className="rounded-full bg-secondary px-2.5 py-1 text-xs text-secondary-foreground">
+                    <span
+                      key={s}
+                      className="rounded-full border border-border/60 bg-surface px-2.5 py-1 text-[0.72rem] font-medium text-foreground"
+                    >
                       {s}
                     </span>
                   ))}
                 </div>
-                <div className="mt-4 space-y-1.5 border-t border-border pt-4 text-sm">
-                  <a href={`tel:${d.phone.replace(/\s/g, "")}`} className="flex items-center gap-2 hover:text-accent">
-                    <Phone className="h-3.5 w-3.5" /> {d.phone}
-                  </a>
-                  <a href={`mailto:${d.email}`} className="flex items-center gap-2 break-all hover:text-accent">
-                    <Mail className="h-3.5 w-3.5 shrink-0" /> {d.email}
-                  </a>
-                </div>
-              </CardContent>
+              </div>
+
+              {/* Contact actions */}
+              <div className="mt-6 border-t border-border/70 pt-4 space-y-2 text-xs">
+                <a
+                  href={`tel:${d.phone.replace(/\s/g, "")}`}
+                  className="flex items-center gap-2 rounded-xl bg-surface/60 px-3 py-2 font-semibold text-foreground transition-colors hover:bg-secondary hover:text-accent"
+                >
+                  <Phone className="h-3.5 w-3.5 text-accent shrink-0" />
+                  <span>{d.phone}</span>
+                </a>
+                <a
+                  href={`mailto:${d.email}`}
+                  className="flex items-center gap-2 rounded-xl px-3 py-1.5 text-muted-foreground transition-colors hover:text-accent break-all"
+                >
+                  <Mail className="h-3.5 w-3.5 shrink-0 text-accent" />
+                  <span>{d.email}</span>
+                </a>
+              </div>
             </Card>
           ))}
         </div>
 
         {results.length === 0 && (
-          <div className="mt-10 rounded-2xl border border-dashed border-border py-16 text-center text-muted-foreground">
-            Aucune structure ne correspond à votre recherche.
+          <div className="mt-12 rounded-3xl border border-dashed border-border/80 bg-card/50 py-16 text-center">
+            <Building2 className="mx-auto h-12 w-12 text-muted-foreground/40" />
+            <h3 className="mt-4 text-base font-bold text-foreground">Aucune structure correspondante</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Essayez de modifier votre recherche ou d'élargir les critères de filtrage.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setQuery("");
+                setCategory("Toutes");
+                setRegion("Toutes");
+              }}
+              className="mt-4 rounded-full"
+            >
+              Effacer la recherche
+            </Button>
           </div>
         )}
       </section>

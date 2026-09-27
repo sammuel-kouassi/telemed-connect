@@ -1,14 +1,122 @@
-@import "tailwindcss" source(none);
-@source "../src";
+@import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
+/* Keyframe animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes floatDelayed {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes marqueeSlow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-slow {
+  display: flex;
+  width: max-content;
+  animation: marqueeSlow 32s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-slow:hover {
+  animation-play-state: paused;
+}
+
+.mask-marquee-fade {
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-float {
+  animation: floatGentle 5s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: floatDelayed 6s ease-in-out 2.5s infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+/* Glassmorphism surfaces */
+.glass {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.dark .glass {
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-dark {
+  background: rgba(11, 27, 61, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+/* Micro-interactions sur les boutons */
+button:active, a.button-active:active {
+  transform: scale(0.97);
+  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.4, 1);
+}
+
 /*
  * Design system — Portail national de la Télémédecine (Côte d'Ivoire)
- * Palette: bleu nuit institutionnel + teal médical + or ivoirien.
- * Typo: Sora (titres) / Manrope (texte).
- * Toutes les couleurs sont en oklch et exposées via @theme inline.
+ * Palette : Bleu Marine Clinique + Teal Cyan + Or Ivoirien & Émeraude Santé
+ * Typo : Sora (titres) / Manrope (texte).
  */
 
 @theme inline {
@@ -20,8 +128,8 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --radius-3xl: calc(var(--radius) + 14px);
+  --radius-4xl: calc(var(--radius) + 20px);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -39,6 +147,7 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
+  --color-emerald: var(--emerald);
   --color-surface: var(--surface);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
@@ -62,88 +171,100 @@
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 0.85rem;
 
-  --background: oklch(0.99 0.004 220);
-  --foreground: oklch(0.22 0.045 245);
-  --surface: oklch(0.965 0.012 220);
+  --background: oklch(0.985 0.006 230);
+  --foreground: oklch(0.18 0.04 250);
+  --surface: oklch(0.965 0.012 225);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.045 245);
+  --card-foreground: oklch(0.18 0.04 250);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.045 245);
+  --popover-foreground: oklch(0.18 0.04 250);
 
-  --primary: oklch(0.34 0.09 245);
-  --primary-foreground: oklch(0.985 0.005 220);
+  /* Brand Green (Primary - matching logo 'TELE' & official identity) */
+  --primary: #74a638;
+  --primary-foreground: #ffffff;
 
-  --secondary: oklch(0.945 0.02 215);
-  --secondary-foreground: oklch(0.3 0.07 245);
+  --secondary: oklch(0.95 0.016 220);
+  --secondary-foreground: oklch(0.24 0.07 245);
 
-  --muted: oklch(0.955 0.012 220);
-  --muted-foreground: oklch(0.52 0.03 240);
+  --muted: oklch(0.955 0.01 225);
+  --muted-foreground: oklch(0.48 0.03 245);
 
-  --accent: oklch(0.62 0.1 200);
+  /* Vibrant Clinical Teal / Cyan */
+  --accent: oklch(0.64 0.14 200);
   --accent-foreground: oklch(0.99 0.005 220);
 
-  --gold: oklch(0.78 0.12 82);
-  --gold-foreground: oklch(0.25 0.05 60);
+  /* Warm Gold / Ivorian Amber */
+  --gold: oklch(0.76 0.15 75);
+  --gold-foreground: oklch(0.22 0.06 65);
 
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0.005 220);
+  /* Health Green matching primary brand */
+  --emerald: #74a638;
 
-  --border: oklch(0.9 0.015 225);
-  --input: oklch(0.9 0.015 225);
-  --ring: oklch(0.62 0.1 200);
+  --destructive: oklch(0.58 0.22 25);
+  --destructive-foreground: oklch(0.99 0.005 220);
 
-  --chart-1: oklch(0.34 0.09 245);
-  --chart-2: oklch(0.62 0.1 200);
-  --chart-3: oklch(0.72 0.11 180);
-  --chart-4: oklch(0.78 0.12 82);
-  --chart-5: oklch(0.5 0.08 260);
+  --border: oklch(0.91 0.012 230);
+  --input: oklch(0.91 0.012 230);
+  --ring: #74a638;
 
-  --sidebar: oklch(0.985 0.008 220);
-  --sidebar-foreground: oklch(0.22 0.045 245);
-  --sidebar-primary: oklch(0.34 0.09 245);
-  --sidebar-primary-foreground: oklch(0.985 0.005 220);
-  --sidebar-accent: oklch(0.945 0.02 215);
-  --sidebar-accent-foreground: oklch(0.3 0.07 245);
-  --sidebar-border: oklch(0.9 0.015 225);
-  --sidebar-ring: oklch(0.62 0.1 200);
+  --chart-1: #74a638;
+  --chart-2: oklch(0.64 0.14 200);
+  --chart-3: oklch(0.72 0.12 175);
+  --chart-4: oklch(0.76 0.15 75);
+  --chart-5: #82bc3f;
 
-  --gradient-hero: linear-gradient(
-    135deg,
-    oklch(0.24 0.07 250) 0%,
-    oklch(0.32 0.09 240) 45%,
-    oklch(0.45 0.1 205) 100%
-  );
-  --gradient-accent: linear-gradient(
-    120deg,
-    oklch(0.4 0.1 230) 0%,
-    oklch(0.66 0.11 195) 100%
-  );
-  --shadow-soft: 0 1px 2px oklch(0.34 0.09 245 / 6%), 0 8px 24px -12px oklch(0.34 0.09 245 / 18%);
-  --shadow-lift: 0 2px 4px oklch(0.34 0.09 245 / 8%), 0 24px 48px -20px oklch(0.34 0.09 245 / 28%);
+  --sidebar: oklch(0.985 0.006 230);
+  --sidebar-foreground: oklch(0.18 0.04 250);
+  --sidebar-primary: #74a638;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: oklch(0.95 0.016 220);
+  --sidebar-accent-foreground: oklch(0.24 0.07 245);
+  --sidebar-border: oklch(0.91 0.012 230);
+  --sidebar-ring: #74a638;
+
+  --gradient-hero: linear-gradient(135deg,
+      oklch(0.17 0.08 255) 0%,
+      oklch(0.24 0.09 245) 45%,
+      oklch(0.36 0.11 210) 80%,
+      oklch(0.44 0.12 195) 100%);
+  --gradient-accent: linear-gradient(125deg,
+      oklch(0.3 0.1 245) 0%,
+      oklch(0.55 0.14 205) 55%,
+      oklch(0.66 0.14 185) 100%);
+  --gradient-gold: linear-gradient(120deg,
+      oklch(0.76 0.15 75) 0%,
+      oklch(0.85 0.12 85) 100%);
+
+  --shadow-soft: 0 2px 8px -2px oklch(0.2 0.05 250 / 6%), 0 12px 28px -8px oklch(0.2 0.05 250 / 10%);
+  --shadow-lift: 0 4px 14px -2px oklch(0.2 0.05 250 / 8%), 0 24px 48px -12px oklch(0.2 0.05 250 / 18%);
+  --shadow-glow: 0 0 35px -5px rgba(116, 166, 56, 0.32);
 }
 
 .dark {
-  --background: oklch(0.17 0.035 250);
-  --foreground: oklch(0.97 0.006 220);
-  --surface: oklch(0.22 0.04 250);
-  --card: oklch(0.22 0.04 250);
-  --card-foreground: oklch(0.97 0.006 220);
-  --popover: oklch(0.22 0.04 250);
-  --popover-foreground: oklch(0.97 0.006 220);
-  --primary: oklch(0.72 0.11 195);
-  --primary-foreground: oklch(0.18 0.04 250);
-  --secondary: oklch(0.27 0.045 250);
-  --secondary-foreground: oklch(0.97 0.006 220);
-  --muted: oklch(0.27 0.045 250);
-  --muted-foreground: oklch(0.72 0.03 230);
-  --accent: oklch(0.68 0.11 197);
-  --accent-foreground: oklch(0.18 0.04 250);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.68 0.11 197);
+  --background: oklch(0.14 0.035 255);
+  --foreground: oklch(0.98 0.005 220);
+  --surface: oklch(0.18 0.038 252);
+  --card: oklch(0.19 0.038 252);
+  --card-foreground: oklch(0.98 0.005 220);
+  --popover: oklch(0.19 0.038 252);
+  --popover-foreground: oklch(0.98 0.005 220);
+  --primary: #82bc3f;
+  --primary-foreground: #0d1a08;
+  --secondary: oklch(0.24 0.04 250);
+  --secondary-foreground: oklch(0.98 0.005 220);
+  --muted: oklch(0.23 0.035 250);
+  --muted-foreground: oklch(0.72 0.025 235);
+  --accent: oklch(0.68 0.14 200);
+  --accent-foreground: oklch(0.14 0.035 255);
+  --gold: oklch(0.8 0.15 75);
+  --gold-foreground: oklch(0.14 0.035 255);
+  --emerald: #82bc3f;
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: #82bc3f;
 }
 
 @layer base {
@@ -156,68 +277,54 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   h1,
   h2,
   h3,
-  h4 {
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
   }
 
-  .nav-link {
-    position: relative;
+  /* Custom sleek scrollbar */
+  ::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
   }
-
-  .nav-link::after {
-    position: absolute;
-    right: 0.75rem;
-    bottom: 0.25rem;
-    left: 0.75rem;
-    height: 2px;
-    border-radius: 999px;
-    background: var(--accent);
-    content: "";
-    opacity: 0;
-    transform: scaleX(0.35);
-    transition: opacity 0.25s ease, transform 0.25s ease;
+  ::-webkit-scrollbar-track {
+    background: oklch(0.96 0.01 220);
   }
-
-  .nav-link:hover::after,
-  .nav-link[aria-current="page"]::after {
-    opacity: 1;
-    transform: scaleX(1);
+  .dark ::-webkit-scrollbar-track {
+    background: oklch(0.16 0.03 250);
   }
-
-  .status-dot {
-    width: 0.4rem;
-    height: 0.4rem;
-    border-radius: 999px;
-    background: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 18%, transparent);
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.8 0.02 230);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
   }
-
-  .trust-item {
-    transition: background-color 0.25s ease, transform 0.25s ease;
-  }
-
-  .trust-item:hover {
-    background: var(--surface);
-    transform: translateY(-2px);
-  }
-
-  .page-content > header > .relative {
-    animation: rise-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.65 0.06 220);
+    background-clip: padding-box;
   }
 }
 
 @utility surface-hero {
   background-image: var(--gradient-hero);
+  background-size: 200% 200%;
+  animation: gradientShift 16s ease-in-out infinite alternate;
 }
 
 @utility surface-accent {
   background-image: var(--gradient-accent);
+}
+
+@utility surface-gold {
+  background-image: var(--gradient-gold);
 }
 
 @utility shadow-soft {
@@ -228,57 +335,66 @@
   box-shadow: var(--shadow-lift);
 }
 
+@utility shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+
 @utility card-hover {
   transition:
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.35s ease;
-  animation: rise-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-  will-change: transform;
+
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
     box-shadow: var(--shadow-lift);
-    border-color: color-mix(in oklab, var(--accent) 45%, transparent);
+    border-color: color-mix(in oklab, var(--accent) 55%, transparent);
   }
 }
 
 @utility grid-pattern {
   background-image:
-    linear-gradient(to right, color-mix(in oklab, var(--foreground) 6%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 6%, transparent) 1px, transparent 1px);
-  background-size: 56px 56px;
+    linear-gradient(to right, color-mix(in oklab, var(--foreground) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 7%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+@utility dot-pattern {
+  background-image: radial-gradient(color-mix(in oklab, var(--foreground) 10%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 @utility eyebrow {
   font-family: var(--font-display);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
 @keyframes pulse-ring {
   0% {
     transform: scale(0.85);
-    opacity: 0.8;
+    opacity: 0.9;
   }
   70% {
-    transform: scale(1.9);
+    transform: scale(2.1);
     opacity: 0;
   }
   100% {
+    transform: scale(2.1);
     opacity: 0;
   }
 }
 
 @utility pulse-ring {
-  animation: pulse-ring 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  animation: pulse-ring 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
 @keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(16px) scale(0.98);
   }
   to {
     opacity: 1;
@@ -287,67 +403,11 @@
 }
 
 @utility rise-in {
-  animation: rise-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: rise-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@keyframes page-enter {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes soft-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-@utility page-content {
-  & > * {
-    animation: page-enter 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-  & > *:nth-child(2) {
-    animation-delay: 80ms;
-  }
-  & > *:nth-child(3) {
-    animation-delay: 140ms;
-  }
-  & > *:nth-child(4) {
-    animation-delay: 200ms;
-  }
-}
-
-@utility stagger-grid {
-  & > * {
-    animation: rise-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-  & > *:nth-child(2) { animation-delay: 70ms; }
-  & > *:nth-child(3) { animation-delay: 140ms; }
-  & > *:nth-child(4) { animation-delay: 210ms; }
-  & > *:nth-child(5) { animation-delay: 280ms; }
-  & > *:nth-child(6) { animation-delay: 350ms; }
-}
-
-@utility soft-float {
-  animation: soft-float 5s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+/* Subtle Côte d'Ivoire accent ribbon */
+.ci-accent-band {
+  background: linear-gradient(90deg, #f97316 0%, #ffffff 50%, #22c55e 100%);
+  height: 3px;
 }
