@@ -21,6 +21,9 @@ import pioneerDiby from "@/assets/pioneer_diby.webp";
 
 import cartographieOfficielle from "@/assets/cartographie_officielle.webp";
 import raftCiMembres from "@/assets/raft_ci_membres.jpg";
+import formationOutilsRaft from "@/assets/formation_outils_raft.jpg";
+import projetTeleEcgCsrs from "@/assets/projet_tele_ecg_csrs.jpg";
+import projetTeleEcgMonitor from "@/assets/projet_tele_ecg_monitor.jpg";
 
 export const images = {
   hero: heroImg,
@@ -60,17 +63,70 @@ export type Article = {
   readingTime: string;
   author: string;
   image: string;
+  secondaryImage?: string;
   body: string[];
 };
 
 export const articles: Article[] = [
+  {
+    slug: "outils-du-raft",
+    title: "Outils Du RAFT",
+    excerpt:
+      "Les coordonnateurs du RAFT forment les professionnels de santé sur les outils de télé enseignement du RAFT (DUDAL) et sur l'outil de télé expertise BOGOU.",
+    category: "Formation",
+    date: "2026-06-28",
+    readingTime: "4 min",
+    author: "Coordination RAFT Côte d'Ivoire",
+    image: formationOutilsRaft,
+    body: [
+      "Les coordonnateurs du RAFT forment les professionnels de santé sur les outils de télé enseignement du RAFT (DUDAL) et sur l'outil de télé expertise BOGOU.",
+      "La plateforme DUDAL constitue le dispositif central de formation médicale continue à distance du réseau. Conçue pour opérer efficacement sur des réseaux Internet à bande passante variable ou restreinte, elle offre aux praticiens, spécialistes et étudiants en santé un accès direct à des visioconférences, cours interactifs et séances de télé-enseignement animés par des experts universitaires internationaux et régionaux.",
+      "L'application BOGOU est un système de télé-expertise médicale asynchrone sécurisé, spécialement pensé pour répondre aux défis des zones isolées. Grâce à BOGOU, les soignants dans les centres de santé périphériques peuvent soumettre des dossiers cliniques complexes, partager des clichés diagnostiques ou des tracés, et recevoir dans des délais courts des avis spécialisés émanant des centres hospitaliers universitaires de référence.",
+      "Ces sessions de formation pratique permettent aux professionnels de santé d'acquérir une maîtrise complète et autonome des plateformes numériques du RAFT, renforçant la qualité et l'équité des soins sur toute l'étendue du territoire ivoirien.",
+    ],
+  },
+  {
+    slug: "formation-cardiologs-paris-ia",
+    title: "Formation chez Cardiologs à Paris",
+    excerpt:
+      "Dans le cadre de la mise en œuvre de la phase 2 du projet TELE ECG avec la plateforme de e-santé ResoDoc, formation des acteurs principaux du projet chez Cardiologs à Paris.",
+    category: "Formation",
+    date: "2026-06-25",
+    readingTime: "5 min",
+    author: "Prof ADOUBI, Dr DIBY Florent & Mr. Roger KPON",
+    image: formationImg,
+    body: [
+      "Dans le cadre de la mise en œuvre de la phase 2 du projet TELE ECG avec la plateforme de e-santé ResoDoc, une formation à l'utilisation du service d'assistance à l'interprétation des ECG une formation des acteurs principaux du Projet TELE ECG a eu lieu à Paris en France Cette formation organisée par Doc&You avec la société Cardiologs a eu lieu au siège de ladite société au 136 rue Saint Denis à Paris le mardi 29 janvier 2019.",
+      "L'objectif principal de cette formation était d'échanger autour de l'utilisation de l'intelligence artificielle dans le cadre du projet TELE ECG.",
+      "Les échanges ont été très enrichissantes, et ont permis de comprendre la plus value de l'IA dans ce projet. La délégation Ivoirienne était composée de Prof ADOUBI, Dr DIBY Florent et de Mr. Roger KPON.",
+      "Cette collaboration technologique de pointe permet d'accélérer l'analyse diagnostique des tracés cardiaques et d'apporter un soutien décisionnel déterminant pour les médecins isolés.",
+    ],
+  },
+  {
+    slug: "le-projet-tele-ecg",
+    title: "Le Projet Tele ECG",
+    excerpt:
+      "Le projet de télé ECG a concerné dix centres de santé en Côte d'Ivoire. Le service des maladies cardiovasculaires et thoraciques du CHU de BOUAKE s'est chargé de la télé expertise.",
+    category: "Projet",
+    date: "2026-06-22",
+    readingTime: "5 min",
+    author: "Service des maladies cardiovasculaires et thoraciques — CHU de Bouaké",
+    image: projetTeleEcgCsrs,
+    secondaryImage: projetTeleEcgMonitor,
+    body: [
+      "Le projet de télé ECG a concerné dix centres de santé en Côte d'Ivoire (ODIENNE, ADZOPE, ABOBO, FOCOLARI, NIABLE, FERKESSEDOUGOU, BOUNDIALI, MAN, BOUNA et BOUAKE).",
+      "Le service des maladies cardiovasculaires et thoraciques du CHU de BOUAKE s'est chargé de la télé expertise c'est-à-dire de l'interprétation à distance des ECG via les technologies d'informations et de communications(TIC).",
+      "La mise en place de ce réseau de télé-électrocardiographie permet la transmission instantanée et sécurisée des tracés électrocardiographiques depuis les centres périphériques vers les cardiologues référents du CHU de Bouaké.",
+      "Ce dispositif a permis une réduction significative des coûts des consultations cardiovasculaires par des ECG à distance, tout en évitant des transferts d'urgence pénibles et coûteux pour les populations de l'intérieur du pays.",
+    ],
+  },
   {
     slug: "mission-phase-2-projet-tele-ecg",
     title: "Mission Phase 2 du projet Télé-ECG : intelligence artificielle & plateforme ResoDoc",
     excerpt:
       "Dans le cadre de la phase 2 du projet Télé-ECG, le réseau ivoirien intègre l'assistance à l'interprétation par IA pour soutenir les praticiens dans les centres périphériques.",
     category: "Projet",
-    date: "2026-06-22",
+    date: "2026-05-10",
     readingTime: "5 min",
     author: "Coordination RAFT Côte d'Ivoire",
     image: teleecgImg,
@@ -79,23 +135,6 @@ export const articles: Article[] = [
       "Le Réseau en Afrique Francophone pour la Télémédecine (RAFT), en partenariat avec l'ONG Wake Up Africa (WUA), a procédé dès 2014 à l'installation des premiers kits dans les centres régionaux. La Phase 2 étend ce dispositif vers de nouveaux districts sanitaires.",
       "Grâce à l'appui de la plateforme e-santé ResoDoc et des algorithmes d'analyse pré-diagnostique, les tracés capturés en zone rurale sont pré-qualifiés instantanément avant validation par le pool de cardiologues de garde du CHU de Bouaké et des CHU d'Abidjan.",
       "Cette évolution permet de réduire le délai de prise en charge des infarctus du myocarde et des troubles du rythme sévères, tout en évitant des évacuations sanitaires coûteuses et éprouvantes pour les familles.",
-    ],
-  },
-  {
-    slug: "formation-cardiologs-paris-ia",
-    title: "Formation chez Cardiologs à Paris : l'IA au service de l'expertise cardiologique",
-    excerpt:
-      "Une délégation ivoirienne composée du Prof Adoubi, du Dr Diby Florent et de M. Roger Kpon a été formée à Paris sur l'assistance à l'interprétation des ECG par intelligence artificielle.",
-    category: "Formation",
-    date: "2026-05-15",
-    readingTime: "6 min",
-    author: "Roger KPON",
-    image: formationImg,
-    body: [
-      "Dans le cadre de la mise en œuvre de la phase 2 du projet TELE ECG avec la plateforme de e-santé ResoDoc, une session de formation approfondie des acteurs principaux du projet s'est tenue au siège de la société Cardiologs à Paris.",
-      "Organisée avec le concours de Doc&You, cette session a réuni une délégation ivoirienne de premier plan : le Prof ADOUBI, le Dr DIBY Florent (Président de l'ONG Wake Up Africa) et M. Roger KPON (Coordonnateur Technique du RAFT Côte d'Ivoire).",
-      "L'objectif principal était d'échanger autour de l'utilisation concrète de l'intelligence artificielle appliquée à l'électrocardiographie clinique : détection précoce des fibrillations atriales, identification des blocs de conduction et validation des alertes prioritaires.",
-      "Les échanges ont permis de définir les protocoles d'intégration adaptés aux contraintes de connectivité du territoire ivoirien, garantissant un fonctionnement fluide même en cas de faible bande passante.",
     ],
   },
   {
@@ -130,23 +169,6 @@ export const articles: Article[] = [
       "Fondée en 2007, la SIBIM a joué un rôle moteur dans l'implémentation opérationnelle du projet Télé-ECG et dans l'élaboration des standards éthiques et déontologiques de la consultation à distance.",
       "L'intégration au réseau RAFT en Côte d'Ivoire s'effectue généralement par l'intermédiaire de la SIBIM ou dans le cadre des conventions signées entre les établissements hospitaliers et la coordination nationale.",
       "La SIBIM invite tous les médecins, infirmiers, ingénieurs biomédicaux et informaticiens de santé à participer aux ateliers d'évaluation et aux séminaires hebdomadaires.",
-    ],
-  },
-  {
-    slug: "tele-ecg-dix-centres-de-sante-pionniers",
-    title: "Télé-ECG : le retour d'expérience des dix premiers centres connectés",
-    excerpt:
-      "D'Odienné à Adzopé, en passant par Man, Ferkessédougou, Bouna et Boundiali, les kits Medico Net ont prouvé l'efficacité de la télé-expertise cardiaque en milieu isolé.",
-    category: "Projet",
-    date: "2026-02-05",
-    readingTime: "6 min",
-    author: "Dr. Florent DIBY",
-    image: heroImg,
-    body: [
-      "Le projet de télé-électrocardiographie a concerné en priorité dix centres de santé stratégiques répartis dans toute la Côte d'Ivoire : Odienné, Adzopé, Abobo, Focolari (Man), Niablé, Ferkessédougou, Boundiali, Man, Bouna et Bouaké.",
-      "Le service des maladies cardiovasculaires et thoraciques du CHU de Bouaké s'est chargé du volet télé-expertise, assurant l'interprétation systématique des tracés transmis par liaison numérique.",
-      "Chaque site bénéficiaire a été doté d'un équipement complet comprenant ordinateur, module d'acquisition numérique, onduleur de protection électrique et matériel de communication sécurisé.",
-      "Ce modèle a démontré qu'avec un encadrement rigoureux et une formation continue des soignants locaux, il est possible de délivrer une médecine d'excellence partout sur le territoire.",
     ],
   },
 ];
@@ -204,14 +226,36 @@ export const mediaItems: MediaItem[] = [
   },
   {
     id: "m3",
-    title: "Session de télé-formation sur les outils DUDAL & BOGOU",
+    title: "Session de formation sur les outils DUDAL & BOGOU",
     type: "Photo",
     theme: "Formation",
-    date: "2026-05-18",
-    image: formationImg,
+    date: "2026-06-28",
+    image: formationOutilsRaft,
     description:
-      "Formation pratique des médecins et infirmiers aux outils de télé-enseignement DUDAL et de télé-expertise clinique asynchrone BOGOU.",
+      "Les coordonnateurs du RAFT forment les professionnels de santé sur les outils de télé-enseignement du RAFT (DUDAL) et de télé-expertise (BOGOU).",
     source: "Centre DUDAL CI",
+  },
+  {
+    id: "m-tele-ecg-csrs",
+    title: "Le Projet Télé-ECG et réduction des coûts (CSRS)",
+    type: "Photo",
+    theme: "Télé-ECG",
+    date: "2026-06-22",
+    image: projetTeleEcgCsrs,
+    description:
+      "Présentation des résultats sur la réduction des coûts des consultations cardiovasculaires par des ECG à distance dans les dix centres connectés.",
+    source: "CHU de Bouaké / CSRS",
+  },
+  {
+    id: "m-tele-ecg-monitor",
+    title: "Poste d'interprétation et monitoring Télé-ECG",
+    type: "Photo",
+    theme: "Télé-ECG",
+    date: "2026-06-20",
+    image: projetTeleEcgMonitor,
+    description:
+      "Interprétation à distance des électrocardiogrammes par les spécialistes du CHU de Bouaké via les technologies de l'information.",
+    source: "Service cardiologie CHU de Bouaké",
   },
   {
     id: "m4",

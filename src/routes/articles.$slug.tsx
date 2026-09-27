@@ -123,7 +123,22 @@ function ArticlePage() {
         {/* Article text content */}
         <div className="mt-8 space-y-6 text-base sm:text-lg leading-relaxed text-muted-foreground">
           {article.body.map((p, i) => (
-            <p key={i}>{p}</p>
+            <div key={i} className="space-y-6">
+              <p>{p}</p>
+              {i === 1 && article.secondaryImage && (
+                <div className="my-8 overflow-hidden rounded-3xl border border-border/80 bg-muted/30 shadow-soft">
+                  <img
+                    src={article.secondaryImage}
+                    alt={`${article.title} - Illustration`}
+                    loading="lazy"
+                    className="w-full max-h-[500px] object-cover"
+                  />
+                  <div className="p-3 text-center text-xs text-muted-foreground border-t border-border/60 bg-card/60">
+                    Dispositif et acquisition en temps réel — Réseau Télémédecine Côte d'Ivoire
+                  </div>
+                </div>
+              )}
+            </div>
           ))}
         </div>
 
