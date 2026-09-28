@@ -3,13 +3,14 @@ import { ArrowLeft, Clock, User, Calendar, Share2, ArrowRight, ShieldCheck, Chec
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { articles } from "@/data/site";
+import { getArticleBySlug } from "@/lib/db";
+import { useArticles } from "@/hooks/useData";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/articles/$slug")({
-  loader: ({ params }) => {
-    const article = articles.find((a) => a.slug === params.slug);
+  loader: async ({ params }) => {
+    const article = await getArticleBySlug(params.slug);
     if (!article) throw notFound();
     return { article };
   },
@@ -46,6 +47,7 @@ function ArticleNotFound() {
 
 function ArticlePage() {
   const { article } = Route.useLoaderData();
+  const { data: articles = [] } = useArticles();
   const related = articles.filter((a) => a.slug !== article.slug).slice(0, 3);
 
   const { ref: headerRef, isVisible: headerVisible } = useIntersectionObserver<HTMLDivElement>();

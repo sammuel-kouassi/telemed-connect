@@ -71,7 +71,7 @@ export type Article = {
   readingTime: string;
   author: string;
   image: string;
-  secondaryImage?: string;
+  secondaryImage?: string | undefined;
   body: string[];
 };
 
@@ -189,10 +189,10 @@ export type MediaItem = {
   date: string;
   image: string;
   description: string;
-  youtubeId?: string;
-  duration?: string;
-  source?: string;
-  featured?: boolean;
+  youtubeId?: string | undefined;
+  duration?: string | undefined;
+  source?: string | undefined;
+  featured?: boolean | undefined;
 };
 
 export const mediaItems: MediaItem[] = [
@@ -359,7 +359,7 @@ export type Partner = {
   type: "Institutionnel" | "Technique" | "ONG" | "Académique";
   description: string;
   initials: string;
-  logoImg?: string;
+  logoImg?: string | undefined;
 };
 
 export const partners: Partner[] = [

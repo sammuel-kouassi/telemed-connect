@@ -4,7 +4,7 @@ import { Handshake, Building2, Globe2, ShieldCheck, ArrowRight, Layers } from "l
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { partners } from "@/data/site";
+import { usePartners } from "@/hooks/useData";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +30,7 @@ export const Route = createFileRoute("/partenaires")({
 const types = ["Tous", "Institutionnel", "Académique"];
 
 function PartenairesPage() {
+  const { data: partners = [] } = usePartners();
   const [type, setType] = useState("Tous");
   const list = type === "Tous" ? partners : partners.filter((p) => p.type === type);
 

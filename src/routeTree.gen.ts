@@ -17,6 +17,8 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as MediathequeRouteImport } from './routes/mediatheque'
 import { Route as PartenairesRouteImport } from './routes/partenaires'
 import { Route as ProjetsRouteImport } from './routes/projets'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
 import { Route as ArticlesSlugRouteImport } from './routes/articles.$slug'
 
@@ -60,6 +62,16 @@ const ProjetsRoute = ProjetsRouteImport.update({
   path: '/projets',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
   id: '/articles/',
   path: '/articles/',
@@ -80,7 +92,9 @@ export interface FileRoutesByFullPath {
   '/mediatheque': typeof MediathequeRoute
   '/partenaires': typeof PartenairesRoute
   '/projets': typeof ProjetsRoute
+  '/admin/login': typeof AdminLoginRoute
   '/articles/$slug': typeof ArticlesSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/articles/': typeof ArticlesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -92,7 +106,9 @@ export interface FileRoutesByTo {
   '/mediatheque': typeof MediathequeRoute
   '/partenaires': typeof PartenairesRoute
   '/projets': typeof ProjetsRoute
+  '/admin/login': typeof AdminLoginRoute
   '/articles/$slug': typeof ArticlesSlugRoute
+  '/admin': typeof AdminIndexRoute
   '/articles': typeof ArticlesIndexRoute
 }
 export interface FileRoutesById {
@@ -105,7 +121,9 @@ export interface FileRoutesById {
   '/mediatheque': typeof MediathequeRoute
   '/partenaires': typeof PartenairesRoute
   '/projets': typeof ProjetsRoute
+  '/admin/login': typeof AdminLoginRoute
   '/articles/$slug': typeof ArticlesSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/articles/': typeof ArticlesIndexRoute
 }
 export interface FileRouteTypes {
@@ -119,7 +137,9 @@ export interface FileRouteTypes {
     | '/mediatheque'
     | '/partenaires'
     | '/projets'
+    | '/admin/login'
     | '/articles/$slug'
+    | '/admin/'
     | '/articles/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -131,7 +151,9 @@ export interface FileRouteTypes {
     | '/mediatheque'
     | '/partenaires'
     | '/projets'
+    | '/admin/login'
     | '/articles/$slug'
+    | '/admin'
     | '/articles'
   id:
     | '__root__'
@@ -143,7 +165,9 @@ export interface FileRouteTypes {
     | '/mediatheque'
     | '/partenaires'
     | '/projets'
+    | '/admin/login'
     | '/articles/$slug'
+    | '/admin/'
     | '/articles/'
   fileRoutesById: FileRoutesById
 }
@@ -156,7 +180,9 @@ export interface RootRouteChildren {
   MediathequeRoute: typeof MediathequeRoute
   PartenairesRoute: typeof PartenairesRoute
   ProjetsRoute: typeof ProjetsRoute
+  AdminLoginRoute: typeof AdminLoginRoute
   ArticlesSlugRoute: typeof ArticlesSlugRoute
+  AdminIndexRoute: typeof AdminIndexRoute
   ArticlesIndexRoute: typeof ArticlesIndexRoute
 }
 
@@ -218,6 +244,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjetsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/articles/': {
       id: '/articles/'
       path: '/articles'
@@ -244,7 +284,9 @@ const rootRouteChildren: RootRouteChildren = {
   MediathequeRoute: MediathequeRoute,
   PartenairesRoute: PartenairesRoute,
   ProjetsRoute: ProjetsRoute,
+  AdminLoginRoute: AdminLoginRoute,
   ArticlesSlugRoute: ArticlesSlugRoute,
+  AdminIndexRoute: AdminIndexRoute,
   ArticlesIndexRoute: ArticlesIndexRoute,
 }
 export const routeTree = rootRouteImport

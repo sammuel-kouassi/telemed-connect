@@ -128,6 +128,11 @@ export function Footer() {
               Assistance
             </Link>
             <span>•</span>
+            <Link to="/admin" className="hover:text-[#5e8c2a] dark:hover:text-[#8bc34a] transition-colors flex items-center gap-1 font-semibold text-foreground/90">
+              <ShieldCheck className="h-3 w-3 text-[#74a638]" />
+              Espace Administration
+            </Link>
+            <span>•</span>
             <span className="font-semibold text-foreground/80">v2.4</span>
           </div>
         </div>

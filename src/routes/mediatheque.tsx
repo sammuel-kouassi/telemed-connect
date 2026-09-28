@@ -22,7 +22,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { mediaItems, mediaThemes, type MediaItem } from "@/data/site";
+import { mediaThemes, type MediaItem } from "@/data/site";
+import { useMediaItems } from "@/hooks/useData";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { cn } from "@/lib/utils";
 
@@ -52,6 +53,7 @@ const typeIcon = {
 } as const;
 
 function MediathequePage() {
+  const { data: mediaItems = [] } = useMediaItems();
   const [theme, setTheme] = useState("Tous");
   const [type, setType] = useState<"Tous" | MediaItem["type"]>("Tous");
   const [searchQuery, setSearchQuery] = useState("");
@@ -66,7 +68,7 @@ function MediathequePage() {
   // Featured hero video (the one provided by the user)
   const featuredVideo = useMemo(() => {
     return mediaItems.find((m) => m.featured && m.type === "Vidéo") ?? mediaItems[0];
-  }, []);
+  }, [mediaItems]);
 
   // Filtered items based on format, theme, and real-time search
   const filteredItems = useMemo(() => {
@@ -81,7 +83,7 @@ function MediathequePage() {
         (m.source && m.source.toLowerCase().includes(q));
       return matchesTheme && matchesType && matchesSearch;
     });
-  }, [theme, type, searchQuery]);
+  }, [mediaItems, theme, type, searchQuery]);
 
   const handleResetFilters = () => {
     setTheme("Tous");

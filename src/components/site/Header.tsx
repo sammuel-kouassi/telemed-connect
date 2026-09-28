@@ -221,7 +221,19 @@ export function Header() {
           </nav>
 
           {/* Desktop Right CTAs */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="hidden md:inline-flex rounded-full text-xs font-semibold text-muted-foreground hover:bg-[#74a638]/10 hover:text-[#5e8c2a] h-8 px-3"
+            >
+              <Link to="/admin">
+                <ShieldCheck className="h-3.5 w-3.5 mr-1 text-[#74a638]" />
+                Admin
+              </Link>
+            </Button>
+
             <Button
               asChild
               size="sm"
@@ -290,6 +302,20 @@ export function Header() {
                         <ArrowRight className="h-4 w-4 opacity-40" />
                       </Link>
                     ))}
+
+                    <div className="my-2 border-t border-border/60" />
+
+                    <Link
+                      to="/admin"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold text-[#5e8c2a] dark:text-[#8bc34a] bg-[#74a638]/10 transition-all hover:bg-[#74a638]/20"
+                    >
+                      <span className="flex items-center gap-2">
+                        <ShieldCheck className="h-4 w-4 text-[#74a638]" />
+                        Espace Administration
+                      </span>
+                      <ArrowRight className="h-4 w-4 opacity-70" />
+                    </Link>
                   </nav>
                 </div>
 

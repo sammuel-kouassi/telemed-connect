@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { directory } from "@/data/site";
+import { useDirectory } from "@/hooks/useData";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { cn } from "@/lib/utils";
 
@@ -49,13 +49,14 @@ export const Route = createFileRoute("/annuaire")({
 const categories = ["Toutes", "CHU", "Hôpital général", "Centre de santé", "Spécialiste"];
 
 function AnnuairePage() {
+  const { data: directory = [] } = useDirectory();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Toutes");
   const [region, setRegion] = useState("Toutes");
 
   const regions = useMemo(
     () => ["Toutes", ...Array.from(new Set(directory.map((d) => d.region))).sort()],
-    [],
+    [directory],
   );
 
   const results = directory.filter((d) => {

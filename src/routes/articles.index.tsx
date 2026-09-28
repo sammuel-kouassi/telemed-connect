@@ -4,7 +4,7 @@ import { ArrowRight, Clock, BookOpen, User, Calendar, Newspaper } from "lucide-r
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { articles } from "@/data/site";
+import { useArticles } from "@/hooks/useData";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { cn } from "@/lib/utils";
 
@@ -34,6 +34,7 @@ function formatDate(date: string) {
 }
 
 function ArticlesPage() {
+  const { data: articles = [] } = useArticles();
   const [category, setCategory] = useState("Toutes");
   const list = category === "Toutes" ? articles : articles.filter((a) => a.category === category);
   const [featured, ...rest] = list;

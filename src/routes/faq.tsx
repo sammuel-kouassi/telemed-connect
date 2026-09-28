@@ -4,7 +4,8 @@ import { HelpCircle, Search, MessageSquare, ArrowRight, X, Sparkles, CheckCircle
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { faqCategories, faqItems } from "@/data/site";
+import { faqCategories } from "@/data/site";
+import { useFaqs } from "@/hooks/useData";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/faq")({
 });
 
 function FaqPage() {
+  const { data: faqItems = [] } = useFaqs();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Tous");
 

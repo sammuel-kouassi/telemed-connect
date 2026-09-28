@@ -28,7 +28,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import LeafletMap from "@/components/site/LeafletMap";
-import { articles, images, stats, team, testimonials, projectSites, partners } from "@/data/site";
+import { images, stats } from "@/data/site";
+import { useArticles, useTeam, useTestimonials, useProjects, usePartners } from "@/hooks/useData";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { cn } from "@/lib/utils";
 
@@ -162,6 +163,12 @@ const services = [
 ];
 
 function Home() {
+  const { data: articles = [] } = useArticles();
+  const { data: team = [] } = useTeam();
+  const { data: testimonials = [] } = useTestimonials();
+  const { data: projectSites = [] } = useProjects();
+  const { data: partners = [] } = usePartners();
+
   const latest = articles.slice(0, 3);
 
   const { ref: heroRef, isVisible: heroVisible } = useIntersectionObserver<HTMLDivElement>();

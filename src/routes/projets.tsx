@@ -24,7 +24,8 @@ import LeafletMap from "@/components/site/LeafletMap";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { projectSites, programColors, directory, type ProjectSite } from "@/data/site";
+import { programColors, type ProjectSite } from "@/data/site";
+import { useProjects, useDirectory } from "@/hooks/useData";
 import { cn } from "@/lib/utils";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
@@ -50,6 +51,9 @@ export const Route = createFileRoute("/projets")({
 const programs = ["Tous", "Télé-ECG", "Télé-expertise", "Télé-formation"] as const;
 
 function ProjetsPage() {
+  const { data: projectSites = [] } = useProjects();
+  const { data: directory = [] } = useDirectory();
+
   const [filter, setFilter] = useState<(typeof programs)[number]>("Tous");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeId, setActiveId] = useState<string | null>("abidjan");
@@ -70,7 +74,7 @@ function ProjetsPage() {
         s.detail.toLowerCase().includes(q);
       return matchesProgram && matchesSearch;
     });
-  }, [filter, searchQuery]);
+  }, [projectSites, filter, searchQuery]);
 
   // Selected active site
   const active = useMemo(() => {
@@ -85,7 +89,7 @@ function ProjetsPage() {
         d.city.toLowerCase().includes(active.city.toLowerCase()) ||
         active.city.toLowerCase().includes(d.city.toLowerCase()),
     );
-  }, [active]);
+  }, [active, directory]);
 
   const handleResetFilters = () => {
     setFilter("Tous");
