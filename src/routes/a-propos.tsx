@@ -26,6 +26,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 import { images } from "@/data/site";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { cn } from "@/lib/utils";
+import heroApropos from "@/assets/hero_apropos.jpg";
 
 export const Route = createFileRoute("/a-propos")({
   head: () => ({
@@ -172,74 +173,86 @@ function AProposPage() {
 
   return (
     <>
-      {/* Header Banner */}
+      {/* Header Banner with Background Image */}
       <header
         ref={headerRef}
         className={cn(
-          "surface-hero relative overflow-hidden text-primary-foreground py-16 sm:py-24 lg:py-28",
+          "relative overflow-hidden text-primary-foreground py-16 sm:py-20 lg:py-24 min-h-[460px] flex items-center",
           headerVisible && "animate-fade-up"
         )}
       >
-        <div className="grid-pattern absolute inset-0 opacity-20" aria-hidden="true" />
-        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-emerald-500/20 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-amber-500/15 blur-3xl pointer-events-none" />
+        {/* Background Image with High Clarity & Directional Gradient Overlay */}
+        <div className="absolute inset-0 select-none">
+          <img
+            src={heroApropos}
+            alt="Pionniers et 20 ans d'histoire de la télémédecine et du réseau RAFT en Côte d'Ivoire"
+            className="h-full w-full object-cover object-center"
+          />
+          {/* Directional subtle gradient: deep dark on text side, clear and visible on the right */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#031422]/95 via-[#031422]/80 to-[#031422]/35" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#020d17] via-transparent to-black/40" />
+          <div className="absolute inset-0 bg-[#74a638]/10 mix-blend-overlay" />
+          <div className="grid-pattern absolute inset-0 opacity-15" aria-hidden="true" />
+        </div>
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-accent uppercase tracking-wider">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>En Savoir Plus</span>
-            <span className="text-primary-foreground/40">•</span>
-            <span className="text-primary-foreground/80">Portail Officiel RAFT Côte d'Ivoire</span>
-          </div>
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+          <div className="max-w-3xl space-y-5">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wider">
+              <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[#8bc34a]">En Savoir Plus</span>
+              <span className="text-white/40">•</span>
+              <span className="text-white/80">Portail Officiel RAFT Côte d'Ivoire</span>
+            </div>
 
-          <h1 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl max-w-4xl leading-[1.12]">
-            Le RAFT Côte d'Ivoire :{" "}
-            <span className="text-transparent bg-gradient-to-r from-cyan-200 via-teal-100 to-amber-200 bg-clip-text">
-              l'histoire pionnière
-            </span>{" "}
-            de la médecine connectée.
-          </h1>
+            <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl leading-[1.12] text-white drop-shadow-md">
+              Le RAFT Côte d'Ivoire :{" "}
+              <span className="text-[#8bc34a]">
+                l'histoire pionnière
+              </span>{" "}
+              de la médecine connectée.
+            </h1>
 
-          <p className="mt-6 max-w-3xl text-base sm:text-lg lg:text-xl text-primary-foreground/85 leading-relaxed font-normal">
-            Depuis 2003 en Afrique et 2005 en Côte d'Ivoire, le réseau RAFT rompt l'isolement des soignants en milieu rural à travers le télé-enseignement hebdomadaire, la télé-expertise clinique et des technologies conçues pour résister aux contraintes du terrain.
-          </p>
+            <p className="max-w-2xl text-base sm:text-lg text-white/90 leading-relaxed font-normal drop-shadow-sm">
+              Depuis 2003 en Afrique et 2005 en Côte d'Ivoire, le réseau RAFT rompt l'isolement des soignants en milieu rural à travers le télé-enseignement hebdomadaire, la télé-expertise clinique et des technologies conçues pour résister aux contraintes du terrain.
+            </p>
 
-          {/* Quick jump navigation pills */}
-          <div className="mt-8 flex flex-wrap gap-2.5">
-            {[
-              { href: "#histoire", label: "Origine du RAFT" },
-              { href: "#equipe", label: "L'Équipe Pionnière" },
-              { href: "#objectifs", label: "Objectifs & E-cours" },
-              { href: "#equipements", label: "Équipements & Déploiement" },
-              { href: "#chronologie", label: "Chronologie des 20 Ans" },
-            ].map((btn) => (
-              <a
-                key={btn.href}
-                href={btn.href}
-                className="inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/10 px-4 py-2 text-xs font-semibold text-primary-foreground/90 backdrop-blur-md border border-primary-foreground/15 hover:bg-primary-foreground/20 hover:text-white transition-all shadow-xs"
-              >
-                {btn.label}
-              </a>
-            ))}
+            {/* Quick jump navigation pills */}
+            <div className="flex flex-wrap gap-2 pt-1">
+              {[
+                { href: "#histoire", label: "Origine du RAFT" },
+                { href: "#equipe", label: "L'Équipe Pionnière" },
+                { href: "#objectifs", label: "Objectifs & E-cours" },
+                { href: "#equipements", label: "Équipements & Déploiement" },
+                { href: "#chronologie", label: "Chronologie des 20 Ans" },
+              ].map((btn) => (
+                <a
+                  key={btn.href}
+                  href={btn.href}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-3.5 py-1.5 text-xs font-semibold text-white/90 backdrop-blur-md border border-white/20 hover:bg-[#74a638] hover:text-white transition-all shadow-xs"
+                >
+                  {btn.label}
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* Key metrics grid */}
-          <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-4 border-t border-primary-foreground/15 pt-8">
-            <div className="rounded-2xl bg-primary-foreground/5 p-4 border border-primary-foreground/10 backdrop-blur-xs">
-              <div className="text-3xl sm:text-4xl font-black text-accent tracking-tight">2003</div>
-              <div className="text-xs text-primary-foreground/80 mt-1 font-semibold">Genèse Panafricaine (Mali)</div>
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 border-t border-white/15 pt-8">
+            <div className="rounded-2xl bg-black/40 p-3.5 sm:p-4 border border-white/20 backdrop-blur-md">
+              <div className="text-2xl sm:text-3xl font-black text-[#8bc34a] tracking-tight">2003</div>
+              <div className="text-xs text-white/80 mt-1 font-semibold">Genèse Panafricaine (Mali)</div>
             </div>
-            <div className="rounded-2xl bg-primary-foreground/5 p-4 border border-primary-foreground/10 backdrop-blur-xs">
-              <div className="text-3xl sm:text-4xl font-black text-white tracking-tight">2005</div>
-              <div className="text-xs text-primary-foreground/80 mt-1 font-semibold">Intégration Côte d'Ivoire</div>
+            <div className="rounded-2xl bg-black/40 p-3.5 sm:p-4 border border-white/20 backdrop-blur-md">
+              <div className="text-2xl sm:text-3xl font-black text-white tracking-tight">2005</div>
+              <div className="text-xs text-white/80 mt-1 font-semibold">Intégration Côte d'Ivoire</div>
             </div>
-            <div className="rounded-2xl bg-primary-foreground/5 p-4 border border-primary-foreground/10 backdrop-blur-xs">
-              <div className="text-3xl sm:text-4xl font-black text-cyan-300 tracking-tight">10+</div>
-              <div className="text-xs text-primary-foreground/80 mt-1 font-semibold">Centres pionniers outillés</div>
+            <div className="rounded-2xl bg-black/40 p-3.5 sm:p-4 border border-white/20 backdrop-blur-md">
+              <div className="text-2xl sm:text-3xl font-black text-cyan-300 tracking-tight">10+</div>
+              <div className="text-xs text-white/80 mt-1 font-semibold">Centres pionniers outillés</div>
             </div>
-            <div className="rounded-2xl bg-primary-foreground/5 p-4 border border-primary-foreground/10 backdrop-blur-xs">
-              <div className="text-3xl sm:text-4xl font-black text-amber-300 tracking-tight">24/7</div>
-              <div className="text-xs text-primary-foreground/80 mt-1 font-semibold">Astreinte & Permanence ECG</div>
+            <div className="rounded-2xl bg-black/40 p-3.5 sm:p-4 border border-white/20 backdrop-blur-md">
+              <div className="text-2xl sm:text-3xl font-black text-amber-300 tracking-tight">24/7</div>
+              <div className="text-xs text-white/80 mt-1 font-semibold">Astreinte & Permanence ECG</div>
             </div>
           </div>
         </div>

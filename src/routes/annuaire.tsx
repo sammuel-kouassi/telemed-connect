@@ -26,6 +26,7 @@ import {
 import { useDirectory } from "@/hooks/useData";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { cn } from "@/lib/utils";
+import heroAnnuaire from "@/assets/hero_annuaire.jpg";
 
 export const Route = createFileRoute("/annuaire")({
   head: () => ({
@@ -74,39 +75,54 @@ function AnnuairePage() {
 
   return (
     <>
-      {/* Page Header */}
+      {/* Hero Banner with Background Image */}
       <header
         ref={headerRef}
         className={cn(
-          "surface-hero relative overflow-hidden text-primary-foreground py-16 sm:py-20",
+          "relative overflow-hidden text-primary-foreground py-16 sm:py-24 lg:py-28 min-h-[380px] flex items-center",
           headerVisible && "animate-fade-up",
         )}
       >
-        <div className="grid-pattern absolute inset-0 opacity-20" aria-hidden="true" />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 text-xs font-semibold text-accent uppercase tracking-wider">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Répertoire Officiel</span>
-          </div>
+        {/* Background Image with High Clarity & Directional Gradient Overlay */}
+        <div className="absolute inset-0 select-none">
+          <img
+            src={heroAnnuaire}
+            alt="Campus hospitalier et praticiens du réseau national de télémédecine"
+            className="h-full w-full object-cover object-center"
+          />
+          {/* Subtle directional gradient: deep dark on the text side, clear & visible on the right */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#031422]/95 via-[#031422]/80 to-[#031422]/35" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#020d17] via-transparent to-black/40" />
+          <div className="absolute inset-0 bg-[#74a638]/10 mix-blend-overlay" />
+          <div className="grid-pattern absolute inset-0 opacity-15" aria-hidden="true" />
+        </div>
 
-          <h1 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl max-w-3xl">
-            Annuaire des structures{" "}
-            <span className="text-transparent bg-gradient-to-r from-cyan-200 via-teal-100 to-amber-200 bg-clip-text">
-              & praticiens connectés.
-            </span>
-          </h1>
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+          <div className="max-w-3xl space-y-5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md">
+              <span className="flex h-2 w-2 rounded-full bg-[#74a638] animate-pulse" />
+              <span>Répertoire National Officiel</span>
+            </div>
 
-          <p className="mt-5 max-w-2xl text-base sm:text-lg text-primary-foreground/85 leading-relaxed">
-            Consultez les coordonnées, filières de télé-expertise et contacts des centres hospitaliers universitaires, hôpitaux généraux et centres de santé raccordés.
-          </p>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight drop-shadow-md">
+              Annuaire des structures{" "}
+              <span className="text-[#8bc34a]">
+                & praticiens connectés.
+              </span>
+            </h1>
 
-          <div className="mt-8 flex flex-wrap gap-4 text-xs font-medium text-primary-foreground/80">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/10 px-3.5 py-1.5 backdrop-blur-sm border border-primary-foreground/15">
-              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> {directory.length} Établissements répertoriés
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/10 px-3.5 py-1.5 backdrop-blur-sm border border-primary-foreground/15">
-              <MapPin className="h-3.5 w-3.5 text-cyan-300" /> {regions.length - 1} Régions sanitaires
-            </span>
+            <p className="max-w-2xl text-base sm:text-lg text-white/90 leading-relaxed font-normal drop-shadow-sm">
+              Consultez les coordonnées, filières de télé-expertise et contacts des centres hospitaliers universitaires, hôpitaux généraux et centres de santé raccordés.
+            </p>
+
+            <div className="flex flex-wrap gap-3 pt-2 text-xs font-medium text-white/95">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
+                <CheckCircle2 className="h-3.5 w-3.5 text-[#74a638]" /> {directory.length} Établissements répertoriés
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
+                <MapPin className="h-3.5 w-3.5 text-cyan-300" /> {regions.length - 1} Régions sanitaires
+              </span>
+            </div>
           </div>
         </div>
       </header>

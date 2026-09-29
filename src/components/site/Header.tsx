@@ -132,7 +132,7 @@ export function Header() {
               <Link
                 key={item.to}
                 to={item.to}
-                className="relative rounded-full px-4 py-2 text-sm font-medium text-muted-foreground whitespace-nowrap transition-all duration-200 hover:bg-[#74a638]/10 hover:text-[#5e8c2a] active:scale-95"
+                className="relative rounded-full px-4 py-2 text-base font-medium text-muted-foreground whitespace-nowrap transition-all duration-200 hover:bg-[#74a638]/10 hover:text-[#5e8c2a] active:scale-95"
                 activeProps={{
                   className: "bg-[#74a638]/12 font-semibold text-[#5e8c2a] dark:text-[#8bc34a] shadow-xs ring-1 ring-[#74a638]/25",
                 }}
@@ -152,7 +152,7 @@ export function Header() {
                 type="button"
                 onClick={() => setRessourcesOpen((prev) => !prev)}
                 className={cn(
-                  "group relative flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 outline-none whitespace-nowrap cursor-pointer select-none",
+                  "group relative flex items-center gap-1.5 rounded-full px-4 py-2 text-base font-medium transition-all duration-200 outline-none whitespace-nowrap cursor-pointer select-none",
                   isRessourcesActive || ressourcesOpen
                     ? "bg-[#74a638]/12 font-semibold text-[#5e8c2a] dark:text-[#8bc34a] shadow-xs ring-1 ring-[#74a638]/25"
                     : "text-muted-foreground hover:bg-[#74a638]/10 hover:text-[#5e8c2a]"
@@ -163,7 +163,7 @@ export function Header() {
                 <span>Ressources</span>
                 <ChevronDown
                   className={cn(
-                    "h-3.5 w-3.5 transition-transform duration-200 opacity-60 group-hover:opacity-100",
+                    "h-4 w-4 transition-transform duration-200 opacity-60 group-hover:opacity-100",
                     ressourcesOpen && "rotate-180 text-[#5e8c2a]"
                   )}
                 />

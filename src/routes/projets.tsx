@@ -28,6 +28,7 @@ import { programColors, type ProjectSite } from "@/data/site";
 import { useProjects, useDirectory } from "@/hooks/useData";
 import { cn } from "@/lib/utils";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import heroProjets from "@/assets/hero_projets.jpg";
 
 export const Route = createFileRoute("/projets")({
   head: () => ({
@@ -98,77 +99,92 @@ function ProjetsPage() {
 
   return (
     <>
-      {/* Hero Banner with Modern Medical Look */}
+      {/* Hero Banner with Background Image */}
       <header
         ref={headerRef}
         className={cn(
-          "surface-hero relative overflow-hidden text-primary-foreground py-14 sm:py-20",
+          "relative overflow-hidden text-primary-foreground py-16 sm:py-20 lg:py-24 min-h-[420px] flex items-center",
           headerVisible && "animate-fade-up",
         )}
       >
-        <div className="grid-pattern absolute inset-0 opacity-20" aria-hidden="true" />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider backdrop-blur-md border border-primary-foreground/15 text-primary-foreground">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Cartographie Nationale Officielle · Réseau RAFT CI</span>
-          </div>
+        {/* Background Image with High Clarity & Directional Gradient Overlay */}
+        <div className="absolute inset-0 select-none">
+          <img
+            src={heroProjets}
+            alt="Centre de supervision et cartographie des sites de télémédecine"
+            className="h-full w-full object-cover object-center"
+          />
+          {/* Subtle directional gradient: deep dark on the text side, clear & visible on the right */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#031422]/95 via-[#031422]/80 to-[#031422]/35" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#020d17] via-transparent to-black/40" />
+          <div className="absolute inset-0 bg-[#74a638]/10 mix-blend-overlay" />
+          <div className="grid-pattern absolute inset-0 opacity-15" aria-hidden="true" />
+        </div>
 
-          <h1 className="mt-5 text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl max-w-3xl">
-            La télémédecine ivoirienne,{" "}
-            <span className="text-transparent bg-gradient-to-r from-emerald-200 via-teal-100 to-amber-200 bg-clip-text">
-              site par site.
-            </span>
-          </h1>
-
-          <p className="mt-4 max-w-2xl text-base sm:text-lg text-primary-foreground/90 leading-relaxed">
-            Consultez le maillage territorial en temps réel : 12 localités interconnectées et 24 structures sanitaires
-            équipées pour le télé-ECG d'urgence, la télé-expertise spécialisée et la formation médicale continue.
-          </p>
-
-          {/* 4 Interactive Quick KPI Stats */}
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 max-w-4xl">
-            <div className="rounded-2xl bg-primary-foreground/10 p-3.5 sm:p-4 backdrop-blur-md border border-primary-foreground/15">
-              <div className="flex items-center gap-2 text-emerald-300">
-                <MapPin className="h-4 w-4" />
-                <span className="text-xs font-bold uppercase tracking-wider">Localités</span>
-              </div>
-              <div className="mt-1.5 text-2xl sm:text-3xl font-black font-[family-name:var(--font-display)] text-primary-foreground">
-                12
-              </div>
-              <p className="mt-0.5 text-[11px] text-primary-foreground/75">Grand Nord au Sud</p>
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+          <div className="max-w-3xl space-y-5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md">
+              <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Cartographie Nationale Officielle · Réseau RAFT CI</span>
             </div>
 
-            <div className="rounded-2xl bg-primary-foreground/10 p-3.5 sm:p-4 backdrop-blur-md border border-primary-foreground/15">
-              <div className="flex items-center gap-2 text-cyan-300">
-                <Building2 className="h-4 w-4" />
-                <span className="text-xs font-bold uppercase tracking-wider">Structures</span>
-              </div>
-              <div className="mt-1.5 text-2xl sm:text-3xl font-black font-[family-name:var(--font-display)] text-primary-foreground">
-                24
-              </div>
-              <p className="mt-0.5 text-[11px] text-primary-foreground/75">CHU, CHR & Hôpitaux</p>
-            </div>
+            <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl leading-[1.12] text-white drop-shadow-md">
+              La télémédecine ivoirienne,{" "}
+              <span className="text-[#8bc34a]">
+                site par site.
+              </span>
+            </h1>
 
-            <div className="rounded-2xl bg-primary-foreground/10 p-3.5 sm:p-4 backdrop-blur-md border border-primary-foreground/15">
-              <div className="flex items-center gap-2 text-amber-300">
-                <HeartPulse className="h-4 w-4" />
-                <span className="text-xs font-bold uppercase tracking-wider">Filières</span>
-              </div>
-              <div className="mt-1.5 text-2xl sm:text-3xl font-black font-[family-name:var(--font-display)] text-primary-foreground">
-                3
-              </div>
-              <p className="mt-0.5 text-[11px] text-primary-foreground/75">ECG, Expertise & DUDAL</p>
-            </div>
+            <p className="max-w-2xl text-base sm:text-lg text-white/90 leading-relaxed font-normal drop-shadow-sm">
+              Consultez le maillage territorial en temps réel : 12 localités interconnectées et 24 structures sanitaires
+              équipées pour le télé-ECG d'urgence, la télé-expertise spécialisée et la formation médicale continue.
+            </p>
 
-            <div className="rounded-2xl bg-primary-foreground/10 p-3.5 sm:p-4 backdrop-blur-md border border-primary-foreground/15">
-              <div className="flex items-center gap-2 text-emerald-300">
-                <Activity className="h-4 w-4" />
-                <span className="text-xs font-bold uppercase tracking-wider">Astreinte</span>
+            {/* 4 Interactive Quick KPI Stats */}
+            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3 pt-3 max-w-2xl">
+              <div className="rounded-2xl bg-black/40 p-3 sm:p-3.5 backdrop-blur-md border border-white/20 shadow-xs">
+                <div className="flex items-center gap-1.5 text-emerald-300">
+                  <MapPin className="h-3.5 w-3.5" />
+                  <span className="text-[11px] font-bold uppercase tracking-wider">Localités</span>
+                </div>
+                <div className="mt-1 text-2xl font-black font-[family-name:var(--font-display)] text-white">
+                  12
+                </div>
+                <p className="text-[10px] text-white/75 truncate">Grand Nord au Sud</p>
               </div>
-              <div className="mt-1.5 text-2xl sm:text-3xl font-black font-[family-name:var(--font-display)] text-primary-foreground">
-                24/7
+
+              <div className="rounded-2xl bg-black/40 p-3 sm:p-3.5 backdrop-blur-md border border-white/20 shadow-xs">
+                <div className="flex items-center gap-1.5 text-cyan-300">
+                  <Building2 className="h-3.5 w-3.5" />
+                  <span className="text-[11px] font-bold uppercase tracking-wider">Structures</span>
+                </div>
+                <div className="mt-1 text-2xl font-black font-[family-name:var(--font-display)] text-white">
+                  24
+                </div>
+                <p className="text-[10px] text-white/75 truncate">CHU, CHR & Hôpitaux</p>
               </div>
-              <p className="mt-0.5 text-[11px] text-primary-foreground/75">Avis cardiologique actif</p>
+
+              <div className="rounded-2xl bg-black/40 p-3 sm:p-3.5 backdrop-blur-md border border-white/20 shadow-xs">
+                <div className="flex items-center gap-1.5 text-amber-300">
+                  <HeartPulse className="h-3.5 w-3.5" />
+                  <span className="text-[11px] font-bold uppercase tracking-wider">Filières</span>
+                </div>
+                <div className="mt-1 text-2xl font-black font-[family-name:var(--font-display)] text-white">
+                  3
+                </div>
+                <p className="text-[10px] text-white/75 truncate">ECG, Expertise & DUDAL</p>
+              </div>
+
+              <div className="rounded-2xl bg-black/40 p-3 sm:p-3.5 backdrop-blur-md border border-white/20 shadow-xs">
+                <div className="flex items-center gap-1.5 text-emerald-300">
+                  <Activity className="h-3.5 w-3.5" />
+                  <span className="text-[11px] font-bold uppercase tracking-wider">Astreinte</span>
+                </div>
+                <div className="mt-1 text-2xl font-black font-[family-name:var(--font-display)] text-white">
+                  24/7
+                </div>
+                <p className="text-[10px] text-white/75 truncate">Avis cardiologique actif</p>
+              </div>
             </div>
           </div>
         </div>

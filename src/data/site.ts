@@ -15,7 +15,7 @@ import testimonialDoumbia from "@/assets/testimonial_doumbia.webp";
 import testimonialGeissbuhler from "@/assets/testimonial_geissbuhler.webp";
 
 import pioneerEhua from "@/assets/pioneer_ehua.webp";
-import pioneerRkpon from "@/assets/pioneer_rkpon.webp";
+import pioneerRkpon from "@/assets/pioneer_rkpon.png";
 import pioneerNanan from "@/assets/pioneer_nanan.webp";
 import pioneerDiby from "@/assets/pioneer_diby.webp";
 

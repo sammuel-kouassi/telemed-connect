@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { usePartners } from "@/hooks/useData";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { cn } from "@/lib/utils";
+import heroPartenaires from "@/assets/hero_partenaires.jpg";
 
 export const Route = createFileRoute("/partenaires")({
   head: () => ({
@@ -39,39 +40,53 @@ function PartenairesPage() {
 
   return (
     <>
-      {/* Header Banner */}
+      {/* Header Banner with Background Image */}
       <header
         ref={headerRef}
         className={cn(
-          "surface-hero relative overflow-hidden text-primary-foreground py-16 sm:py-20",
+          "relative overflow-hidden text-primary-foreground py-16 sm:py-24 lg:py-28 min-h-[380px] flex items-center",
           headerVisible && "animate-fade-up",
         )}
       >
-        <div className="grid-pattern absolute inset-0 opacity-20" aria-hidden="true" />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 text-xs font-semibold text-accent uppercase tracking-wider">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Écosystème & Coopérations</span>
-          </div>
+        {/* Background Image with High Clarity & Directional Gradient Overlay */}
+        <div className="absolute inset-0 select-none">
+          <img
+            src={heroPartenaires}
+            alt="Alliance nationale et partenaires pour la télémédecine"
+            className="h-full w-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#031422]/95 via-[#031422]/80 to-[#031422]/35" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#020d17] via-transparent to-black/40" />
+          <div className="absolute inset-0 bg-[#74a638]/10 mix-blend-overlay" />
+          <div className="grid-pattern absolute inset-0 opacity-15" aria-hidden="true" />
+        </div>
 
-          <h1 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl max-w-3xl">
-            Une alliance nationale & internationale{" "}
-            <span className="text-transparent bg-gradient-to-r from-cyan-200 via-teal-100 to-amber-200 bg-clip-text">
-              au service du soin.
-            </span>
-          </h1>
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+          <div className="max-w-3xl space-y-5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md">
+              <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Écosystème & Coopérations Stratégiques</span>
+            </div>
 
-          <p className="mt-5 max-w-2xl text-base sm:text-lg text-primary-foreground/85 leading-relaxed">
-            La pérennité de la télémédecine ivoirienne repose sur une étroite synergie entre l'État, les centres hospitaliers universitaires, les bailleurs et les ONG pionnières.
-          </p>
+            <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-white leading-tight drop-shadow-md">
+              Une alliance nationale & internationale{" "}
+              <span className="text-[#8bc34a]">
+                au service du soin.
+              </span>
+            </h1>
 
-          <div className="mt-8 flex flex-wrap gap-4 text-xs font-medium text-primary-foreground/80">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/10 px-3.5 py-1.5 backdrop-blur-sm border border-primary-foreground/15">
-              <Building2 className="h-3.5 w-3.5 text-accent" /> {partners.length} Partenaires engagés
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/10 px-3.5 py-1.5 backdrop-blur-sm border border-primary-foreground/15">
-              <Globe2 className="h-3.5 w-3.5 text-cyan-300" /> Coopération multilatérale & RAFT
-            </span>
+            <p className="max-w-2xl text-base sm:text-lg text-white/90 leading-relaxed font-normal drop-shadow-sm">
+              La pérennité de la télémédecine ivoirienne repose sur une étroite synergie entre l'État, les centres hospitaliers universitaires, les bailleurs et les ONG pionnières.
+            </p>
+
+            <div className="flex flex-wrap gap-3 pt-2 text-xs font-medium text-white/95">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
+                <Building2 className="h-3.5 w-3.5 text-[#8bc34a]" /> {partners.length} Partenaires engagés
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
+                <Globe2 className="h-3.5 w-3.5 text-cyan-300" /> Coopération multilatérale & RAFT
+              </span>
+            </div>
           </div>
         </div>
       </header>

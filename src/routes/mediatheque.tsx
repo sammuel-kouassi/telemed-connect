@@ -26,6 +26,7 @@ import { mediaThemes, type MediaItem } from "@/data/site";
 import { useMediaItems } from "@/hooks/useData";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { cn } from "@/lib/utils";
+import heroMediatheque from "@/assets/hero_mediatheque.jpg";
 
 export const Route = createFileRoute("/mediatheque")({
   head: () => ({
@@ -105,43 +106,57 @@ function MediathequePage() {
 
   return (
     <>
-      {/* Header Banner */}
+      {/* Header Banner with Background Image */}
       <header
         ref={headerRef}
         className={cn(
-          "surface-hero relative overflow-hidden text-primary-foreground py-14 sm:py-20",
+          "relative overflow-hidden text-primary-foreground py-16 sm:py-24 lg:py-28 min-h-[380px] flex items-center",
           headerVisible && "animate-fade-up",
         )}
       >
-        <div className="grid-pattern absolute inset-0 opacity-20" aria-hidden="true" />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider backdrop-blur-md border border-primary-foreground/15 text-primary-foreground">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Fonds Audiovisuel & Pédagogique Officiel · RAFT CI</span>
-          </div>
+        {/* Background Image with High Clarity & Directional Gradient Overlay */}
+        <div className="absolute inset-0 select-none">
+          <img
+            src={heroMediatheque}
+            alt="Studio de diffusion et cours de télémédecine en direct"
+            className="h-full w-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#031422]/95 via-[#031422]/80 to-[#031422]/35" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#020d17] via-transparent to-black/40" />
+          <div className="absolute inset-0 bg-[#74a638]/10 mix-blend-overlay" />
+          <div className="grid-pattern absolute inset-0 opacity-15" aria-hidden="true" />
+        </div>
 
-          <h1 className="mt-5 text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl max-w-3xl">
-            Médiathèque, reportages &{" "}
-            <span className="text-transparent bg-gradient-to-r from-emerald-200 via-teal-100 to-amber-200 bg-clip-text">
-              replays cliniques.
-            </span>
-          </h1>
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+          <div className="max-w-3xl space-y-5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md">
+              <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Fonds Audiovisuel & Pédagogique Officiel · RAFT CI</span>
+            </div>
 
-          <p className="mt-4 max-w-2xl text-base sm:text-lg text-primary-foreground/90 leading-relaxed">
-            Consultez les reportages vidéo de référence, les enregistrements des télé-expertises spécialisées, la
-            photothèque des missions de terrain et les guides techniques officiels du réseau.
-          </p>
+            <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-white leading-tight drop-shadow-md">
+              Médiathèque, reportages &{" "}
+              <span className="text-[#8bc34a]">
+                replays cliniques.
+              </span>
+            </h1>
 
-          <div className="mt-8 flex flex-wrap gap-3 text-xs font-semibold text-primary-foreground/90">
-            <span className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 px-4 py-2 backdrop-blur-md border border-primary-foreground/15">
-              <Tv className="h-4 w-4 text-emerald-300" /> Grand reportage Medi1TV
-            </span>
-            <span className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 px-4 py-2 backdrop-blur-md border border-primary-foreground/15">
-              <Film className="h-4 w-4 text-cyan-300" /> {mediaItems.filter((m) => m.type === "Vidéo").length} Replays & Séminaires
-            </span>
-            <span className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 px-4 py-2 backdrop-blur-md border border-primary-foreground/15">
-              <FileText className="h-4 w-4 text-amber-300" /> Documents & Guides téléchargeables
-            </span>
+            <p className="max-w-2xl text-base sm:text-lg text-white/90 leading-relaxed font-normal drop-shadow-sm">
+              Consultez les reportages vidéo de référence, les enregistrements des télé-expertises spécialisées, la
+              photothèque des missions de terrain et les guides techniques officiels du réseau.
+            </p>
+
+            <div className="flex flex-wrap gap-2.5 pt-2 text-xs font-semibold text-white/95">
+              <span className="inline-flex items-center gap-2 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
+                <Tv className="h-4 w-4 text-[#8bc34a]" /> Grand reportage Medi1TV
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
+                <Film className="h-4 w-4 text-cyan-300" /> {mediaItems.filter((m) => m.type === "Vidéo").length} Replays & Séminaires
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
+                <FileText className="h-4 w-4 text-amber-300" /> Documents & Guides téléchargeables
+              </span>
+            </div>
           </div>
         </div>
       </header>
