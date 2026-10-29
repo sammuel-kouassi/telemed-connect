@@ -80,6 +80,8 @@ export async function getArticles(): Promise<Article[]> {
           author: row.author,
           image: row.image,
           secondaryImage: row.secondary_image || undefined,
+          // Pas de colonne dédiée en base : la légende vient de l'article local de même slug
+          secondaryCaption: defaultArticles.find((a) => a.slug === row.slug)?.secondaryCaption,
           body: Array.isArray(row.body) ? row.body : [],
         }));
       }
@@ -777,5 +779,39 @@ export async function seedInitialDataToSupabase(): Promise<{
       counts: {},
       message: err instanceof Error ? err.message : "Erreur lors de la synchronisation",
     };
+  }
+}
+
+// ============================================================================
+// Demandes de contact (formulaire /contact)
+// ============================================================================
+
+export type ContactRequest = {
+  name: string;
+  email: string;
+  organisation: string;
+  phone: string;
+  subject: string;
+  message: string;
+};
+
+/** Enregistre la demande dans Supabase. Renvoie une erreur lisible si l'envoi échoue. */
+export async function submitContactRequest(request: ContactRequest): Promise<{ ok: boolean; error?: string }> {
+  if (!supabase || !isSupabaseConfigured()) {
+    return { ok: false, error: "Le service d'envoi n'est pas disponible pour le moment." };
+  }
+  try {
+    const { error } = await supabase.from("contact_requests").insert({
+      name: request.name.trim(),
+      email: request.email.trim(),
+      organisation: request.organisation.trim() || null,
+      phone: request.phone.trim() || null,
+      subject: request.subject,
+      message: request.message.trim(),
+    });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  } catch (err: unknown) {
+    return { ok: false, error: err instanceof Error ? err.message : "Erreur réseau" };
   }
 }

@@ -117,20 +117,19 @@ function ProjetsPage() {
           {/* Subtle directional gradient: deep dark on the text side, clear & visible on the right */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#031422]/95 via-[#031422]/80 to-[#031422]/35" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#020d17] via-transparent to-black/40" />
-          <div className="absolute inset-0 bg-[#74a638]/10 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-primary/10 mix-blend-overlay" />
           <div className="grid-pattern absolute inset-0 opacity-15" aria-hidden="true" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
           <div className="max-w-3xl space-y-5">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md">
-              <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
               <span>Cartographie Nationale Officielle · Réseau RAFT CI</span>
             </div>
 
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl leading-[1.12] text-white drop-shadow-md">
               La télémédecine ivoirienne,{" "}
-              <span className="text-[#8bc34a]">
+              <span className="text-brand-light">
                 site par site.
               </span>
             </h1>
@@ -145,45 +144,45 @@ function ProjetsPage() {
               <div className="rounded-2xl bg-black/40 p-3 sm:p-3.5 backdrop-blur-md border border-white/20 shadow-xs">
                 <div className="flex items-center gap-1.5 text-emerald-300">
                   <MapPin className="h-3.5 w-3.5" />
-                  <span className="text-[11px] font-bold uppercase tracking-wider">Localités</span>
+                  <span className="text-xs font-bold uppercase tracking-wider">Localités</span>
                 </div>
                 <div className="mt-1 text-2xl font-black font-[family-name:var(--font-display)] text-white">
                   12
                 </div>
-                <p className="text-[10px] text-white/75 truncate">Grand Nord au Sud</p>
+                <p className="text-xs text-white/75 truncate">Grand Nord au Sud</p>
               </div>
 
               <div className="rounded-2xl bg-black/40 p-3 sm:p-3.5 backdrop-blur-md border border-white/20 shadow-xs">
                 <div className="flex items-center gap-1.5 text-cyan-300">
                   <Building2 className="h-3.5 w-3.5" />
-                  <span className="text-[11px] font-bold uppercase tracking-wider">Structures</span>
+                  <span className="text-xs font-bold uppercase tracking-wider">Structures</span>
                 </div>
                 <div className="mt-1 text-2xl font-black font-[family-name:var(--font-display)] text-white">
                   24
                 </div>
-                <p className="text-[10px] text-white/75 truncate">CHU, CHR & Hôpitaux</p>
+                <p className="text-xs text-white/75 truncate">CHU, CHR & Hôpitaux</p>
               </div>
 
               <div className="rounded-2xl bg-black/40 p-3 sm:p-3.5 backdrop-blur-md border border-white/20 shadow-xs">
                 <div className="flex items-center gap-1.5 text-amber-300">
                   <HeartPulse className="h-3.5 w-3.5" />
-                  <span className="text-[11px] font-bold uppercase tracking-wider">Filières</span>
+                  <span className="text-xs font-bold uppercase tracking-wider">Filières</span>
                 </div>
                 <div className="mt-1 text-2xl font-black font-[family-name:var(--font-display)] text-white">
                   3
                 </div>
-                <p className="text-[10px] text-white/75 truncate">ECG, Expertise & DUDAL</p>
+                <p className="text-xs text-white/75 truncate">ECG, Expertise & DUDAL</p>
               </div>
 
               <div className="rounded-2xl bg-black/40 p-3 sm:p-3.5 backdrop-blur-md border border-white/20 shadow-xs">
                 <div className="flex items-center gap-1.5 text-emerald-300">
                   <Activity className="h-3.5 w-3.5" />
-                  <span className="text-[11px] font-bold uppercase tracking-wider">Astreinte</span>
+                  <span className="text-xs font-bold uppercase tracking-wider">Astreinte</span>
                 </div>
                 <div className="mt-1 text-2xl font-black font-[family-name:var(--font-display)] text-white">
                   24/7
                 </div>
-                <p className="text-[10px] text-white/75 truncate">Avis cardiologique actif</p>
+                <p className="text-xs text-white/75 truncate">Avis cardiologique actif</p>
               </div>
             </div>
           </div>
@@ -214,7 +213,7 @@ function ProjetsPage() {
                     onClick={() => setFilter(p)}
                     aria-pressed={isActive}
                     className={cn(
-                      "rounded-full gap-2 transition-all font-semibold whitespace-nowrap",
+                      "rounded-full gap-2 transition font-semibold whitespace-nowrap",
                       isActive
                         ? "bg-primary text-primary-foreground shadow-sm"
                         : "hover:border-primary/40 hover:bg-secondary",
@@ -223,7 +222,7 @@ function ProjetsPage() {
                     <span>{p === "Tous" ? "Toutes les filières" : p}</span>
                     <span
                       className={cn(
-                        "rounded-full px-2 py-0.5 text-[0.7rem] font-bold",
+                        "rounded-full px-2 py-0.5 text-xs font-bold",
                         isActive ? "bg-primary-foreground/20 text-primary-foreground" : "bg-muted text-muted-foreground",
                       )}
                     >
@@ -242,7 +241,7 @@ function ProjetsPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Rechercher une ville, région (ex: Bouaké, Man, Gbêkê)..."
-                className="w-full rounded-full border border-border/80 bg-surface/80 py-2 pl-9 pr-9 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/80 focus:border-primary focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                className="w-full rounded-full border border-border/80 bg-surface/80 py-2 pl-9 pr-9 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/80 focus:border-primary focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
               />
               {searchQuery && (
                 <button
@@ -266,7 +265,7 @@ function ProjetsPage() {
                 {projectSites.length}
               </span>
               {(filter !== "Tous" || searchQuery) && (
-                <span className="text-[11px] text-muted-foreground font-medium">
+                <span className="text-xs text-muted-foreground font-medium">
                   (Filtres actifs : {filter !== "Tous" ? filter : ""}
                   {filter !== "Tous" && searchQuery ? " · " : ""}
                   {searchQuery ? `"${searchQuery}"` : ""})
@@ -295,8 +294,8 @@ function ProjetsPage() {
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-base font-extrabold text-foreground tracking-tight">Carte Nationale Interactive</h2>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[0.7rem] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                     En direct
                   </span>
                 </div>
@@ -312,7 +311,7 @@ function ProjetsPage() {
             </div>
 
             {/* Clean Status Strip replacing duplicate legend */}
-            <div className="mt-3.5 flex flex-wrap items-center justify-between gap-2 text-[11px] text-muted-foreground px-1">
+            <div className="mt-3.5 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground px-1">
               <span className="flex items-center gap-1.5">
                 <ShieldCheck className="h-3.5 w-3.5 text-primary" />
                 Données certifiées RAFT CI & Ministère de la Santé et de l'Hygiène Publique
@@ -324,7 +323,7 @@ function ProjetsPage() {
           {/* Details & List Side (5 cols) */}
           <div className="lg:col-span-5 space-y-6">
             {active ? (
-              <Card className="rounded-3xl border-2 border-primary/30 bg-card shadow-lift overflow-hidden transition-all">
+              <Card className="rounded-3xl border-2 border-primary/30 bg-card shadow-lift overflow-hidden transition">
                 {/* Top colored program indicator */}
                 <div className="h-2 w-full" style={{ background: programColors[active.program] }} />
                 <CardContent className="p-6">
@@ -340,7 +339,7 @@ function ProjetsPage() {
                         Région : {active.region}
                       </Badge>
                     </div>
-                    <span className="text-[11px] font-mono font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-md">
+                    <span className="text-xs font-mono font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-md">
                       #{active.id}
                     </span>
                   </div>
@@ -352,7 +351,7 @@ function ProjetsPage() {
                         <MapPin className="h-3.5 w-3.5 text-primary" /> District sanitaire de {active.city}
                       </p>
                     </div>
-                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
                       <CheckCircle2 className="h-3 w-3" /> Connecté
                     </span>
                   </div>
@@ -393,7 +392,7 @@ function ProjetsPage() {
                       <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                         <Building2 className="h-3.5 w-3.5 text-primary" /> Établissements de santé dans cette zone
                       </p>
-                      <span className="text-[11px] font-bold text-primary">
+                      <span className="text-xs font-bold text-primary">
                         {localFacilities.length} répertorié(s)
                       </span>
                     </div>
@@ -403,19 +402,19 @@ function ProjetsPage() {
                         {localFacilities.map((fac, idx) => (
                           <div
                             key={idx}
-                            className="rounded-xl border border-border/80 bg-surface/50 p-3 hover:border-primary/40 transition-colors"
+                            className="rounded-xl border border-border/80 bg-surface/50 p-3 hover:border-primary/40 transition"
                           >
                             <div className="flex items-start justify-between gap-2">
                               <div>
                                 <h4 className="text-xs font-bold text-foreground leading-snug">{fac.name}</h4>
                                 <div className="mt-1 flex flex-wrap gap-1">
-                                  <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary">
+                                  <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs font-bold text-primary">
                                     {fac.category}
                                   </span>
                                   {fac.services.slice(0, 2).map((srv, sIdx) => (
                                     <span
                                       key={sIdx}
-                                      className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground"
+                                      className="rounded bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground"
                                     >
                                       {srv}
                                     </span>
@@ -425,7 +424,7 @@ function ProjetsPage() {
                             </div>
 
                             {fac.phone && (
-                              <div className="mt-2 flex items-center justify-between pt-2 border-t border-border/50 text-[11px]">
+                              <div className="mt-2 flex items-center justify-between pt-2 border-t border-border/50 text-xs">
                                 <a
                                   href={`tel:${fac.phone}`}
                                   className="inline-flex items-center gap-1 text-primary font-bold hover:underline"
@@ -490,7 +489,7 @@ function ProjetsPage() {
                 <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                   <Radio className="h-3.5 w-3.5 text-primary" /> Sélection rapide par localité
                 </p>
-                <span className="text-[11px] font-bold text-muted-foreground">
+                <span className="text-xs font-bold text-muted-foreground">
                   {filteredSites.length} disponible(s)
                 </span>
               </div>
@@ -504,7 +503,7 @@ function ProjetsPage() {
                       type="button"
                       onClick={() => setActiveId(s.id)}
                       className={cn(
-                        "flex w-full items-center justify-between gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-all cursor-pointer",
+                        "flex w-full items-center justify-between gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition cursor-pointer",
                         isSelected
                           ? "border-primary bg-primary/10 shadow-xs ring-2 ring-primary/40 font-semibold"
                           : "border-border/80 bg-surface/60 hover:border-primary/40 hover:bg-secondary",
@@ -527,7 +526,7 @@ function ProjetsPage() {
                       </span>
                       <div className="flex items-center gap-2">
                         <span
-                          className="hidden sm:inline-block rounded-full px-2 py-0.5 text-[10px] font-bold"
+                          className="hidden sm:inline-block rounded-full px-2 py-0.5 text-xs font-bold"
                           style={{
                             backgroundColor: `${programColors[s.program]}20`,
                             color: programColors[s.program],
@@ -535,7 +534,7 @@ function ProjetsPage() {
                         >
                           {s.program}
                         </span>
-                        <Badge variant="outline" className="text-[0.68rem] font-bold whitespace-nowrap">
+                        <Badge variant="outline" className="text-xs font-bold whitespace-nowrap">
                           {s.structures} {s.structures > 1 ? "structures" : "structure"}
                         </Badge>
                       </div>
@@ -570,7 +569,7 @@ function ProjetsPage() {
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {/* Pilier 1: Télé-ECG */}
-            <div className="rounded-3xl border border-border/80 bg-card p-6 shadow-soft hover:shadow-lift transition-all hover:border-accent/50 flex flex-col justify-between">
+            <div className="rounded-3xl border border-border/80 bg-card p-6 shadow-soft hover:shadow-lift transition hover:border-accent/50 flex flex-col justify-between">
               <div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500/10 text-sky-600 dark:text-sky-400 mb-5">
                   <HeartPulse className="h-6 w-6" />
@@ -595,7 +594,7 @@ function ProjetsPage() {
             </div>
 
             {/* Pilier 2: Télé-expertise */}
-            <div className="rounded-3xl border border-border/80 bg-card p-6 shadow-soft hover:shadow-lift transition-all hover:border-primary/50 flex flex-col justify-between">
+            <div className="rounded-3xl border border-border/80 bg-card p-6 shadow-soft hover:shadow-lift transition hover:border-primary/50 flex flex-col justify-between">
               <div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mb-5">
                   <Stethoscope className="h-6 w-6" />
@@ -620,7 +619,7 @@ function ProjetsPage() {
             </div>
 
             {/* Pilier 3: Télé-formation */}
-            <div className="rounded-3xl border border-border/80 bg-card p-6 shadow-soft hover:shadow-lift transition-all hover:border-amber-500/50 flex flex-col justify-between">
+            <div className="rounded-3xl border border-border/80 bg-card p-6 shadow-soft hover:shadow-lift transition hover:border-amber-500/50 flex flex-col justify-between">
               <div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 mb-5">
                   <GraduationCap className="h-6 w-6" />
@@ -672,7 +671,7 @@ function ProjetsPage() {
                   asChild
                   variant="outline"
                   size="lg"
-                  className="rounded-full border border-white/40 bg-white/10 text-white font-bold hover:bg-white/20 backdrop-blur-sm transition-all"
+                  className="rounded-full border border-white/40 bg-white/10 text-white font-bold hover:bg-white/20 backdrop-blur-sm transition"
                 >
                   <Link to="/annuaire">Voir l'annuaire des centres</Link>
                 </Button>

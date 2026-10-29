@@ -71,20 +71,20 @@ function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-center items-center p-4 selection:bg-[#74a638] selection:text-white relative">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-center items-center p-4 selection:bg-primary selection:text-white relative">
       {/* Halo décoratif très doux vert primaire */}
-      <div className="absolute top-0 inset-x-0 h-64 bg-gradient-to-b from-[#74a638]/10 via-[#74a638]/5 to-transparent pointer-events-none" />
+      <div className="absolute top-0 inset-x-0 h-64 bg-gradient-to-b from-primary/10 via-primary/5 to-transparent pointer-events-none" />
 
       {/* Top navigation */}
       <div className="w-full max-w-sm mb-6 flex justify-between items-center z-10">
         <Link
           to="/"
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-900 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-900 transition"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           Retour au site public
         </Link>
-        <span className="text-[11px] font-semibold text-[#74a638] uppercase tracking-wider">
+        <span className="text-xs font-semibold text-primary uppercase tracking-wider">
           Portail RAFT CI
         </span>
       </div>
@@ -126,7 +126,7 @@ function AdminLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@telemedecine.ci"
-                className="pl-10 bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638] text-xs h-10 rounded-xl"
+                className="pl-10 bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary text-xs h-10 rounded-xl"
               />
             </div>
           </div>
@@ -143,7 +143,7 @@ function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="pl-10 bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638] text-xs h-10 rounded-xl"
+                className="pl-10 bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary text-xs h-10 rounded-xl"
               />
             </div>
           </div>
@@ -155,7 +155,7 @@ function AdminLoginPage() {
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 rounded border-slate-300 text-[#74a638] focus:ring-[#74a638] accent-[#74a638] cursor-pointer"
+                className="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary accent-primary cursor-pointer"
               />
               <span>Se souvenir de moi</span>
             </label>
@@ -164,7 +164,7 @@ function AdminLoginPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#74a638] hover:bg-[#63912e] text-white font-semibold py-2.5 rounded-xl shadow-md shadow-[#74a638]/20 transition-all duration-200 cursor-pointer text-xs mt-2 h-10"
+            className="w-full bg-primary hover:bg-brand-hover text-white font-semibold py-2.5 rounded-xl shadow-md shadow-primary/20 transition duration-200 cursor-pointer text-xs mt-2 h-10"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
@@ -181,7 +181,7 @@ function AdminLoginPage() {
         </form>
 
         <div className="mt-6 pt-5 border-t border-slate-100 text-center">
-          <p className="text-[11px] text-slate-400">
+          <p className="text-xs text-slate-400">
             Accès sécurisé réservé aux administrateurs autorisés
           </p>
         </div>

@@ -114,9 +114,37 @@ const starters = ["ecg", "sites", "rejoindre", "formation", "donnees", "contact"
 const getFormattedTime = () =>
   new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
 
+function matchTopic(query: string): string | null {
+  if (query.includes("ecg") || query.includes("coeur") || query.includes("cardio") || query.includes("tracé")) {
+    return "ecg";
+  }
+  if (
+    query.includes("site") ||
+    query.includes("centre") ||
+    query.includes("hopital") ||
+    query.includes("chu") ||
+    query.includes("ville") ||
+    query.includes("où")
+  ) {
+    return "sites";
+  }
+  if (query.includes("rejoindre") || query.includes("connecter") || query.includes("inscri") || query.includes("adher")) {
+    return "rejoindre";
+  }
+  if (query.includes("format") || query.includes("cours") || query.includes("seminaire") || query.includes("replay")) {
+    return "formation";
+  }
+  if (query.includes("donnee") || query.includes("secur") || query.includes("rgpd") || query.includes("confidential")) {
+    return "donnees";
+  }
+  if (query.includes("contact") || query.includes("telephon") || query.includes("mail") || query.includes("appel") || query.includes("parler")) {
+    return "contact";
+  }
+  return null;
+}
+
 export function Chatbot() {
   const [open, setOpen] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([
     {
       from: "bot",
@@ -127,43 +155,56 @@ export function Chatbot() {
   const [suggestions, setSuggestions] = useState<string[]>(starters);
   const [draft, setDraft] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (open) {
       endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
     }
-  }, [messages, isTyping, open]);
+  }, [messages, open]);
 
-  function answer(topicId: string, userText?: string) {
+  // Ouverture : focus dans le champ. Échap ferme et rend le focus au bouton.
+  useEffect(() => {
+    if (!open) return;
+    inputRef.current?.focus({ preventScroll: true });
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  function close() {
+    const focusWasInside = panelRef.current?.contains(document.activeElement);
+    setOpen(false);
+    if (focusWasInside) triggerRef.current?.focus({ preventScroll: true });
+  }
+
+  // Les réponses sont connues d'avance : elles s'affichent immédiatement, sans faux délai de frappe
+  function reply(topicId: string | null, userText: string) {
+    const topic = topicId ? topics[topicId] : undefined;
+    const userMessage: Msg = { from: "user", text: userText, time: getFormattedTime() };
+    const botMessage: Msg = topic
+      ? { from: "bot", text: topic.answer, time: getFormattedTime(), ...(topic.links ? { links: topic.links } : {}) }
+      : {
+          from: "bot",
+          text: "Pour cette demande spécifique, notre coordination technique se tient à votre entière disposition pour vous guider de manière personnalisée.",
+          time: getFormattedTime(),
+          links: [
+            { to: "/contact", label: "Écrire à la coordination" },
+            { to: "/faq", label: "Consulter la FAQ" },
+          ],
+        };
+    setMessages((prev) => [...prev, userMessage, botMessage]);
+    setSuggestions(topic?.follow && topic.follow.length > 0 ? topic.follow : starters.slice(0, 4));
+  }
+
+  function answer(topicId: string) {
     const topic = topics[topicId];
     if (!topic) return;
-
-    const userMessage: Msg = {
-      from: "user",
-      text: userText ?? topic.label,
-      time: getFormattedTime(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
-    setIsTyping(true);
-
-    setTimeout(() => {
-      const botMsg: Msg = {
-        from: "bot",
-        text: topic.answer,
-        time: getFormattedTime(),
-        links: topic.links,
-      };
-
-      setMessages((prev) => [...prev, botMsg]);
-      setIsTyping(false);
-
-      if (topic.follow && topic.follow.length > 0) {
-        setSuggestions(topic.follow);
-      } else {
-        setSuggestions(starters.slice(0, 4));
-      }
-    }, 450);
+    reply(topicId, topic.label);
   }
 
   function handleReset() {
@@ -181,120 +222,78 @@ export function Chatbot() {
     e.preventDefault();
     const query = draft.trim().toLowerCase();
     if (!query) return;
+    reply(matchTopic(query), draft.trim());
     setDraft("");
-
-    const userMsg: Msg = {
-      from: "user",
-      text: draft,
-      time: getFormattedTime(),
-    };
-    setMessages((prev) => [...prev, userMsg]);
-    setIsTyping(true);
-
-    let matched: string | null = null;
-    if (query.includes("ecg") || query.includes("coeur") || query.includes("cardio") || query.includes("tracé")) {
-      matched = "ecg";
-    } else if (
-      query.includes("site") ||
-      query.includes("centre") ||
-      query.includes("hopital") ||
-      query.includes("chu") ||
-      query.includes("ville") ||
-      query.includes("où")
-    ) {
-      matched = "sites";
-    } else if (query.includes("rejoindre") || query.includes("connecter") || query.includes("inscri") || query.includes("adher")) {
-      matched = "rejoindre";
-    } else if (query.includes("format") || query.includes("cours") || query.includes("seminaire") || query.includes("replay")) {
-      matched = "formation";
-    } else if (query.includes("donnee") || query.includes("secur") || query.includes("rgpd") || query.includes("confidential")) {
-      matched = "donnees";
-    } else if (query.includes("contact") || query.includes("telephon") || query.includes("mail") || query.includes("appel") || query.includes("parler")) {
-      matched = "contact";
-    }
-
-    setTimeout(() => {
-      if (matched && topics[matched]) {
-        const topic = topics[matched];
-        setMessages((prev) => [
-          ...prev,
-          {
-            from: "bot",
-            text: topic.answer,
-            time: getFormattedTime(),
-            links: topic.links,
-          },
-        ]);
-        if (topic.follow) setSuggestions(topic.follow);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          {
-            from: "bot",
-            text: "Pour cette demande spécifique, notre coordination technique se tient à votre entière disposition pour vous guider de manière personnalisée.",
-            time: getFormattedTime(),
-            links: [
-              { to: "/contact", label: "Écrire à la coordination" },
-              { to: "/faq", label: "Consulter la FAQ" },
-            ],
-          },
-        ]);
-        setSuggestions(starters.slice(0, 4));
-      }
-      setIsTyping(false);
-    }, 500);
   }
 
   return (
     <>
-      {/* Floating Trigger Button with Premium Medical Pill Style */}
+      {/* Bouton flottant : un seul élément qui change d'état, le focus ne se perd jamais */}
       <div className="fixed right-4 bottom-5 z-50 sm:right-6 sm:bottom-6">
-        {!open ? (
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="group relative flex items-center gap-3 rounded-full bg-gradient-to-r from-[#74a638] to-[#5e8c2a] text-white p-2.5 sm:pl-3 sm:pr-5 shadow-2xl hover:shadow-glow hover:scale-105 active:scale-95 transition-all duration-300 border border-white/20 cursor-pointer"
-            aria-expanded={false}
-            aria-label="Ouvrir l'assistant virtuel"
-          >
-            <div className="relative flex h-11 w-11 items-center justify-center rounded-full bg-white/15 backdrop-blur-md text-white shadow-inner">
-              <Headphones className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+        <button
+          ref={triggerRef}
+          type="button"
+          onClick={() => (open ? close() : setOpen(true))}
+          className={cn(
+            "group relative flex items-center gap-3 rounded-full text-white shadow-2xl border border-white/20 cursor-pointer transition-[background-color,box-shadow,scale] duration-200 ease-out active:scale-95",
+            open
+              ? "bg-[#031422] hover:bg-primary p-1.5 sm:p-2"
+              : "bg-gradient-to-r from-primary to-brand-strong hover:shadow-glow p-2.5 sm:pl-3 sm:pr-5"
+          )}
+          aria-expanded={open}
+          aria-controls="chatbot-panel"
+          aria-label={open ? "Fermer l'assistant virtuel" : "Ouvrir l'assistant virtuel"}
+        >
+          <div className="relative flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white shadow-inner">
+            <Headphones
+              className={cn("h-5 w-5 transition-[opacity,scale] duration-200", open ? "opacity-0 scale-50" : "opacity-100 scale-100")}
+            />
+            <X
+              className={cn("absolute h-5 w-5 transition-[opacity,scale] duration-200", open ? "opacity-100 scale-100" : "opacity-0 scale-50")}
+            />
+            {!open && (
               <span className="absolute -top-0.5 -right-0.5 flex h-3.5 w-3.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-300 opacity-75" />
-                <span className="relative inline-flex h-3.5 w-3.5 rounded-full bg-emerald-400 border-2 border-[#5e8c2a]" />
+                <span className="relative inline-flex h-3.5 w-3.5 rounded-full bg-emerald-400 border-2 border-brand-strong" />
               </span>
-            </div>
+            )}
+          </div>
+          {!open && (
             <div className="hidden sm:flex flex-col text-left">
-              <span className="text-[10px] font-bold text-white/80 uppercase tracking-widest leading-none">
+              <span className="text-xs font-bold text-white/80 uppercase tracking-widest leading-none">
                 Astreinte 24/7
               </span>
               <span className="text-sm font-extrabold text-white tracking-tight mt-0.5">
                 Assistant RAFT
               </span>
             </div>
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setOpen(false)}
-            className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-[#031422] text-white shadow-2xl hover:bg-[#74a638] transition-all duration-300 border border-white/20 hover:rotate-90 active:scale-95 cursor-pointer"
-            aria-expanded={true}
-            aria-label="Fermer l'assistant virtuel"
-          >
-            <X className="h-6 w-6" />
-          </button>
-        )}
+          )}
+        </button>
       </div>
 
-      {/* Floating Chat Modal */}
-      {open && (
-        <div className="rise-in fixed right-3 bottom-20 z-50 flex h-[min(620px,80vh)] w-[min(430px,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-3xl border border-white/15 bg-card shadow-2xl backdrop-blur-xl sm:right-6 sm:bottom-24">
+      {/* Panneau : sort du bouton (origine en bas à droite) et y retourne à la fermeture.
+          Transition CSS (et non keyframes) : une ouverture/fermeture interrompue repart de l'état courant.
+          « visible » s'applique tout de suite à l'ouverture pour que le champ puisse recevoir le focus. */}
+      <div
+        ref={panelRef}
+        id="chatbot-panel"
+        role="dialog"
+        aria-label="Assistant virtuel RAFT"
+        aria-hidden={!open}
+        inert={!open}
+        className={cn(
+          "fixed right-3 bottom-20 z-50 flex h-[min(620px,80vh)] w-[min(430px,calc(100vw-1.5rem))] flex-col overflow-hidden rounded-3xl border border-white/15 bg-card shadow-2xl sm:right-6 sm:bottom-24 origin-bottom-right",
+          "ease-[cubic-bezier(0.2,0.8,0.2,1)]",
+          open
+            ? "visible opacity-100 scale-100 translate-y-0 duration-300 transition-[opacity,scale,translate]"
+            : "invisible opacity-0 scale-90 translate-y-3 duration-200 pointer-events-none transition-[opacity,scale,translate,visibility]"
+        )}
+      >
           {/* Header */}
           <div className="relative bg-[#031422] px-5 py-4 text-white border-b border-white/10">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#74a638]/20 via-transparent to-transparent opacity-40 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-transparent opacity-40 pointer-events-none" />
             <div className="relative flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#74a638] to-[#5e8c2a] text-white shadow-md border border-white/20">
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-brand-strong text-white shadow-md border border-white/20">
                   <Stethoscope className="h-5 w-5" />
                   <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3">
                     <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-400 border-2 border-[#031422]" />
@@ -303,11 +302,11 @@ export function Chatbot() {
                 <div className="leading-tight">
                   <div className="flex items-center gap-1.5">
                     <p className="text-sm font-bold text-white tracking-tight">Conseiller RAFT</p>
-                    <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-emerald-300 border border-emerald-500/30">
+                    <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs font-semibold text-emerald-300 border border-emerald-500/30">
                       En ligne
                     </span>
                   </div>
-                  <p className="text-[11px] text-white/70">Réseau Médical de Côte d'Ivoire</p>
+                  <p className="text-xs text-white/70">Réseau Médical de Côte d'Ivoire</p>
                 </div>
               </div>
 
@@ -316,16 +315,16 @@ export function Chatbot() {
                   type="button"
                   onClick={handleReset}
                   title="Réinitialiser la conversation"
-                  className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
+                  className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white transition cursor-pointer"
                   aria-label="Réinitialiser la conversation"
                 >
                   <RotateCcw className="h-4 w-4" />
                 </button>
                 <button
                   type="button"
-                  onClick={() => setOpen(false)}
+                  onClick={close}
                   title="Fermer"
-                  className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
+                  className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white transition cursor-pointer"
                   aria-label="Fermer"
                 >
                   <X className="h-4 w-4" />
@@ -339,15 +338,15 @@ export function Chatbot() {
             {messages.map((m, i) => (
               <div key={i} className={cn("flex gap-2.5", m.from === "user" ? "justify-end" : "justify-start")}>
                 {m.from === "bot" && (
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-[#74a638] text-white text-xs shadow-xs mt-1">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-primary text-white text-xs shadow-xs mt-1">
                     <Stethoscope className="h-3.5 w-3.5" />
                   </div>
                 )}
                 <div
                   className={cn(
-                    "max-w-[85%] rounded-2xl px-4 py-3 text-xs sm:text-sm leading-relaxed shadow-sm transition-all",
+                    "max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm transition",
                     m.from === "user"
-                      ? "rounded-br-xs bg-gradient-to-r from-[#74a638] to-[#5e8c2a] text-white font-medium shadow-md"
+                      ? "rounded-br-xs bg-gradient-to-r from-primary to-brand-strong text-white font-medium shadow-md"
                       : "rounded-bl-xs bg-card text-foreground border border-border/70 shadow-xs",
                   )}
                 >
@@ -360,7 +359,7 @@ export function Chatbot() {
                           key={l.to + l.label}
                           to={l.to}
                           onClick={() => setOpen(false)}
-                          className="inline-flex items-center justify-between rounded-xl bg-muted/60 px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-[#74a638] hover:text-white transition-all group/link border border-border/50"
+                          className="inline-flex items-center justify-between rounded-xl bg-muted/60 px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-primary hover:text-white transition group/link border border-border/50"
                         >
                           <span>{l.label}</span>
                           <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-1" />
@@ -372,7 +371,7 @@ export function Chatbot() {
                   {m.time && (
                     <div
                       className={cn(
-                        "mt-1.5 flex items-center justify-end gap-1 text-[10px]",
+                        "mt-1.5 flex items-center justify-end gap-1 text-xs",
                         m.from === "user" ? "text-white/70" : "text-muted-foreground",
                       )}
                     >
@@ -384,16 +383,6 @@ export function Chatbot() {
               </div>
             ))}
 
-            {isTyping && (
-              <div className="flex items-center gap-2 text-muted-foreground text-xs pl-9">
-                <div className="flex items-center gap-1 bg-card border border-border/60 rounded-full px-3 py-1.5 shadow-xs">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#74a638] animate-bounce" style={{ animationDelay: "0ms" }} />
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#74a638] animate-bounce" style={{ animationDelay: "150ms" }} />
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#74a638] animate-bounce" style={{ animationDelay: "300ms" }} />
-                  <span className="ml-1 text-[11px] font-medium text-foreground/80">L'assistant écrit…</span>
-                </div>
-              </div>
-            )}
             <div ref={endRef} />
           </div>
 
@@ -401,9 +390,9 @@ export function Chatbot() {
           <div className="border-t border-border/70 bg-card p-3.5 space-y-3 shadow-lg">
             {/* Horizontal Suggestions Carousel */}
             <div>
-              <div className="flex items-center justify-between text-[11px] font-semibold text-muted-foreground mb-1.5 px-0.5">
+              <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground mb-1.5 px-0.5">
                 <span className="flex items-center gap-1">
-                  <Sparkles className="h-3 w-3 text-[#74a638]" /> Suggestions d'orientation :
+                  <Sparkles className="h-3 w-3 text-primary" /> Suggestions d'orientation :
                 </span>
               </div>
               <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
@@ -416,9 +405,9 @@ export function Chatbot() {
                       key={id}
                       type="button"
                       onClick={() => answer(id)}
-                      className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border/80 bg-muted/40 hover:bg-[#74a638]/10 hover:border-[#74a638] hover:text-[#5e8c2a] px-3 py-1 text-xs font-semibold text-foreground transition-all duration-200 active:scale-95 cursor-pointer shadow-2xs"
+                      className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border/80 bg-muted/40 hover:bg-primary/10 hover:border-primary hover:text-brand-strong px-3 py-1 text-xs font-semibold text-foreground transition duration-200 active:scale-95 cursor-pointer shadow-2xs"
                     >
-                      <Icon className="h-3.5 w-3.5 text-[#74a638]" />
+                      <Icon className="h-3.5 w-3.5 text-primary" />
                       <span>{item.shortLabel}</span>
                     </button>
                   );
@@ -429,29 +418,29 @@ export function Chatbot() {
             {/* Input Form */}
             <form onSubmit={handleSubmit} className="relative flex items-center">
               <input
+                ref={inputRef}
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 placeholder="Posez votre question (ex: télé-ECG, Man, contact)…"
                 aria-label="Votre question"
-                className="h-11 w-full rounded-full border border-border/80 bg-muted/30 pl-4 pr-12 text-xs sm:text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground focus:border-[#74a638] focus:bg-card focus:ring-2 focus:ring-[#74a638]/20"
+                className="h-11 w-full rounded-full border border-border/80 bg-muted/30 pl-4 pr-12 text-base sm:text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:bg-card focus:ring-2 focus:ring-primary/20"
               />
               <button
                 type="submit"
-                disabled={!draft.trim() || isTyping}
+                disabled={!draft.trim()}
                 aria-label="Envoyer le message"
-                className="absolute right-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-[#74a638] text-white shadow-sm transition-all hover:bg-[#68982f] hover:scale-105 active:scale-95 disabled:opacity-40 disabled:hover:scale-100 cursor-pointer"
+                className="absolute right-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white shadow-sm transition hover:bg-brand-hover active:scale-95 disabled:opacity-40 cursor-pointer"
               >
                 <Send className="h-3.5 w-3.5" />
               </button>
             </form>
 
-            <div className="flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground">
-              <ShieldCheck className="h-3 w-3 text-[#74a638]" />
+            <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+              <ShieldCheck className="h-3 w-3 text-primary" />
               <span>Service officiel RAFT CI · Données médicales protégées</span>
             </div>
           </div>
-        </div>
-      )}
+      </div>
     </>
   );
 }

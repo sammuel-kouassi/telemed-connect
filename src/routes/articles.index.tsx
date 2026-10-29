@@ -63,20 +63,19 @@ function ArticlesPage() {
           {/* Subtle directional gradient: deep dark on the text side, clear & visible on the right */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#031422]/95 via-[#031422]/80 to-[#031422]/35" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#020d17] via-transparent to-black/40" />
-          <div className="absolute inset-0 bg-[#74a638]/10 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-primary/10 mix-blend-overlay" />
           <div className="grid-pattern absolute inset-0 opacity-15" aria-hidden="true" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
           <div className="max-w-3xl space-y-5">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md">
-              <span className="flex h-2 w-2 rounded-full bg-[#74a638] animate-pulse" />
               <span>Publications & Analyses Cliniques</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight drop-shadow-md">
               Le journal de la{" "}
-              <span className="text-[#8bc34a]">
+              <span className="text-brand-light">
                 télémédecine ivoirienne.
               </span>
             </h1>
@@ -87,7 +86,7 @@ function ArticlesPage() {
 
             <div className="flex flex-wrap gap-3 pt-2 text-xs font-medium text-white/95">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
-                <Newspaper className="h-3.5 w-3.5 text-[#74a638]" /> {articles.length} Articles et rapports
+                <Newspaper className="h-3.5 w-3.5 text-primary" /> {articles.length} Articles et rapports
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
                 <BookOpen className="h-3.5 w-3.5 text-cyan-300" /> Analyses cliniques & scientifiques
@@ -111,7 +110,7 @@ function ArticlesPage() {
               variant={category === c ? "default" : "outline"}
               onClick={() => setCategory(c)}
               aria-pressed={category === c}
-              className="rounded-full transition-all"
+              className="rounded-full transition"
             >
               {c}
             </Button>
@@ -123,7 +122,7 @@ function ArticlesPage() {
           <Link
             to="/articles/$slug"
             params={{ slug: featured.slug }}
-            className="group mt-8 block overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft transition-all duration-300 hover:shadow-lift hover:border-accent/50"
+            className="group mt-8 block overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft transition duration-300 hover:shadow-lift hover:border-accent/50"
           >
             <div className="lg:grid lg:grid-cols-12">
               <div className="relative aspect-16/10 lg:aspect-auto lg:col-span-7 overflow-hidden bg-muted">
@@ -133,7 +132,7 @@ function ArticlesPage() {
                   loading="lazy"
                   width={1200}
                   height={800}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute top-4 left-4">
                   <Badge className="bg-primary text-primary-foreground font-bold shadow-md">
@@ -156,7 +155,7 @@ function ArticlesPage() {
                   </span>
                 </div>
 
-                <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight text-foreground group-hover:text-accent transition-colors">
+                <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight text-foreground group-hover:text-accent transition">
                   {featured.title}
                 </h2>
 
@@ -185,7 +184,6 @@ function ArticlesPage() {
               to="/articles/$slug"
               params={{ slug: a.slug }}
               className="card-hover group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft"
-              style={{ animationDelay: `${i * 80}ms` }}
             >
               <div>
                 <div className="aspect-16/10 overflow-hidden bg-muted">
@@ -195,7 +193,7 @@ function ArticlesPage() {
                     loading="lazy"
                     width={1200}
                     height={800}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
 
@@ -210,7 +208,7 @@ function ArticlesPage() {
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-bold leading-snug text-foreground group-hover:text-accent transition-colors">
+                  <h3 className="text-lg font-bold leading-snug text-foreground group-hover:text-accent transition">
                     {a.title}
                   </h3>
                   <p className="line-clamp-3 text-xs leading-relaxed text-muted-foreground">{a.excerpt}</p>

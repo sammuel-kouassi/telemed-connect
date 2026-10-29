@@ -137,21 +137,23 @@
   border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-/* Micro-interactions sur les boutons */
-button:active, a.button-active:active {
-  transform: scale(0.97);
-  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.4, 1);
-}
-
 /*
  * Design system — Portail national de la Télémédecine (Côte d'Ivoire)
- * Palette : Bleu Marine Clinique + Teal Cyan + Or Ivoirien & Émeraude Santé
- * Typo : Sora (titres) / Manrope (texte).
+ * Palette : Vert RAFT (primaire) + Teal Cyan + Or Ivoirien
+ * Typo : Source Serif 4 (titres) / police système (interface et texte).
  */
 
 @theme inline {
-  --font-display: "Times New Roman", Times, serif;
-  --font-sans: "Times New Roman", Times, serif;
+  --font-display: "Source Serif 4", "Times New Roman", Times, serif;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Transitions par défaut : courtes et douces, jamais sur la mise en page */
+  --default-transition-duration: 180ms;
+  --default-transition-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1);
+
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-light: var(--brand-light);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -215,6 +217,10 @@ button:active, a.button-active:active {
   /* Brand Green (Primary - matching logo 'TELE' & official identity) */
   --primary: #74a638;
   --primary-foreground: #ffffff;
+  /* Vert foncé pour le texte, vert de survol, vert clair sur fonds sombres */
+  --brand-strong: #5e8c2a;
+  --brand-hover: #68982f;
+  --brand-light: #8bc34a;
 
   --secondary: oklch(0.95 0.016 220);
   --secondary-foreground: oklch(0.24 0.07 245);
@@ -283,6 +289,8 @@ button:active, a.button-active:active {
   --popover-foreground: oklch(0.98 0.005 220);
   --primary: #82bc3f;
   --primary-foreground: #0d1a08;
+  --brand-strong: #8bc34a;
+  --brand-hover: #74a638;
   --secondary: oklch(0.24 0.04 250);
   --secondary-foreground: oklch(0.98 0.005 220);
   --muted: oklch(0.23 0.035 250);
@@ -308,24 +316,45 @@ button:active, a.button-active:active {
   input,
   select,
   textarea {
-    font-family: "Times New Roman", Times, serif;
+    font-family: var(--font-sans);
   }
 
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: "Times New Roman", Times, serif;
+    font-family: var(--font-sans);
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
+  /* Titres en serif ; interlignage serré et approche négative seulement pour les grandes tailles */
   h1,
-  h2,
+  h2 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
   h3,
   h4,
   h5,
   h6 {
-    font-family: "Times New Roman", Times, serif;
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+  }
+
+  /* Retour à l'appui : instantané à la pression, et le relâchement est animé aussi */
+  :where(button, [data-press]) {
+    transition-property: color, background-color, border-color, box-shadow, opacity, scale, translate, rotate;
+    transition-duration: 160ms;
+    transition-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1);
+  }
+
+  :where(button:not(:disabled), [data-press]):active {
+    scale: 0.97;
+    transition-duration: 80ms;
   }
 
   /* Custom sleek scrollbar */
@@ -353,8 +382,6 @@ button:active, a.button-active:active {
 
 @utility surface-hero {
   background-image: var(--gradient-hero);
-  background-size: 200% 200%;
-  animation: gradientShift 16s ease-in-out infinite alternate;
 }
 
 @utility surface-accent {
@@ -379,14 +406,16 @@ button:active, a.button-active:active {
 
 @utility card-hover {
   transition:
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.35s ease;
+    translate 220ms cubic-bezier(0.2, 0.8, 0.4, 1),
+    box-shadow 220ms cubic-bezier(0.2, 0.8, 0.4, 1),
+    border-color 220ms ease;
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lift);
-    border-color: color-mix(in oklab, var(--accent) 55%, transparent);
+  @media (hover: hover) {
+    &:hover {
+      translate: 0 -4px;
+      box-shadow: var(--shadow-lift);
+      border-color: color-mix(in oklab, var(--accent) 55%, transparent);
+    }
   }
 }
 
@@ -448,4 +477,98 @@ button:active, a.button-active:active {
 .ci-accent-band {
   background: linear-gradient(90deg, #f97316 0%, #ffffff 50%, #22c55e 100%);
   height: 3px;
+}
+
+/* En-tête collant : pas de filet dur, un fondu n'apparaît que lorsque du contenu passe dessous */
+.site-header::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  height: 14px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 7%, transparent), transparent);
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.site-header[data-scrolled="true"]::after {
+  opacity: 1;
+}
+
+/* Lightbox ouverte par View Transition : l'image grandit depuis la vignette */
+::view-transition-group(lightbox-image) {
+  animation-duration: 360ms;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 240ms;
+}
+
+/* Accessibilité : mouvement réduit = fondus courts, aucune boucle, aucun glissement */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  :where(*) {
+    transition-property: opacity, color, background-color, border-color, box-shadow !important;
+  }
+
+  .animate-marquee-slow {
+    animation: none !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Accessibilité : transparence réduite = surfaces pleines, sans flou */
+@media (prefers-reduced-transparency: reduce) {
+  *,
+  *::before,
+  *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .glass,
+  .site-header {
+    background: var(--background) !important;
+  }
+
+  .glass-dark {
+    background: rgb(11, 27, 61) !important;
+  }
+}
+
+/* Accessibilité : contraste renforcé = bordures franches, fonds quasi pleins */
+@media (prefers-contrast: more) {
+  :root {
+    --border: oklch(0.55 0.03 240);
+    --input: oklch(0.55 0.03 240);
+    --muted-foreground: oklch(0.35 0.03 245);
+  }
+
+  .dark {
+    --border: oklch(1 0 0 / 45%);
+    --input: oklch(1 0 0 / 45%);
+    --muted-foreground: oklch(0.85 0.02 235);
+  }
+
+  .glass,
+  .site-header {
+    background: var(--background) !important;
+    border-color: var(--border) !important;
+  }
 }

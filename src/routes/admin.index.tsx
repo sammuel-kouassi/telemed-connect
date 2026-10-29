@@ -213,7 +213,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-800">
         <div className="flex items-center gap-3">
-          <span className="h-5 w-5 border-2 border-[#74a638] border-t-transparent rounded-full animate-spin" />
+          <span className="h-5 w-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
           <span className="text-xs font-medium text-slate-600">Chargement de l'espace administration...</span>
         </div>
       </div>
@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-[#74a638] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-primary selection:text-white">
       {/* Top Admin Navbar */}
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white px-3 sm:px-6 py-2 flex items-center justify-between shadow-2xs">
         <div className="flex items-center gap-3">
@@ -254,8 +254,8 @@ CREATE TABLE IF NOT EXISTS public.articles (
               <span className="font-bold text-sm tracking-tight text-slate-900">
                 Administration
               </span>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                 Connecté
               </span>
             </div>
@@ -291,12 +291,12 @@ CREATE TABLE IF NOT EXISTS public.articles (
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         {/* Left Sidebar Navigation */}
         <aside
-          className={`border-r border-slate-200 bg-white p-2.5 flex md:flex-col gap-1 shrink-0 transition-all duration-200 ${
+          className={`border-r border-slate-200 bg-white p-2.5 flex md:flex-col gap-1 shrink-0 transition duration-200 ${
             sidebarCollapsed ? "md:w-16" : "md:w-60"
           } ${mobileSidebarOpen ? "block" : "hidden md:flex"} overflow-x-auto md:overflow-y-auto`}
         >
           {!sidebarCollapsed && (
-            <div className="px-3 py-2 hidden md:block text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <div className="px-3 py-2 hidden md:block text-xs font-bold text-slate-400 uppercase tracking-wider">
               Navigation
             </div>
           )}
@@ -377,7 +377,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
           <NavButton
             active={activeTab === "database"}
             onClick={() => { setActiveTab("database"); setMobileSidebarOpen(false); }}
-            icon={<Database className="h-4 w-4 text-[#74a638]" />}
+            icon={<Database className="h-4 w-4 text-primary" />}
             label="Base de données"
             collapsed={sidebarCollapsed}
           />
@@ -439,7 +439,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
               {/* Quick Actions Panel */}
               <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-2xs">
                 <h2 className="text-base font-semibold text-slate-900 mb-4 flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-[#74a638]" />
+                  <Sparkles className="h-4 w-4 text-primary" />
                   Actions Rapides d'Ajout
                 </h2>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -459,9 +459,9 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       setArticleModalOpen(true);
                     }}
                     variant="outline"
-                    className="border-slate-200 bg-slate-50 hover:bg-[#74a638]/5 hover:border-[#74a638]/30 hover:text-[#74a638] text-slate-700 font-medium text-xs justify-start h-auto py-3 px-3 shadow-2xs transition-all"
+                    className="border-slate-200 bg-slate-50 hover:bg-primary/5 hover:border-primary/30 hover:text-primary text-slate-700 font-medium text-xs justify-start h-auto py-3 px-3 shadow-2xs transition"
                   >
-                    <Plus className="h-4 w-4 text-[#74a638] mr-2 shrink-0" />
+                    <Plus className="h-4 w-4 text-primary mr-2 shrink-0" />
                     <span>Nouvel Article</span>
                   </Button>
 
@@ -479,7 +479,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       setMediaModalOpen(true);
                     }}
                     variant="outline"
-                    className="border-slate-200 bg-slate-50 hover:bg-[#74a638]/5 hover:border-[#74a638]/30 hover:text-[#74a638] text-slate-700 font-medium text-xs justify-start h-auto py-3 px-3 shadow-2xs transition-all"
+                    className="border-slate-200 bg-slate-50 hover:bg-primary/5 hover:border-primary/30 hover:text-primary text-slate-700 font-medium text-xs justify-start h-auto py-3 px-3 shadow-2xs transition"
                   >
                     <Plus className="h-4 w-4 text-purple-600 mr-2 shrink-0" />
                     <span>Nouveau Média</span>
@@ -501,7 +501,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       setDirectoryModalOpen(true);
                     }}
                     variant="outline"
-                    className="border-slate-200 bg-slate-50 hover:bg-[#74a638]/5 hover:border-[#74a638]/30 hover:text-[#74a638] text-slate-700 font-medium text-xs justify-start h-auto py-3 px-3 shadow-2xs transition-all"
+                    className="border-slate-200 bg-slate-50 hover:bg-primary/5 hover:border-primary/30 hover:text-primary text-slate-700 font-medium text-xs justify-start h-auto py-3 px-3 shadow-2xs transition"
                   >
                     <Plus className="h-4 w-4 text-emerald-600 mr-2 shrink-0" />
                     <span>Nouvelle Structure</span>
@@ -523,7 +523,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       setProjectModalOpen(true);
                     }}
                     variant="outline"
-                    className="border-slate-200 bg-slate-50 hover:bg-[#74a638]/5 hover:border-[#74a638]/30 hover:text-[#74a638] text-slate-700 font-medium text-xs justify-start h-auto py-3 px-3 shadow-2xs transition-all"
+                    className="border-slate-200 bg-slate-50 hover:bg-primary/5 hover:border-primary/30 hover:text-primary text-slate-700 font-medium text-xs justify-start h-auto py-3 px-3 shadow-2xs transition"
                   >
                     <Plus className="h-4 w-4 text-amber-600 mr-2 shrink-0" />
                     <span>Nouveau Site Carte</span>
@@ -556,7 +556,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     });
                     setArticleModalOpen(true);
                   }}
-                  className="bg-[#74a638] hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
+                  className="bg-primary hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
                 >
                   <Plus className="h-3.5 w-3.5 mr-1.5" />
                   Ajouter un Article
@@ -585,7 +585,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                   .map((article) => (
                     <div
                       key={article.slug}
-                      className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs hover:shadow-sm hover:border-slate-300 transition-all"
+                      className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs hover:shadow-sm hover:border-slate-300 transition"
                     >
                       <div className="flex items-start gap-3.5 min-w-0">
                         <img
@@ -595,10 +595,10 @@ CREATE TABLE IF NOT EXISTS public.articles (
                         />
                         <div className="min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <Badge variant="outline" className="text-[10px] bg-slate-100 border-slate-200 text-slate-700">
+                            <Badge variant="outline" className="text-xs bg-slate-100 border-slate-200 text-slate-700">
                               {article.category}
                             </Badge>
-                            <span className="text-[11px] text-slate-500">{article.date}</span>
+                            <span className="text-xs text-slate-500">{article.date}</span>
                           </div>
                           <h3 className="font-semibold text-sm text-slate-900 truncate max-w-lg">{article.title}</h3>
                           <p className="text-xs text-slate-600 line-clamp-1 mt-0.5">{article.excerpt}</p>
@@ -672,7 +672,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     });
                     setMediaModalOpen(true);
                   }}
-                  className="bg-[#74a638] hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
+                  className="bg-primary hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
                 >
                   <Plus className="h-3.5 w-3.5 mr-1.5" />
                   Ajouter un Média
@@ -683,20 +683,20 @@ CREATE TABLE IF NOT EXISTS public.articles (
                 {mediaItems.map((item) => (
                   <div
                     key={item.id}
-                    className="bg-white border border-slate-200/90 rounded-xl overflow-hidden flex flex-col shadow-2xs hover:shadow-sm hover:border-slate-300 transition-all"
+                    className="bg-white border border-slate-200/90 rounded-xl overflow-hidden flex flex-col shadow-2xs hover:shadow-sm hover:border-slate-300 transition"
                   >
                     <div className="relative aspect-video bg-slate-100">
                       <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                       <div className="absolute top-2 left-2 flex gap-1.5">
-                        <Badge className="bg-slate-900/80 backdrop-blur-md text-[10px] text-white border-none">
+                        <Badge className="bg-slate-900/80 backdrop-blur-md text-xs text-white border-none">
                           {item.type}
                         </Badge>
-                        <Badge className="bg-[#74a638] text-[10px] text-white border-none font-medium">
+                        <Badge className="bg-primary text-xs text-white border-none font-medium">
                           {item.theme}
                         </Badge>
                       </div>
                       {item.youtubeId && (
-                        <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-red-600 text-white text-[10px] font-semibold">
+                        <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-red-600 text-white text-xs font-semibold">
                           YouTube
                         </div>
                       )}
@@ -708,7 +708,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                         <p className="text-xs text-slate-600 line-clamp-2 mt-1">{item.description}</p>
                       </div>
 
-                      <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-500">
+                      <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500">
                         <span>{item.date}</span>
                         <div className="flex items-center gap-1">
                           <Button
@@ -771,7 +771,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     });
                     setDirectoryModalOpen(true);
                   }}
-                  className="bg-[#74a638] hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
+                  className="bg-primary hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
                 >
                   <Plus className="h-3.5 w-3.5 mr-1.5" />
                   Ajouter une Structure
@@ -782,11 +782,11 @@ CREATE TABLE IF NOT EXISTS public.articles (
                 {directoryEntries.map((entry) => (
                   <div
                     key={entry.name}
-                    className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-sm hover:border-slate-300 transition-all"
+                    className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-sm hover:border-slate-300 transition"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-2">
-                        <Badge variant="outline" className="text-[10px] bg-slate-100 border-slate-200 text-slate-700">
+                        <Badge variant="outline" className="text-xs bg-slate-100 border-slate-200 text-slate-700">
                           {entry.category}
                         </Badge>
                         <span className="text-xs text-slate-500 font-medium">
@@ -796,7 +796,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       <h4 className="font-semibold text-sm text-slate-900">{entry.name}</h4>
                       <div className="flex flex-wrap gap-1 mt-2">
                         {entry.services.map((s, i) => (
-                          <span key={i} className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
+                          <span key={i} className="text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
                             {s}
                           </span>
                         ))}
@@ -867,7 +867,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     });
                     setProjectModalOpen(true);
                   }}
-                  className="bg-[#74a638] hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
+                  className="bg-primary hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
                 >
                   <Plus className="h-3.5 w-3.5 mr-1.5" />
                   Ajouter un Site
@@ -878,21 +878,21 @@ CREATE TABLE IF NOT EXISTS public.articles (
                 {projectSites.map((site) => (
                   <div
                     key={site.id}
-                    className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-sm hover:border-slate-300 transition-all"
+                    className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-sm hover:border-slate-300 transition"
                   >
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <Badge className="bg-[#74a638]/15 text-[#74a638] border border-[#74a638]/20 font-semibold text-[10px]">
+                        <Badge className="bg-primary/15 text-primary border border-primary/20 font-semibold text-xs">
                           {site.program}
                         </Badge>
-                        <span className="text-[11px] text-slate-500">Depuis {site.since}</span>
+                        <span className="text-xs text-slate-500">Depuis {site.since}</span>
                       </div>
                       <h4 className="font-semibold text-base text-slate-900">{site.city}</h4>
                       <p className="text-xs text-slate-500">{site.region}</p>
                       <p className="text-xs text-slate-600 mt-2 line-clamp-3">{site.detail}</p>
                     </div>
 
-                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-500">
+                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500">
                       <span>
                         GPS: {site.lat.toFixed(2)}, {site.lon.toFixed(2)} ({site.structures} struct.)
                       </span>
@@ -954,7 +954,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     });
                     setPartnerModalOpen(true);
                   }}
-                  className="bg-[#74a638] hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
+                  className="bg-primary hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
                 >
                   <Plus className="h-3.5 w-3.5 mr-1.5" />
                   Ajouter un Partenaire
@@ -965,19 +965,19 @@ CREATE TABLE IF NOT EXISTS public.articles (
                 {partners.map((partner) => (
                   <div
                     key={partner.name}
-                    className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-sm hover:border-slate-300 transition-all"
+                    className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-sm hover:border-slate-300 transition"
                   >
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <Badge variant="outline" className="text-[10px] bg-slate-100 border-slate-200 text-slate-700">
+                        <Badge variant="outline" className="text-xs bg-slate-100 border-slate-200 text-slate-700">
                           {partner.type}
                         </Badge>
-                        <span className="h-7 w-7 rounded-lg bg-[#74a638]/10 text-[#74a638] font-bold text-xs flex items-center justify-center border border-[#74a638]/20">
+                        <span className="h-7 w-7 rounded-lg bg-primary/10 text-primary font-bold text-xs flex items-center justify-center border border-primary/20">
                           {partner.initials}
                         </span>
                       </div>
                       <h4 className="font-semibold text-sm text-slate-900">{partner.name}</h4>
-                      <p className="text-xs text-[#74a638] font-semibold mt-0.5">{partner.role}</p>
+                      <p className="text-xs text-primary font-semibold mt-0.5">{partner.role}</p>
                       <p className="text-xs text-slate-600 mt-2 line-clamp-3">{partner.description}</p>
                     </div>
 
@@ -1036,7 +1036,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     });
                     setFaqModalOpen(true);
                   }}
-                  className="bg-[#74a638] hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
+                  className="bg-primary hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
                 >
                   <Plus className="h-3.5 w-3.5 mr-1.5" />
                   Ajouter une Question
@@ -1047,10 +1047,10 @@ CREATE TABLE IF NOT EXISTS public.articles (
                 {faqs.map((f, i) => (
                   <div
                     key={i}
-                    className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs hover:shadow-sm hover:border-slate-300 transition-all"
+                    className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-2xs hover:shadow-sm hover:border-slate-300 transition"
                   >
                     <div className="min-w-0">
-                      <Badge variant="outline" className="text-[10px] bg-slate-100 border-slate-200 text-slate-700 mb-1.5">
+                      <Badge variant="outline" className="text-xs bg-slate-100 border-slate-200 text-slate-700 mb-1.5">
                         {f.category}
                       </Badge>
                       <h4 className="font-semibold text-sm text-slate-900">{f.question}</h4>
@@ -1117,7 +1117,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       });
                       setTeamModalOpen(true);
                     }}
-                    className="bg-[#74a638] hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
+                    className="bg-primary hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
                   >
                     <Plus className="h-3.5 w-3.5 mr-1.5" />
                     Ajouter un Membre
@@ -1128,7 +1128,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                   {teamMembers.map((member) => (
                     <div
                       key={member.name}
-                      className="bg-white border border-slate-200/90 rounded-xl p-4 flex gap-3.5 shadow-2xs hover:shadow-sm hover:border-slate-300 transition-all"
+                      className="bg-white border border-slate-200/90 rounded-xl p-4 flex gap-3.5 shadow-2xs hover:shadow-sm hover:border-slate-300 transition"
                     >
                       <img
                         src={member.image}
@@ -1169,8 +1169,8 @@ CREATE TABLE IF NOT EXISTS public.articles (
                             </Button>
                           </div>
                         </div>
-                        <p className="text-xs text-[#74a638] font-semibold">{member.role}</p>
-                        <p className="text-[11px] text-slate-500">{member.subRole}</p>
+                        <p className="text-xs text-primary font-semibold">{member.role}</p>
+                        <p className="text-xs text-slate-500">{member.subRole}</p>
                         <p className="text-xs text-slate-600 mt-2 line-clamp-2">{member.bio}</p>
                       </div>
                     </div>
@@ -1197,7 +1197,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       });
                       setTestimonialModalOpen(true);
                     }}
-                    className="bg-[#74a638] hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
+                    className="bg-primary hover:bg-[#64922e] text-white text-xs font-semibold shadow-sm cursor-pointer"
                   >
                     <Plus className="h-3.5 w-3.5 mr-1.5" />
                     Ajouter un Témoignage
@@ -1208,7 +1208,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                   {testimonials.map((testim) => (
                     <div
                       key={testim.author}
-                      className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-sm hover:border-slate-300 transition-all"
+                      className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-sm hover:border-slate-300 transition"
                     >
                       <div>
                         <div className="flex items-center justify-between mb-2">
@@ -1285,10 +1285,10 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     <div>
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold text-sm text-slate-900">Supabase Cloud PostgreSQL</h3>
-                        <Badge className="bg-emerald-600 text-white text-[10px] py-0 px-2 font-medium">Actif</Badge>
+                        <Badge className="bg-emerald-600 text-white text-xs py-0 px-2 font-medium">Actif</Badge>
                       </div>
                       <p className="text-xs text-slate-500 mt-0.5">
-                        Projet : <span className="text-slate-700 font-mono font-medium">pjwqyvcmwlvtwyuhnkww</span> · Bucket : <span className="text-[#74a638] font-mono font-semibold">images (Public)</span>
+                        Projet : <span className="text-slate-700 font-mono font-medium">pjwqyvcmwlvtwyuhnkww</span> · Bucket : <span className="text-primary font-mono font-semibold">images (Public)</span>
                       </p>
                     </div>
                   </div>
@@ -1299,7 +1299,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                   <Button
                     onClick={handleSeed}
                     disabled={isSeeding || !supabaseActive}
-                    className="bg-[#74a638] hover:bg-[#64922e] text-white text-xs h-9 cursor-pointer font-semibold shadow-sm"
+                    className="bg-primary hover:bg-[#64922e] text-white text-xs h-9 cursor-pointer font-semibold shadow-sm"
                   >
                     {isSeeding ? (
                       <span className="flex items-center gap-1.5">
@@ -1346,41 +1346,41 @@ CREATE TABLE IF NOT EXISTS public.articles (
               {/* Table Records Summary Grid */}
               <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-2xs">
                 <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-[#74a638]" />
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
                   Tables actives & enregistrements en ligne
                 </h3>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
-                    <span className="text-[11px] text-slate-500 block">Articles</span>
+                    <span className="text-xs text-slate-500 block">Articles</span>
                     <span className="text-lg font-bold text-slate-900 mt-1 block">{articles.length}</span>
                   </div>
                   <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
-                    <span className="text-[11px] text-slate-500 block">Médiathèque</span>
+                    <span className="text-xs text-slate-500 block">Médiathèque</span>
                     <span className="text-lg font-bold text-slate-900 mt-1 block">{mediaItems.length}</span>
                   </div>
                   <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
-                    <span className="text-[11px] text-slate-500 block">Annuaire Santé</span>
+                    <span className="text-xs text-slate-500 block">Annuaire Santé</span>
                     <span className="text-lg font-bold text-slate-900 mt-1 block">{directoryEntries.length}</span>
                   </div>
                   <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
-                    <span className="text-[11px] text-slate-500 block">Sites Carte</span>
+                    <span className="text-xs text-slate-500 block">Sites Carte</span>
                     <span className="text-lg font-bold text-slate-900 mt-1 block">{projectSites.length}</span>
                   </div>
                   <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
-                    <span className="text-[11px] text-slate-500 block">Partenaires</span>
+                    <span className="text-xs text-slate-500 block">Partenaires</span>
                     <span className="text-lg font-bold text-slate-900 mt-1 block">{partners.length}</span>
                   </div>
                   <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
-                    <span className="text-[11px] text-slate-500 block">FAQ</span>
+                    <span className="text-xs text-slate-500 block">FAQ</span>
                     <span className="text-lg font-bold text-slate-900 mt-1 block">{faqs.length}</span>
                   </div>
                   <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
-                    <span className="text-[11px] text-slate-500 block">Membres Équipe</span>
+                    <span className="text-xs text-slate-500 block">Membres Équipe</span>
                     <span className="text-lg font-bold text-slate-900 mt-1 block">{teamMembers.length}</span>
                   </div>
                   <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
-                    <span className="text-[11px] text-slate-500 block">Témoignages</span>
+                    <span className="text-xs text-slate-500 block">Témoignages</span>
                     <span className="text-lg font-bold text-slate-900 mt-1 block">{testimonials.length}</span>
                   </div>
                 </div>
@@ -1422,7 +1422,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       setEditingArticle({ ...editingArticle, title, slug: slug || editingArticle.slug });
                     }}
                     placeholder="Ex: Lancement de la Phase 3 Télé-ECG"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
                 <div>
@@ -1430,7 +1430,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                   <Input
                     value={editingArticle.slug}
                     onChange={(e) => setEditingArticle({ ...editingArticle, slug: e.target.value })}
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
               </div>
@@ -1446,7 +1446,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                         category: e.target.value as Article["category"],
                       })
                     }
-                    className="w-full bg-slate-50/50 border border-slate-300 rounded-md p-2 text-slate-900 outline-none text-xs focus:border-[#74a638]"
+                    className="w-full bg-slate-50/50 border border-slate-300 rounded-md p-2 text-slate-900 outline-none text-xs focus:border-primary"
                   >
                     <option value="Actualité">Actualité</option>
                     <option value="Projet">Projet</option>
@@ -1460,7 +1460,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     type="date"
                     value={editingArticle.date}
                     onChange={(e) => setEditingArticle({ ...editingArticle, date: e.target.value })}
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
                 <div>
@@ -1469,7 +1469,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     value={editingArticle.readingTime}
                     onChange={(e) => setEditingArticle({ ...editingArticle, readingTime: e.target.value })}
                     placeholder="4 min"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
               </div>
@@ -1480,7 +1480,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                   value={editingArticle.author}
                   onChange={(e) => setEditingArticle({ ...editingArticle, author: e.target.value })}
                   placeholder="Coordination RAFT Côte d'Ivoire"
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
 
@@ -1490,7 +1490,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                   value={editingArticle.excerpt}
                   onChange={(e) => setEditingArticle({ ...editingArticle, excerpt: e.target.value })}
                   rows={2}
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
 
@@ -1525,7 +1525,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                   }}
                   rows={6}
                   placeholder="Écrivez le contenu de l'article ici..."
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
             </div>
@@ -1549,7 +1549,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                 toast.success("Article enregistré avec succès !");
                 setArticleModalOpen(false);
               }}
-              className="bg-[#74a638] hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
+              className="bg-primary hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
             >
               Enregistrer l'article
             </Button>
@@ -1579,7 +1579,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                   value={editingMedia.title}
                   onChange={(e) => setEditingMedia({ ...editingMedia, title: e.target.value })}
                   placeholder="Ex: Cérémonie de remise des kits Télé-ECG"
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
 
@@ -1594,7 +1594,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                         type: e.target.value as MediaItem["type"],
                       })
                     }
-                    className="w-full bg-slate-50/50 border border-slate-300 rounded-md p-2 text-slate-900 outline-none text-xs focus:border-[#74a638]"
+                    className="w-full bg-slate-50/50 border border-slate-300 rounded-md p-2 text-slate-900 outline-none text-xs focus:border-primary"
                   >
                     <option value="Photo">Photo</option>
                     <option value="Vidéo">Vidéo</option>
@@ -1611,7 +1611,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                         theme: e.target.value as MediaItem["theme"],
                       })
                     }
-                    className="w-full bg-slate-50/50 border border-slate-300 rounded-md p-2 text-slate-900 outline-none text-xs focus:border-[#74a638]"
+                    className="w-full bg-slate-50/50 border border-slate-300 rounded-md p-2 text-slate-900 outline-none text-xs focus:border-primary"
                   >
                     <option value="Télé-ECG">Télé-ECG</option>
                     <option value="Télé-expertise">Télé-expertise</option>
@@ -1646,7 +1646,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       });
                     }}
                     placeholder="Ex: 90fZyQnz4-8"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
               </div>
@@ -1657,7 +1657,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                   value={editingMedia.description}
                   onChange={(e) => setEditingMedia({ ...editingMedia, description: e.target.value })}
                   rows={2}
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
 
@@ -1668,7 +1668,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     value={editingMedia.source || ""}
                     onChange={(e) => setEditingMedia({ ...editingMedia, source: e.target.value || undefined })}
                     placeholder="Coordination RAFT CI"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
                 <div>
@@ -1677,7 +1677,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     value={editingMedia.duration || ""}
                     onChange={(e) => setEditingMedia({ ...editingMedia, duration: e.target.value || undefined })}
                     placeholder="Ex: 14:30"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
               </div>
@@ -1702,7 +1702,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                 toast.success("Média enregistré avec succès !");
                 setMediaModalOpen(false);
               }}
-              className="bg-[#74a638] hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
+              className="bg-primary hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
             >
               Enregistrer
             </Button>
@@ -1734,7 +1734,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     })
                   }
                   placeholder="Ex: Hôpital Général de Korhogo"
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
 
@@ -1752,7 +1752,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                         },
                       })
                     }
-                    className="w-full bg-slate-50/50 border border-slate-300 rounded-md p-2 text-slate-900 outline-none text-xs focus:border-[#74a638]"
+                    className="w-full bg-slate-50/50 border border-slate-300 rounded-md p-2 text-slate-900 outline-none text-xs focus:border-primary"
                   >
                     <option value="CHU">CHU</option>
                     <option value="Hôpital général">Hôpital général</option>
@@ -1771,7 +1771,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       })
                     }
                     placeholder="Korhogo"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
                 <div>
@@ -1785,7 +1785,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       })
                     }
                     placeholder="Poro"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
               </div>
@@ -1806,7 +1806,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     })
                   }
                   placeholder="Télé-ECG connecté, Urgences cardiologiques"
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
 
@@ -1822,7 +1822,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       })
                     }
                     placeholder="+225 27 00 00 00 00"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
                 <div>
@@ -1836,7 +1836,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       })
                     }
                     placeholder="contact@structure.ci"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
               </div>
@@ -1858,7 +1858,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                 toast.success("Structure enregistrée avec succès !");
                 setDirectoryModalOpen(false);
               }}
-              className="bg-[#74a638] hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
+              className="bg-primary hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
             >
               Enregistrer
             </Button>
@@ -1886,7 +1886,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     value={editingProject.city}
                     onChange={(e) => setEditingProject({ ...editingProject, city: e.target.value })}
                     placeholder="Bouaké"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
                 <div>
@@ -1895,7 +1895,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     value={editingProject.region}
                     onChange={(e) => setEditingProject({ ...editingProject, region: e.target.value })}
                     placeholder="Gbêkê"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
               </div>
@@ -1909,7 +1909,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     value={editingProject.lat}
                     onChange={(e) => setEditingProject({ ...editingProject, lat: parseFloat(e.target.value) || 0 })}
                     placeholder="7.69"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
                 <div>
@@ -1920,7 +1920,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     value={editingProject.lon}
                     onChange={(e) => setEditingProject({ ...editingProject, lon: parseFloat(e.target.value) || 0 })}
                     placeholder="-5.03"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
               </div>
@@ -1936,7 +1936,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                         program: e.target.value as ProjectSite["program"],
                       })
                     }
-                    className="w-full bg-slate-50/50 border border-slate-300 rounded-md p-2 text-slate-900 outline-none text-xs focus:border-[#74a638]"
+                    className="w-full bg-slate-50/50 border border-slate-300 rounded-md p-2 text-slate-900 outline-none text-xs focus:border-primary"
                   >
                     <option value="Télé-ECG">Télé-ECG</option>
                     <option value="Télé-expertise">Télé-expertise</option>
@@ -1949,7 +1949,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     type="number"
                     value={editingProject.structures}
                     onChange={(e) => setEditingProject({ ...editingProject, structures: parseInt(e.target.value) || 1 })}
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
                 <div>
@@ -1958,7 +1958,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     type="number"
                     value={editingProject.since}
                     onChange={(e) => setEditingProject({ ...editingProject, since: parseInt(e.target.value) || 2026 })}
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
               </div>
@@ -1969,7 +1969,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                   value={editingProject.detail}
                   onChange={(e) => setEditingProject({ ...editingProject, detail: e.target.value })}
                   rows={3}
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
             </div>
@@ -1990,7 +1990,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                 toast.success("Site cartographique enregistré avec succès !");
                 setProjectModalOpen(false);
               }}
-              className="bg-[#74a638] hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
+              className="bg-primary hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
             >
               Enregistrer
             </Button>
@@ -2022,7 +2022,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     })
                   }
                   placeholder="Ex: Ministère de la Santé"
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
 
@@ -2040,7 +2040,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                         },
                       })
                     }
-                    className="w-full bg-slate-50/50 border border-slate-300 rounded-md p-2 text-slate-900 outline-none text-xs focus:border-[#74a638]"
+                    className="w-full bg-slate-50/50 border border-slate-300 rounded-md p-2 text-slate-900 outline-none text-xs focus:border-primary"
                   >
                     <option value="Institutionnel">Institutionnel</option>
                     <option value="Technique">Technique</option>
@@ -2059,7 +2059,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       })
                     }
                     placeholder="MS"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
               </div>
@@ -2075,7 +2075,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     })
                   }
                   placeholder="Tutelle institutionnelle & santé publique"
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
 
@@ -2090,7 +2090,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     })
                   }
                   rows={3}
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
             </div>
@@ -2111,7 +2111,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                 toast.success("Partenaire enregistré avec succès !");
                 setPartnerModalOpen(false);
               }}
-              className="bg-[#74a638] hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
+              className="bg-primary hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
             >
               Enregistrer
             </Button>
@@ -2143,7 +2143,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     })
                   }
                   placeholder="Général, Télé-ECG, Formation..."
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
 
@@ -2158,7 +2158,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     })
                   }
                   placeholder="Quelle est la procédure d'adhésion ?"
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
 
@@ -2173,7 +2173,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     })
                   }
                   rows={4}
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
             </div>
@@ -2194,7 +2194,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                 toast.success("Question enregistrée avec succès !");
                 setFaqModalOpen(false);
               }}
-              className="bg-[#74a638] hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
+              className="bg-primary hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
             >
               Enregistrer
             </Button>
@@ -2226,7 +2226,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     })
                   }
                   placeholder="Prof EHUA Somian Francis"
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
 
@@ -2242,7 +2242,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       })
                     }
                     placeholder="Point focal RAFT Côte d'Ivoire"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
                 <div>
@@ -2256,7 +2256,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       })
                     }
                     placeholder="Chirurgien · +35 ans d'expérience"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
               </div>
@@ -2285,7 +2285,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     })
                   }
                   rows={3}
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
             </div>
@@ -2306,7 +2306,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                 toast.success("Membre enregistré avec succès !");
                 setTeamModalOpen(false);
               }}
-              className="bg-[#74a638] hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
+              className="bg-primary hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
             >
               Enregistrer
             </Button>
@@ -2339,7 +2339,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       })
                     }
                     placeholder="Dr. Carlo MONTAGUTI"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
                 <div>
@@ -2353,7 +2353,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                       })
                     }
                     placeholder="Centre Focolari Man"
-                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                    className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                   />
                 </div>
               </div>
@@ -2382,7 +2382,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                     })
                   }
                   rows={4}
-                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638]"
+                  className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary"
                 />
               </div>
             </div>
@@ -2406,7 +2406,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
                 toast.success("Témoignage enregistré avec succès !");
                 setTestimonialModalOpen(false);
               }}
-              className="bg-[#74a638] hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
+              className="bg-primary hover:bg-[#64922e] text-white font-semibold text-xs shadow-sm"
             >
               Enregistrer
             </Button>
@@ -2476,9 +2476,9 @@ function NavButton({
         type="button"
         onClick={onClick}
         title={`${label}${typeof count === "number" ? ` (${count})` : ""}`}
-        className={`relative flex items-center justify-center w-full h-10 rounded-xl transition-all cursor-pointer select-none ${
+        className={`relative flex items-center justify-center w-full h-10 rounded-xl transition cursor-pointer select-none ${
           active
-            ? "bg-[#74a638] text-white shadow-md shadow-[#74a638]/20 font-semibold"
+            ? "bg-primary text-white shadow-md shadow-primary/20 font-semibold"
             : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
         }`}
       >
@@ -2486,7 +2486,7 @@ function NavButton({
         {typeof count === "number" && count > 0 && (
           <span
             className={`absolute top-2 right-2 h-1.5 w-1.5 rounded-full ${
-              active ? "bg-white" : "bg-[#74a638]"
+              active ? "bg-white" : "bg-primary"
             }`}
           />
         )}
@@ -2498,9 +2498,9 @@ function NavButton({
     <button
       type="button"
       onClick={onClick}
-      className={`flex items-center justify-between w-full px-3 py-2 rounded-xl text-xs font-medium transition-colors cursor-pointer select-none whitespace-nowrap ${
+      className={`flex items-center justify-between w-full px-3 py-2 rounded-xl text-xs font-medium transition cursor-pointer select-none whitespace-nowrap ${
         active
-          ? "bg-[#74a638] text-white shadow-md shadow-[#74a638]/20 font-semibold"
+          ? "bg-primary text-white shadow-md shadow-primary/20 font-semibold"
           : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
       }`}
     >
@@ -2510,7 +2510,7 @@ function NavButton({
       </div>
       {typeof count === "number" && (
         <span
-          className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold ${
+          className={`px-1.5 py-0.5 rounded-md text-xs font-semibold ${
             active ? "bg-white/20 text-white" : "bg-slate-100 text-slate-700 border border-slate-200"
           }`}
         >
@@ -2519,7 +2519,7 @@ function NavButton({
       )}
       {badge && (
         <span
-          className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold ${
+          className={`px-1.5 py-0.5 rounded-md text-xs font-semibold ${
             active ? "bg-white/20 text-white" : "bg-emerald-50 text-emerald-700 border border-emerald-200"
           }`}
         >
@@ -2544,7 +2544,7 @@ function StatCard({
   return (
     <div
       onClick={onAction}
-      className="bg-white border border-slate-200/90 rounded-2xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-sm hover:border-[#74a638]/40 transition-all cursor-pointer group"
+      className="bg-white border border-slate-200/90 rounded-2xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-sm hover:border-primary/40 transition cursor-pointer group"
     >
       <div className="flex items-center justify-between">
         <span className="text-xs text-slate-500 font-medium">{title}</span>
@@ -2554,7 +2554,7 @@ function StatCard({
       </div>
       <div className="mt-4 flex items-baseline justify-between">
         <span className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">{count}</span>
-        <span className="text-[11px] text-[#74a638] font-semibold group-hover:underline">Gérer →</span>
+        <span className="text-xs text-primary font-semibold group-hover:underline">Gérer →</span>
       </div>
     </div>
   );

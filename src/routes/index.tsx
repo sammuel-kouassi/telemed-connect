@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import {
   Activity,
   ArrowRight,
@@ -58,11 +59,20 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
+function prefersReducedMotion() {
+  return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+// Le compteur part de la valeur finale (rendu serveur, carte déjà visible, mouvement réduit) ;
+// il ne compte depuis 0 que pour une carte qui arrive à l'écran en défilant.
 function useCountUp(target: number, active: boolean) {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(target);
   useEffect(() => {
-    if (!active) return;
-    const duration = 1600;
+    if (!active) {
+      setValue(target);
+      return;
+    }
+    const duration = 1200;
     const start = performance.now();
     let frame = 0;
     const tick = (now: number) => {
@@ -107,29 +117,16 @@ function HeroStatCard({
   label: string;
   iconIndex: number;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [seen, setSeen] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) setSeen(true);
-      },
-      { threshold: 0.2 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  const shown = useCountUp(value, seen);
+  const { ref, isVisible: animateCount } = useIntersectionObserver<HTMLDivElement>();
+  const shown = useCountUp(value, animateCount && !prefersReducedMotion());
   const Icon = statIcons[iconIndex % statIcons.length] ?? HeartPulse;
 
   return (
     <div
       ref={ref}
-      className="group relative flex items-center gap-3 sm:gap-3.5 overflow-hidden rounded-2xl border border-white/15 bg-white/[0.06] p-3 sm:p-3.5 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.1] hover:border-[#74a638]/70 hover:-translate-y-0.5 shadow-sm"
+      className="group relative flex items-center gap-3 sm:gap-3.5 overflow-hidden rounded-2xl border border-white/15 bg-white/[0.06] p-3 sm:p-3.5 backdrop-blur-md transition duration-200 hover:bg-white/[0.1] hover:border-primary/70 shadow-sm"
     >
-      <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-[#74a638] text-white shadow-xs transition-transform duration-300 group-hover:scale-105">
+      <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-white shadow-xs">
         <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
       </div>
 
@@ -137,11 +134,10 @@ function HeroStatCard({
         <div className="flex items-center justify-between">
           <p className="font-[family-name:var(--font-display)] text-lg sm:text-xl xl:text-2xl font-extrabold tracking-tight text-white leading-tight">
             {shown.toLocaleString("fr-FR")}
-            <span className="text-[#74a638] ml-0.5">{suffix}</span>
+            <span className="text-primary ml-0.5">{suffix}</span>
           </p>
-          <span className="flex h-1.5 w-1.5 shrink-0 rounded-full bg-[#74a638] animate-pulse ml-2" />
         </div>
-        <p className="mt-0.5 text-[0.72rem] sm:text-xs font-medium text-white/80 leading-snug line-clamp-1">{label}</p>
+        <p className="mt-0.5 text-xs sm:text-xs font-medium text-white/80 leading-snug line-clamp-1">{label}</p>
       </div>
     </div>
   );
@@ -158,7 +154,6 @@ function Home() {
 
   const latest = articles.slice(0, 3);
 
-  const { ref: heroRef, isVisible: heroVisible } = useIntersectionObserver<HTMLDivElement>();
   const { ref: histoireRef, isVisible: histoireVisible } = useIntersectionObserver<HTMLDivElement>();
   const { ref: mapRef, isVisible: mapVisible } = useIntersectionObserver<HTMLDivElement>();
   const { ref: articlesRef, isVisible: articlesVisible } = useIntersectionObserver<HTMLDivElement>();
@@ -166,20 +161,29 @@ function Home() {
   const { ref: teamRef, isVisible: teamVisible } = useIntersectionObserver<HTMLDivElement>();
   const { ref: ctaRef, isVisible: ctaVisible } = useIntersectionObserver<HTMLDivElement>();
 
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const [isTestimonialPlaying, setIsTestimonialPlaying] = useState(true);
-
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [isSlidePaused, setIsSlidePaused] = useState(false);
-
-  // Auto-rotation des 3 images du slider toutes les 5 secondes
+  const [reducedMotion, setReducedMotion] = useState(false);
   useEffect(() => {
-    if (isSlidePaused) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const onChange = () => setReducedMotion(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  // ---- Hero : fondu entre 3 images, glissable au doigt ----
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isSlidePlaying, setIsSlidePlaying] = useState(true);
+  const [isHeroInteracting, setIsHeroInteracting] = useState(false);
+  const swipeRef = useRef<{ x: number; y: number; t: number; id: number; locked: "x" | "y" | null } | null>(null);
+
+  // Défilement auto : arrêté si mouvement réduit, en pause au survol, au focus ou au toucher
+  useEffect(() => {
+    if (!isSlidePlaying || isHeroInteracting || reducedMotion) return;
     const timer = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(timer);
-  }, [isSlidePaused]);
+  }, [isSlidePlaying, isHeroInteracting, reducedMotion, activeSlide]);
 
   const prevSlide = () => {
     setActiveSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
@@ -189,42 +193,95 @@ function Home() {
     setActiveSlide((prev) => (prev + 1) % heroSlides.length);
   };
 
-  // Auto-rotation des témoignages
+  // Geste de balayage : seuil de 10 px avant de choisir un axe, puis décision sur distance OU vitesse
+  const onHeroPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse") return;
+    swipeRef.current = { x: e.clientX, y: e.clientY, t: performance.now(), id: e.pointerId, locked: null };
+    setIsHeroInteracting(true);
+  };
+  const onHeroPointerMove = (e: React.PointerEvent) => {
+    const s = swipeRef.current;
+    if (!s || s.id !== e.pointerId || s.locked) return;
+    const dx = Math.abs(e.clientX - s.x);
+    const dy = Math.abs(e.clientY - s.y);
+    if (dx > 10 || dy > 10) s.locked = dx > dy ? "x" : "y";
+  };
+  const onHeroPointerEnd = (e: React.PointerEvent) => {
+    const s = swipeRef.current;
+    swipeRef.current = null;
+    setIsHeroInteracting(false);
+    if (!s || s.id !== e.pointerId || s.locked !== "x") return;
+    const dx = e.clientX - s.x;
+    const velocity = dx / Math.max(1, performance.now() - s.t); // px/ms
+    if (Math.abs(dx) > 60 || Math.abs(velocity) > 0.35) {
+      if (dx < 0) nextSlide();
+      else prevSlide();
+    }
+  };
+
+  // ---- Témoignages : carrousel Embla (suivi 1:1 du doigt, élan, bords élastiques) ----
+  const [testimonialsViewport, testimonialsApi] = useEmblaCarousel({
+    loop: true,
+    align: "start",
+    duration: reducedMotion ? 1 : 28,
+  });
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [isTestimonialPlaying, setIsTestimonialPlaying] = useState(true);
+  const [isTestimonialHovered, setIsTestimonialHovered] = useState(false);
+
   useEffect(() => {
-    if (!isTestimonialPlaying) return;
-    const timer = setInterval(() => {
-      setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 6500);
+    if (!testimonialsApi) return;
+    const onSelect = () => setActiveTestimonial(testimonialsApi.selectedScrollSnap());
+    onSelect();
+    testimonialsApi.on("select", onSelect).on("reInit", onSelect);
+    return () => {
+      testimonialsApi.off("select", onSelect).off("reInit", onSelect);
+    };
+  }, [testimonialsApi]);
+
+  useEffect(() => {
+    if (!testimonialsApi || !isTestimonialPlaying || isTestimonialHovered || reducedMotion) return;
+    if (testimonials.length < 2) return;
+    const timer = setInterval(() => testimonialsApi.scrollNext(), 7000);
     return () => clearInterval(timer);
-  }, [isTestimonialPlaying]);
+  }, [testimonialsApi, isTestimonialPlaying, isTestimonialHovered, reducedMotion, testimonials.length, activeTestimonial]);
+
+  const goToTestimonial = (idx: number) => testimonialsApi?.scrollTo(idx);
 
   return (
     <>
       {/* Hero Section with 3-image Background Carousel & Integrated Dynamic Stats */}
       <section
-        ref={heroRef}
-        className={cn(
-          "relative overflow-hidden text-primary-foreground pt-14 pb-16 lg:pt-20 lg:pb-24 min-h-[580px] flex flex-col justify-center",
-          heroVisible && "animate-fade-up",
-        )}
+        aria-roledescription="carrousel"
+        aria-label="Présentation du réseau"
+        className="relative overflow-hidden text-primary-foreground pt-14 pb-16 lg:pt-20 lg:pb-24 min-h-[580px] flex flex-col justify-center touch-pan-y"
+        onPointerDown={onHeroPointerDown}
+        onPointerMove={onHeroPointerMove}
+        onPointerUp={onHeroPointerEnd}
+        onPointerCancel={onHeroPointerEnd}
+        onMouseEnter={() => setIsHeroInteracting(true)}
+        onMouseLeave={() => setIsHeroInteracting(false)}
+        onFocus={() => setIsHeroInteracting(true)}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node)) setIsHeroInteracting(false);
+        }}
       >
-        {/* Background Image Carousel with 3 rotating images (avec les 3 images qui défilent) */}
+        {/* Images de fond en fondu enchaîné */}
         <div className="absolute inset-0 select-none">
           {heroSlides.map((slide, idx) => (
             <div
               key={idx}
               className={cn(
-                "absolute inset-0 transition-opacity duration-1000 ease-in-out",
+                "absolute inset-0 transition-opacity duration-700 ease-out",
                 idx === activeSlide ? "opacity-100 z-0" : "opacity-0 pointer-events-none -z-10"
               )}
+              aria-hidden={idx !== activeSlide}
             >
               <img
                 src={slide.image}
                 alt={slide.alt}
-                className={cn(
-                  "h-full w-full object-cover object-center transform transition-transform duration-7000 ease-out",
-                  idx === activeSlide ? "scale-105" : "scale-100"
-                )}
+                draggable={false}
+                className="h-full w-full object-cover object-center"
               />
             </div>
           ))}
@@ -232,22 +289,21 @@ function Home() {
           {/* Directional subtle dark & brand gradient overlay ensuring text readability while keeping the image clear */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#031422]/95 via-[#031422]/80 to-[#031422]/35" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#020d17] via-transparent to-black/45" />
-          <div className="absolute inset-0 bg-[#74a638]/10 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-primary/10 mix-blend-overlay" />
           <div className="grid-pattern absolute inset-0 opacity-15" aria-hidden="true" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
           <div className="max-w-3xl space-y-6">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3.5 py-1.5 text-xs font-semibold tracking-wide text-white backdrop-blur-md">
-              <span className="flex h-2 w-2 rounded-full bg-[#74a638] animate-pulse" />
               <span>Réseau National RAFT · Côte d'Ivoire</span>
               <span className="text-white/40">|</span>
-              <span className="text-[#8bc34a] font-bold">Santé Numérique</span>
+              <span className="text-brand-light font-bold">Santé Numérique</span>
             </div>
 
             <h1 className="text-4xl leading-[1.08] font-extrabold sm:text-5xl lg:text-6xl tracking-tight text-white drop-shadow-md">
               Le soin spécialisé,{" "}
-              <span className="text-[#8bc34a]">
+              <span className="text-brand-light">
                 accessible partout sur le territoire.
               </span>
             </h1>
@@ -260,7 +316,7 @@ function Home() {
               <Button
                 asChild
                 size="lg"
-                className="rounded-full bg-[#74a638] hover:bg-[#68982f] text-white px-7 font-semibold shadow-lg shadow-[#74a638]/30 transition-all hover:-translate-y-0.5 cursor-pointer"
+                className="rounded-full bg-primary hover:bg-brand-hover text-white px-7 font-semibold shadow-lg shadow-primary/30 transition hover:-translate-y-0.5 cursor-pointer"
               >
                 <Link to="/projets">
                   Explorer la carte des 24 sites
@@ -272,7 +328,7 @@ function Home() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="rounded-full border-white/30 bg-black/30 text-white backdrop-blur-md hover:bg-black/50 hover:text-white transition-all cursor-pointer"
+                className="rounded-full border-white/30 bg-black/30 text-white backdrop-blur-md hover:bg-black/50 hover:text-white transition cursor-pointer"
               >
                 <Link to="/annuaire">Trouver une structure</Link>
               </Button>
@@ -280,48 +336,64 @@ function Home() {
 
             {/* Slide controls & current theme badge */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
-              <div className="inline-flex items-center gap-2 rounded-full bg-black/50 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-md border border-white/20">
-                <span className="h-2 w-2 rounded-full bg-[#74a638] animate-pulse" />
-                <span>{heroSlides[activeSlide].tag}</span>
+              <div
+                className="inline-flex items-center gap-2 rounded-full bg-black/50 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-md border border-white/20"
+                aria-live="polite"
+              >
+                <span>{heroSlides[activeSlide]?.tag}</span>
               </div>
 
-              <div className="flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-md">
+              {/* Commandes : chaque cible fait au moins 44 px grâce à une zone de clic étendue */}
+              <div className="flex items-center gap-3 bg-black/40 px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-md">
                 <button
                   type="button"
                   onClick={prevSlide}
                   aria-label="Diapositive précédente"
-                  className="text-white/80 hover:text-white transition-colors cursor-pointer"
+                  className="relative text-white/80 hover:text-white cursor-pointer after:absolute after:-inset-3.5 after:content-['']"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1">
                   {heroSlides.map((_, idx) => (
                     <button
                       key={idx}
                       type="button"
                       onClick={() => setActiveSlide(idx)}
-                      aria-label={`Aller au slide ${idx + 1}`}
-                      className={cn(
-                        "h-1.5 rounded-full transition-all duration-300 cursor-pointer",
-                        idx === activeSlide
-                          ? "w-6 bg-[#74a638]"
-                          : "w-2 bg-white/40 hover:bg-white/70"
-                      )}
-                    />
+                      aria-label={`Aller à la diapositive ${idx + 1}`}
+                      aria-current={idx === activeSlide}
+                      className="relative flex h-1.5 items-center px-1 cursor-pointer after:absolute after:-inset-y-[19px] after:inset-x-0 after:content-['']"
+                    >
+                      <span
+                        className={cn(
+                          "block h-1.5 rounded-full transition-[width,background-color] duration-300 ease-out",
+                          idx === activeSlide ? "w-6 bg-primary" : "w-2 bg-white/40 hover:bg-white/70"
+                        )}
+                      />
+                    </button>
                   ))}
                 </div>
                 <button
                   type="button"
                   onClick={nextSlide}
                   aria-label="Diapositive suivante"
-                  className="text-white/80 hover:text-white transition-colors cursor-pointer"
+                  className="relative text-white/80 hover:text-white cursor-pointer after:absolute after:-inset-3.5 after:content-['']"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>
+                {!reducedMotion && (
+                  <button
+                    type="button"
+                    onClick={() => setIsSlidePlaying((p) => !p)}
+                    aria-label={isSlidePlaying ? "Mettre le défilement en pause" : "Reprendre le défilement"}
+                    className="relative ml-1 text-white/80 hover:text-white cursor-pointer after:absolute after:-inset-3.5 after:content-['']"
+                  >
+                    {isSlidePlaying ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+                  </button>
+                )}
               </div>
 
               <div className="hidden sm:inline-flex items-center gap-2 text-xs font-medium text-white/80 bg-black/30 px-3 py-1.5 rounded-full border border-white/10 backdrop-blur-md">
-                <Clock className="h-3.5 w-3.5 text-[#8bc34a]" />
+                <Clock className="h-3.5 w-3.5 text-brand-light" />
                 <span>Avis cardiologique en &lt; 28 min</span>
               </div>
             </div>
@@ -363,19 +435,19 @@ function Home() {
       <div className="border-b border-border/80 bg-card py-4 shadow-xs">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-around gap-6 px-4 text-xs font-semibold text-muted-foreground sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-[#74a638]" />
+            <CheckCircle2 className="h-4 w-4 text-primary" />
             <span>Conventionné Ministère de la Santé</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-[#74a638]" />
+            <CheckCircle2 className="h-4 w-4 text-primary" />
             <span>Membre officiel Réseau RAFT Afrique</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-[#74a638]" />
+            <CheckCircle2 className="h-4 w-4 text-primary" />
             <span>Matériel médical certifié CE / OMS</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-[#74a638]" />
+            <CheckCircle2 className="h-4 w-4 text-primary" />
             <span>Astreinte cardiologique 24h/24 7j/7</span>
           </div>
         </div>
@@ -391,12 +463,11 @@ function Home() {
             {/* Colonne Gauche : Texte & Récit (Animation d'entrée depuis la gauche) */}
             <div
               className={cn(
-                "lg:col-span-7 space-y-6 transition-all duration-700 ease-out",
-                histoireVisible ? "animate-fade-right opacity-100" : "opacity-0 -translate-x-10"
+                "lg:col-span-7 space-y-6",
+                histoireVisible && "animate-fade-up"
               )}
             >
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#74a638]/25 bg-[#74a638]/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a]">
-                <span className="h-2 w-2 rounded-full bg-[#74a638] animate-pulse" />
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-brand-strong dark:text-brand-light">
                 <span>Genèse & Histoire Pionnière</span>
               </div>
 
@@ -404,7 +475,7 @@ function Home() {
                 <span className="block sm:whitespace-nowrap">
                   La Télémédecine En Côte D'Ivoire
                 </span>
-                <span className="block text-[#5e8c2a] dark:text-[#8bc34a] mt-1">
+                <span className="block text-brand-strong dark:text-brand-light mt-1">
                   D'hier À Aujourd'hui
                 </span>
               </h2>
@@ -416,7 +487,7 @@ function Home() {
               <div className="pt-2">
                 <Button
                   asChild
-                  className="rounded-full bg-[#74a638] hover:bg-[#68982f] text-white px-7 py-3 font-semibold shadow-md shadow-[#74a638]/25 transition-all hover:-translate-y-0.5 cursor-pointer"
+                  className="rounded-full bg-primary hover:bg-brand-hover text-white px-7 py-3 font-semibold shadow-md shadow-primary/25 transition hover:-translate-y-0.5 cursor-pointer"
                 >
                   <Link to="/a-propos">
                     Découvrir toute l'histoire
@@ -429,27 +500,26 @@ function Home() {
             {/* Colonne Droite : Image historique (Animation d'entrée depuis la droite) */}
             <div
               className={cn(
-                "lg:col-span-5 relative transition-all duration-700 ease-out delay-150",
-                histoireVisible ? "animate-fade-left opacity-100" : "opacity-0 translate-x-10"
+                "lg:col-span-5 relative [animation-delay:80ms]",
+                histoireVisible && "animate-fade-up"
               )}
             >
               <div className="relative mx-auto max-w-lg lg:max-w-none">
                 {/* Lueur d'ambiance en arrière-plan */}
-                <div className="absolute -inset-4 rounded-3xl bg-[#74a638]/15 blur-3xl opacity-60 pointer-events-none" />
+                <div className="absolute -inset-4 rounded-3xl bg-primary/15 blur-3xl opacity-60 pointer-events-none" />
 
                 {/* Cadre d'image unique soigné */}
-                <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-card shadow-lift group transition-all duration-500 hover:shadow-2xl hover:border-[#74a638]/50">
+                <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-card shadow-lift group transition duration-300 hover:shadow-2xl hover:border-primary/50">
                   <img
                     src={histoireRencontre2004}
                     alt="Pr EHUA Somian Francis et confrères lors de la rencontre fondatrice de 2004"
-                    className="w-full h-auto max-h-[420px] object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-auto max-h-[420px] object-cover object-center transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-85" />
 
                   {/* Badge descriptif élégant en bas */}
                   <div className="absolute bottom-4 left-5 right-5 flex items-center justify-between text-white text-xs sm:text-sm font-semibold">
                     <span className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-[#74a638]" />
                       2004 · Rencontre fondatrice avec le Pr Ehua
                     </span>
                     <span className="rounded-full bg-white/20 px-3 py-1 text-xs backdrop-blur-md border border-white/20 font-medium">
@@ -465,8 +535,7 @@ function Home() {
       {/* Équipe et Pionniers */}
       <section ref={teamRef} className={cn("mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 border-b border-border/70", teamVisible && "animate-fade-up")}>
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#74a638]/25 bg-[#74a638]/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a]">
-            <span className="h-2 w-2 rounded-full bg-[#74a638] animate-pulse" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-brand-strong dark:text-brand-light">
             <span>Coordination RAFT & Pionniers</span>
           </div>
           <h2 className="mt-3 font-[family-name:var(--font-display)] text-3xl font-extrabold sm:text-4xl text-foreground">
@@ -489,8 +558,7 @@ function Home() {
             return (
               <div
                 key={m.name}
-                className="card-hover group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-[#74a638]/10 hover:border-[#74a638]/60"
-                style={{ animationDelay: `${i * 90}ms` }}
+                className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft transition duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/60"
               >
                 {/* Photo portrait optimisée */}
                 <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-muted">
@@ -501,12 +569,12 @@ function Home() {
                       width={400}
                       height={400}
                       className={cn(
-                        "h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105",
+                        "h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-105",
                         isKpon ? "object-[center_20%]" : "object-top"
                       )}
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-[#74a638] text-white font-bold text-3xl">
+                    <div className="flex h-full w-full items-center justify-center bg-primary text-white font-bold text-3xl">
                       {m.initials}
                     </div>
                   )}
@@ -516,8 +584,8 @@ function Home() {
 
                   {/* Badge incrusté en haut à gauche */}
                   <div className="absolute top-3 left-3">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 dark:bg-card/90 px-2.5 py-0.5 text-[0.65rem] font-bold text-[#5e8c2a] dark:text-[#8bc34a] backdrop-blur-md shadow-xs border border-[#74a638]/25">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#74a638] animate-pulse" />
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 dark:bg-card/90 px-2.5 py-0.5 text-xs font-bold text-brand-strong dark:text-brand-light backdrop-blur-md shadow-xs border border-primary/25">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                       {badgeType}
                     </span>
                   </div>
@@ -525,7 +593,7 @@ function Home() {
                   {/* Pastille active en haut à droite */}
                   <div className="absolute top-3 right-3">
                     <span className="flex h-2.5 w-2.5">
-                      <span className="inline-flex h-full w-full rounded-full bg-[#74a638] ring-2 ring-white dark:ring-card" />
+                      <span className="inline-flex h-full w-full rounded-full bg-primary ring-2 ring-white dark:ring-card" />
                     </span>
                   </div>
                 </div>
@@ -533,13 +601,13 @@ function Home() {
                 {/* Contenu textuel concis & équilibré */}
                 <div className="flex flex-1 flex-col justify-between p-4 pt-2.5">
                   <div className="space-y-1">
-                    <h3 className="text-base font-bold leading-snug text-foreground group-hover:text-[#5e8c2a] dark:group-hover:text-[#8bc34a] transition-colors">
+                    <h3 className="text-base font-bold leading-snug text-foreground group-hover:text-brand-strong dark:group-hover:text-brand-light transition">
                       {m.name}
                     </h3>
-                    <p className="text-[0.7rem] font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a]">
+                    <p className="text-xs font-bold uppercase tracking-wider text-brand-strong dark:text-brand-light">
                       {m.role}
                     </p>
-                    <p className="text-[0.72rem] text-muted-foreground font-medium leading-tight line-clamp-1">
+                    <p className="text-xs text-muted-foreground font-medium leading-tight line-clamp-1">
                       {m.subRole}
                     </p>
                     <p className="pt-1 text-xs leading-relaxed text-muted-foreground line-clamp-2">
@@ -548,11 +616,11 @@ function Home() {
                   </div>
 
                   <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-xs">
-                    <span className="inline-flex items-center gap-1.5 text-[0.68rem] font-bold text-[#5e8c2a] dark:text-[#8bc34a] bg-[#74a638]/10 border border-[#74a638]/20 px-2.5 py-0.5 rounded-full">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#74a638]" />
+                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-strong dark:text-brand-light bg-primary/10 border border-primary/20 px-2.5 py-0.5 rounded-full">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                       {orgLabel}
                     </span>
-                    <span className="text-[0.68rem] font-medium text-muted-foreground">
+                    <span className="text-xs font-medium text-muted-foreground">
                       {periodLabel}
                     </span>
                   </div>
@@ -567,8 +635,7 @@ function Home() {
       <section ref={articlesRef} className={cn("mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 border-b border-border/70", articlesVisible && "animate-fade-up")}>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#74a638]/25 bg-[#74a638]/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a]">
-              <span className="h-2 w-2 rounded-full bg-[#74a638] animate-pulse" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-brand-strong dark:text-brand-light">
               <span>Actualités & Recherches</span>
             </div>
             <h2 className="mt-3 font-[family-name:var(--font-display)] text-3xl font-extrabold sm:text-4xl text-foreground">
@@ -578,7 +645,7 @@ function Home() {
               Retours d'expérience cliniques, bilans de programmes et avancées de la télémédecine.
             </p>
           </div>
-          <Button asChild variant="outline" className="rounded-full border-[#74a638]/40 hover:bg-[#74a638]/10 hover:text-[#5e8c2a] dark:hover:text-[#8bc34a] font-semibold">
+          <Button asChild variant="outline" className="rounded-full border-primary/40 hover:bg-primary/10 hover:text-brand-strong dark:hover:text-brand-light font-semibold">
             <Link to="/articles">
               Toutes les publications <ArrowRight className="ml-1.5 h-4 w-4" />
             </Link>
@@ -591,8 +658,7 @@ function Home() {
               key={a.slug}
               to="/articles/$slug"
               params={{ slug: a.slug }}
-              className="group flex flex-col overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lift hover:border-[#74a638]/50"
-              style={{ animationDelay: `${i * 100}ms` }}
+              className="group flex flex-col overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft transition duration-300 hover:-translate-y-1.5 hover:shadow-lift hover:border-primary/50"
             >
               <div className="aspect-16/10 overflow-hidden bg-muted">
                 <img
@@ -601,27 +667,27 @@ function Home() {
                   loading="lazy"
                   width={1200}
                   height={800}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
 
               <div className="flex flex-1 flex-col justify-between p-6">
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <Badge variant="secondary" className="font-semibold bg-[#74a638]/10 text-[#5e8c2a] dark:text-[#8bc34a] border border-[#74a638]/20">
+                    <Badge variant="secondary" className="font-semibold bg-primary/10 text-brand-strong dark:text-brand-light border border-primary/20">
                       {a.category}
                     </Badge>
                     <time dateTime={a.date}>
                       {new Date(a.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
                     </time>
                   </div>
-                  <h3 className="text-lg font-bold leading-snug text-foreground group-hover:text-[#5e8c2a] dark:group-hover:text-[#8bc34a] transition-colors">
+                  <h3 className="text-lg font-bold leading-snug text-foreground group-hover:text-brand-strong dark:group-hover:text-brand-light transition">
                     {a.title}
                   </h3>
                   <p className="line-clamp-3 text-sm text-muted-foreground leading-relaxed">{a.excerpt}</p>
                 </div>
 
-                <div className="mt-5 pt-4 border-t border-border/60 flex items-center justify-between text-xs font-semibold text-[#5e8c2a] dark:text-[#8bc34a]">
+                <div className="mt-5 pt-4 border-t border-border/60 flex items-center justify-between text-xs font-semibold text-brand-strong dark:text-brand-light">
                   <span>Lire l'article complet</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </div>
@@ -636,8 +702,7 @@ function Home() {
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
           <div className="lg:col-span-5 space-y-6">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#74a638]/25 bg-[#74a638]/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a]">
-                <span className="h-2 w-2 rounded-full bg-[#74a638] animate-pulse" />
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-brand-strong dark:text-brand-light">
                 <span>Maillage Territorial</span>
               </div>
               <h2 className="mt-3 font-[family-name:var(--font-display)] text-3xl font-extrabold sm:text-4xl text-foreground tracking-tight">
@@ -651,7 +716,7 @@ function Home() {
 
             <div className="space-y-3.5 rounded-2xl bg-card p-5 border border-border/80 shadow-xs">
               <div className="flex items-start gap-3">
-                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#74a638]/15 text-[#5e8c2a] dark:text-[#8bc34a] text-xs font-bold">
+                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/15 text-brand-strong dark:text-brand-light text-xs font-bold">
                   1
                 </div>
                 <div>
@@ -661,7 +726,7 @@ function Home() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#74a638]/15 text-[#5e8c2a] dark:text-[#8bc34a] text-xs font-bold">
+                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/15 text-brand-strong dark:text-brand-light text-xs font-bold">
                   2
                 </div>
                 <div>
@@ -671,7 +736,7 @@ function Home() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#74a638]/15 text-[#5e8c2a] dark:text-[#8bc34a] text-xs font-bold">
+                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/15 text-brand-strong dark:text-brand-light text-xs font-bold">
                   3
                 </div>
                 <div>
@@ -682,7 +747,7 @@ function Home() {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <Button asChild size="lg" className="rounded-full bg-[#74a638] hover:bg-[#68982f] text-white shadow-soft font-semibold">
+              <Button asChild size="lg" className="rounded-full bg-primary hover:bg-brand-hover text-white shadow-soft font-semibold">
                 <Link to="/projets">
                   Ouvrir la carte complète
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -701,7 +766,7 @@ function Home() {
                   <p className="text-sm font-bold text-foreground">Cartographie interactive nationale</p>
                   <p className="text-xs text-muted-foreground">Cliquez sur un marqueur pour afficher le centre</p>
                 </div>
-                <Badge className="bg-[#74a638]/15 text-[#5e8c2a] dark:text-[#8bc34a] font-semibold border-[#74a638]/30">
+                <Badge className="bg-primary/15 text-brand-strong dark:text-brand-light font-semibold border-primary/30">
                   ● 24 Sites en ligne
                 </Badge>
               </div>
@@ -715,8 +780,12 @@ function Home() {
       <section
         ref={testimonialsRef}
         className={cn("bg-background py-20 border-b border-border/70 overflow-hidden", testimonialsVisible && "animate-fade-up")}
-        onMouseEnter={() => setIsTestimonialPlaying(false)}
-        onMouseLeave={() => setIsTestimonialPlaying(true)}
+        onMouseEnter={() => setIsTestimonialHovered(true)}
+        onMouseLeave={() => setIsTestimonialHovered(false)}
+        onFocus={() => setIsTestimonialHovered(true)}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node)) setIsTestimonialHovered(false);
+        }}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="rounded-3xl border border-border/80 bg-card p-6 sm:p-10 lg:p-12 shadow-soft">
@@ -724,8 +793,7 @@ function Home() {
               {/* Colonne Gauche : Titre, Sous-titre & Commandes */}
               <div className="lg:col-span-4 flex flex-col justify-between space-y-6">
                 <div>
-                  <div className="inline-flex items-center gap-2 rounded-full border border-[#74a638]/25 bg-[#74a638]/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a]">
-                    <span className="h-2 w-2 rounded-full bg-[#74a638] animate-pulse" />
+                  <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-brand-strong dark:text-brand-light">
                     <span>Témoignages & Retours Cliniques</span>
                   </div>
                   <h2 className="mt-3 font-[family-name:var(--font-display)] text-3xl font-extrabold sm:text-4xl text-foreground tracking-tight leading-tight">
@@ -737,114 +805,98 @@ function Home() {
                   </p>
                 </div>
 
-                {/* Commandes du Slider */}
+                {/* Commandes du carrousel (cibles de 44 px) */}
                 <div className="flex items-center gap-3 pt-2">
                   <button
                     type="button"
-                    onClick={() =>
-                      setActiveTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length)
-                    }
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-border/80 bg-surface text-foreground transition-all hover:border-[#74a638] hover:bg-[#74a638] hover:text-white cursor-pointer shadow-xs active:scale-95"
-                    title="Témoignage précédent"
+                    onClick={() => testimonialsApi?.scrollPrev()}
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-border/80 bg-surface text-foreground hover:border-primary hover:bg-primary hover:text-white cursor-pointer shadow-xs"
+                    aria-label="Témoignage précédent"
                   >
                     <ChevronLeft className="h-5 w-5" />
                   </button>
 
                   <button
                     type="button"
-                    onClick={() =>
-                      setActiveTestimonial((prev) => (prev + 1) % testimonials.length)
-                    }
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-border/80 bg-surface text-foreground transition-all hover:border-[#74a638] hover:bg-[#74a638] hover:text-white cursor-pointer shadow-xs active:scale-95"
-                    title="Témoignage suivant"
+                    onClick={() => testimonialsApi?.scrollNext()}
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-border/80 bg-surface text-foreground hover:border-primary hover:bg-primary hover:text-white cursor-pointer shadow-xs"
+                    aria-label="Témoignage suivant"
                   >
                     <ChevronRight className="h-5 w-5" />
                   </button>
 
-                  <button
-                    type="button"
-                    onClick={() => setIsTestimonialPlaying((prev) => !prev)}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-border/80 bg-surface text-muted-foreground hover:text-[#74a638] hover:border-[#74a638]/50 transition-all cursor-pointer shadow-xs"
-                    title={isTestimonialPlaying ? "Mettre en pause la rotation" : "Reprendre la rotation automatique"}
-                  >
-                    {isTestimonialPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                  </button>
+                  {!reducedMotion && (
+                    <button
+                      type="button"
+                      onClick={() => setIsTestimonialPlaying((prev) => !prev)}
+                      className="flex h-11 w-11 items-center justify-center rounded-full border border-border/80 bg-surface text-muted-foreground hover:text-primary hover:border-primary/50 cursor-pointer shadow-xs"
+                      aria-label={isTestimonialPlaying ? "Mettre en pause la rotation" : "Reprendre la rotation automatique"}
+                    >
+                      {isTestimonialPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                    </button>
+                  )}
 
-                  <span className="text-xs font-mono font-bold text-muted-foreground ml-2">
-                    0{activeTestimonial + 1} / 0{testimonials.length}
-                  </span>
+                  {testimonials.length > 0 && (
+                    <span className="text-xs font-mono font-bold text-muted-foreground ml-2" aria-live="polite">
+                      {String(activeTestimonial + 1).padStart(2, "0")} / {String(testimonials.length).padStart(2, "0")}
+                    </span>
+                  )}
                 </div>
               </div>
 
-              {/* Centre & Droite : Carte du Témoignage Actif */}
-              {(() => {
-                const current = testimonials[activeTestimonial] ?? testimonials[0];
-                if (!current) return null;
-                return (
-                  <div className="lg:col-span-8 flex flex-col md:flex-row items-center gap-6 lg:gap-8 rounded-2xl bg-surface/60 p-6 sm:p-8 border border-border/60">
-                    {/* Photo de l'acteur */}
-                    <div className="shrink-0 relative">
-                      <div className="relative h-44 w-44 sm:h-48 sm:w-48 overflow-hidden rounded-2xl border-2 border-[#74a638]/30 shadow-lift bg-slate-200">
-                        <img
-                          src={current.image}
-                          alt={current.author}
-                          className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                        />
-                      </div>
-                      <span className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 rounded-full bg-[#74a638]/15 px-3 py-0.5 text-[10px] font-bold text-[#5e8c2a] dark:text-[#8bc34a] border border-[#74a638]/30 whitespace-nowrap shadow-xs backdrop-blur-sm">
-                        ● Praticien certifié
-                      </span>
-                    </div>
+              {/* Centre & Droite : carrousel glissable au doigt et à la souris */}
+              <div className="lg:col-span-8 min-w-0">
+                <div ref={testimonialsViewport} className="overflow-hidden rounded-2xl cursor-grab active:cursor-grabbing">
+                  <div className="flex touch-pan-y">
+                    {testimonials.map((current, idx) => (
+                      <div
+                        key={current.author}
+                        className="min-w-0 shrink-0 grow-0 basis-full"
+                        role="group"
+                        aria-roledescription="diapositive"
+                        aria-label={`${idx + 1} sur ${testimonials.length}`}
+                      >
+                        <div className="flex h-full flex-col md:flex-row items-center gap-6 lg:gap-8 rounded-2xl bg-surface/60 p-6 sm:p-8 border border-border/60 select-none">
+                          {/* Photo de l'acteur */}
+                          <div className="shrink-0 relative">
+                            <div className="relative h-44 w-44 sm:h-48 sm:w-48 overflow-hidden rounded-2xl border-2 border-primary/30 shadow-lift bg-slate-200">
+                              <img
+                                src={current.image}
+                                alt={current.author}
+                                draggable={false}
+                                className="h-full w-full object-cover"
+                              />
+                            </div>
+                            <span className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 rounded-full bg-card px-3 py-0.5 text-xs font-bold text-brand-strong dark:text-brand-light border border-primary/30 whitespace-nowrap shadow-xs">
+                              Praticien certifié
+                            </span>
+                          </div>
 
-                    {/* Citation et détails */}
-                    <div className="flex-1 flex flex-col justify-between text-left">
-                      <Quote className="h-8 w-8 text-[#74a638]/40 mb-2" aria-hidden="true" />
-                      <blockquote className="text-sm sm:text-base leading-relaxed text-foreground font-medium italic">
-                        « {current.quote} »
-                      </blockquote>
+                          {/* Citation et détails */}
+                          <div className="flex-1 flex flex-col justify-between text-left">
+                            <Quote className="h-8 w-8 text-primary/40 mb-2" aria-hidden="true" />
+                            <blockquote className="text-sm sm:text-base leading-relaxed text-foreground font-medium italic">
+                              « {current.quote} »
+                            </blockquote>
 
-                      <div className="mt-5 pt-4 border-t border-border/60 flex items-center justify-between">
-                        <div>
-                          <h4 className="text-lg font-black text-foreground tracking-tight">
-                            {current.author}
-                          </h4>
-                          <p className="text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a] mt-0.5">
-                            {current.role}
-                          </p>
-                        </div>
-
-                        {/* Puces de Pagination */}
-                        <div className="flex items-center gap-2">
-                          {testimonials.map((t, idx) => {
-                            const isCurrent = idx === activeTestimonial;
-                            return (
-                              <button
-                                key={t.author}
-                                type="button"
-                                onClick={() => setActiveTestimonial(idx)}
-                                className="p-1 cursor-pointer transition-transform hover:scale-125"
-                                title={`Témoignage de ${t.author}`}
-                              >
-                                <span
-                                  className={cn(
-                                    "block rounded-full transition-all duration-300",
-                                    isCurrent
-                                      ? "h-3.5 w-3.5 border-2 border-[#74a638] bg-[#74a638] shadow-xs"
-                                      : "h-2.5 w-2.5 bg-slate-300 dark:bg-slate-700 hover:bg-[#74a638]/60"
-                                  )}
-                                />
-                              </button>
-                            );
-                          })}
+                            <div className="mt-5 pt-4 border-t border-border/60">
+                              <h4 className="text-lg font-black text-foreground tracking-tight">
+                                {current.author}
+                              </h4>
+                              <p className="text-xs font-bold uppercase tracking-wider text-brand-strong dark:text-brand-light mt-0.5">
+                                {current.role}
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
-                );
-              })()}
+                </div>
+              </div>
             </div>
 
-            {/* Sélecteur rapide des acteurs */}
+            {/* Sélecteur rapide des acteurs (sert aussi de pagination) */}
             <div className="mt-8 pt-6 border-t border-border/60 grid grid-cols-1 sm:grid-cols-3 gap-3">
               {testimonials.map((t, idx) => {
                 const isCurrent = idx === activeTestimonial;
@@ -852,22 +904,23 @@ function Home() {
                   <button
                     key={t.author}
                     type="button"
-                    onClick={() => setActiveTestimonial(idx)}
+                    onClick={() => goToTestimonial(idx)}
+                    aria-current={isCurrent}
                     className={cn(
-                      "flex items-center gap-3 rounded-2xl border p-2.5 text-left transition-all cursor-pointer",
+                      "flex min-h-11 items-center gap-3 rounded-2xl border p-2.5 text-left cursor-pointer",
                       isCurrent
-                        ? "border-[#74a638] bg-[#74a638]/10 shadow-xs ring-2 ring-[#74a638]/30"
-                        : "border-border/70 bg-card hover:border-[#74a638]/40 hover:bg-[#74a638]/5"
+                        ? "border-primary bg-primary/10 shadow-xs ring-2 ring-primary/30"
+                        : "border-border/70 bg-card hover:border-primary/40 hover:bg-primary/5"
                     )}
                   >
                     <img
                       src={t.image}
-                      alt={t.author}
+                      alt=""
                       className="h-10 w-10 rounded-xl object-cover shrink-0 shadow-xs border border-border"
                     />
                     <div className="min-w-0">
                       <span className="block text-xs font-bold text-foreground truncate">{t.author}</span>
-                      <span className="block text-[10px] text-muted-foreground truncate">{t.role}</span>
+                      <span className="block text-xs text-muted-foreground truncate">{t.role}</span>
                     </div>
                   </button>
                 );
@@ -881,8 +934,7 @@ function Home() {
       <section className="border-b border-border/80 bg-surface/50 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#74a638]/25 bg-[#74a638]/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a]">
-              <span className="h-2 w-2 rounded-full bg-[#74a638] animate-pulse" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-brand-strong dark:text-brand-light">
               <span>Partenaires Stratégiques</span>
             </div>
             <h2 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">
@@ -899,7 +951,7 @@ function Home() {
                 <div
                   key={p.name}
                   className={cn(
-                    "flex flex-col items-center justify-center p-4 text-center group transition-all",
+                    "flex flex-col items-center justify-center p-4 text-center group transition",
                     idx > 0 && "sm:border-t-0"
                   )}
                 >
@@ -915,10 +967,10 @@ function Home() {
                     )}
                   </div>
                   <div className="mt-3">
-                    <span className="block text-xs font-bold text-foreground leading-snug group-hover:text-[#5e8c2a] dark:group-hover:text-[#8bc34a] transition-colors">
+                    <span className="block text-xs font-bold text-foreground leading-snug group-hover:text-brand-strong dark:group-hover:text-brand-light transition">
                       {p.name}
                     </span>
-                    <span className="block text-[11px] text-muted-foreground mt-0.5 line-clamp-1">
+                    <span className="block text-xs text-muted-foreground mt-0.5 line-clamp-1">
                       {p.role}
                     </span>
                   </div>
@@ -930,7 +982,7 @@ function Home() {
           <div className="mt-8 text-center">
             <Link
               to="/partenaires"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5e8c2a] dark:text-[#8bc34a] hover:underline"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-strong dark:text-brand-light hover:underline"
             >
               Consulter les conventions de partenariat & détails institutionnels
               <ArrowRight className="h-3.5 w-3.5" />
@@ -948,14 +1000,13 @@ function Home() {
         )}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-3xl border border-[#74a638]/30 bg-gradient-to-br from-[#16270e] via-[#1d3513] to-[#0e1a09] px-6 py-14 sm:px-12 sm:py-16 text-center text-white shadow-2xl">
+          <div className="relative overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-[#16270e] via-[#1d3513] to-[#0e1a09] px-6 py-14 sm:px-12 sm:py-16 text-center text-white shadow-2xl">
             {/* Halos lumineux d'ambiance */}
-            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[#74a638]/25 blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-[#74a638]/20 blur-3xl pointer-events-none" />
+            <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-primary/25 blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-primary/20 blur-3xl pointer-events-none" />
 
             <div className="relative mx-auto max-w-3xl space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md">
-                <span className="h-2 w-2 rounded-full bg-[#74a638] animate-pulse" />
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white">
                 <span>Déploiement National & Adhésion</span>
               </div>
 
@@ -971,7 +1022,7 @@ function Home() {
                 <Button
                   asChild
                   size="lg"
-                  className="rounded-full bg-[#74a638] hover:bg-[#68982f] text-white px-8 py-3.5 font-bold shadow-lg shadow-[#74a638]/35 transition-all hover:-translate-y-0.5 cursor-pointer"
+                  className="rounded-full bg-primary hover:bg-brand-hover text-white px-8 py-3.5 font-bold shadow-lg shadow-primary/35 transition hover:-translate-y-0.5 cursor-pointer"
                 >
                   <Link to="/contact">
                     Demander un raccordement de site
@@ -983,7 +1034,7 @@ function Home() {
                   asChild
                   size="lg"
                   variant="outline"
-                  className="rounded-full border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 hover:text-white transition-all cursor-pointer font-semibold"
+                  className="rounded-full border-white/30 bg-white/10 text-white hover:bg-white/20 hover:text-white transition cursor-pointer font-semibold"
                 >
                   <Link to="/annuaire">
                     Consulter les 24 centres connectés
@@ -991,21 +1042,6 @@ function Home() {
                 </Button>
               </div>
 
-              {/* Badges de réassurance institutionnelle */}
-              <div className="pt-8 border-t border-white/15 flex flex-wrap items-center justify-center gap-6 text-xs text-white/70 font-medium">
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 text-[#74a638]" />
-                  Conventionné Ministère de la Santé
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 text-[#74a638]" />
-                  Matériel CE / OMS homologué
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 text-[#74a638]" />
-                  Astreinte cardiologique 24h/7j
-                </span>
-              </div>
             </div>
           </div>
         </div>

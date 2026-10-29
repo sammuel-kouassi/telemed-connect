@@ -93,20 +93,19 @@ function AnnuairePage() {
           {/* Subtle directional gradient: deep dark on the text side, clear & visible on the right */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#031422]/95 via-[#031422]/80 to-[#031422]/35" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#020d17] via-transparent to-black/40" />
-          <div className="absolute inset-0 bg-[#74a638]/10 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-primary/10 mix-blend-overlay" />
           <div className="grid-pattern absolute inset-0 opacity-15" aria-hidden="true" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
           <div className="max-w-3xl space-y-5">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md">
-              <span className="flex h-2 w-2 rounded-full bg-[#74a638] animate-pulse" />
               <span>Répertoire National Officiel</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight drop-shadow-md">
               Annuaire des structures{" "}
-              <span className="text-[#8bc34a]">
+              <span className="text-brand-light">
                 & praticiens connectés.
               </span>
             </h1>
@@ -117,7 +116,7 @@ function AnnuairePage() {
 
             <div className="flex flex-wrap gap-3 pt-2 text-xs font-medium text-white/95">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
-                <CheckCircle2 className="h-3.5 w-3.5 text-[#74a638]" /> {directory.length} Établissements répertoriés
+                <CheckCircle2 className="h-3.5 w-3.5 text-primary" /> {directory.length} Établissements répertoriés
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
                 <MapPin className="h-3.5 w-3.5 text-cyan-300" /> {regions.length - 1} Régions sanitaires
@@ -219,16 +218,15 @@ function AnnuairePage() {
             <Card
               key={d.name}
               className="card-hover group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card p-6 shadow-soft"
-              style={{ animationDelay: `${i * 40}ms` }}
             >
               <div>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-secondary text-accent font-bold group-hover:bg-accent group-hover:text-accent-foreground transition-all">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-secondary text-accent font-bold group-hover:bg-accent group-hover:text-accent-foreground transition">
                       <Building2 className="h-5 w-5" />
                     </span>
                     <div>
-                      <h2 className="text-base font-bold leading-snug text-foreground group-hover:text-accent transition-colors">
+                      <h2 className="text-base font-bold leading-snug text-foreground group-hover:text-accent transition">
                         {d.name}
                       </h2>
                       <p className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
@@ -249,7 +247,7 @@ function AnnuairePage() {
                   {d.services.map((s) => (
                     <span
                       key={s}
-                      className="rounded-full border border-border/60 bg-surface px-2.5 py-1 text-[0.72rem] font-medium text-foreground"
+                      className="rounded-full border border-border/60 bg-surface px-2.5 py-1 text-xs font-medium text-foreground"
                     >
                       {s}
                     </span>
@@ -261,14 +259,14 @@ function AnnuairePage() {
               <div className="mt-6 border-t border-border/70 pt-4 space-y-2 text-xs">
                 <a
                   href={`tel:${d.phone.replace(/\s/g, "")}`}
-                  className="flex items-center gap-2 rounded-xl bg-surface/60 px-3 py-2 font-semibold text-foreground transition-colors hover:bg-secondary hover:text-accent"
+                  className="flex items-center gap-2 rounded-xl bg-surface/60 px-3 py-2 font-semibold text-foreground transition hover:bg-secondary hover:text-accent"
                 >
                   <Phone className="h-3.5 w-3.5 text-accent shrink-0" />
                   <span>{d.phone}</span>
                 </a>
                 <a
                   href={`mailto:${d.email}`}
-                  className="flex items-center gap-2 rounded-xl px-3 py-1.5 text-muted-foreground transition-colors hover:text-accent break-all"
+                  className="flex items-center gap-2 rounded-xl px-3 py-1.5 text-muted-foreground transition hover:text-accent break-all"
                 >
                   <Mail className="h-3.5 w-3.5 shrink-0 text-accent" />
                   <span>{d.email}</span>

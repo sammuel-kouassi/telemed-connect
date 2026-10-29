@@ -25,6 +25,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { images } from "@/data/site";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useLightboxTransition } from "@/hooks/useLightboxTransition";
 import { cn } from "@/lib/utils";
 import heroApropos from "@/assets/hero_apropos.jpg";
 
@@ -139,7 +140,7 @@ const teamPillars = [
     title: "Professeur Titulaire en Sciences Médicales",
     bio: "Pionnier fondateur de la télémédecine en Côte d'Ivoire dès 2004 suite à sa rencontre avec le Dr Benjamin Gold. Ancien vice-doyen de l'UFR d'Abidjan, il impulse la vision pédagogique et l'ancrage institutionnel du réseau RAFT.",
     tag: "Gouvernance & Pédagogie",
-    accent: "border-[#74a638] bg-[#74a638]/5",
+    accent: "border-primary bg-primary/5",
   },
   {
     role: "Coordonnateur Médical",
@@ -148,7 +149,7 @@ const teamPillars = [
     title: "Président de la SIBIM",
     bio: "Spécialiste d'informatique médicale et président de la Société Ivoirienne de Biosciences et d'Informatique Médicale (SIBIM). Il garantit la rigueur clinique, déontologique et l'évaluation continue des protocoles de télé-expertise.",
     tag: "Coordination Clinique",
-    accent: "border-[#5e8c2a] bg-[#5e8c2a]/5",
+    accent: "border-brand-strong bg-brand-strong/5",
   },
   {
     role: "Coordonnateur Technique",
@@ -162,7 +163,8 @@ const teamPillars = [
 ];
 
 function AProposPage() {
-  const [selectedPhoto, setSelectedPhoto] = useState<LightboxImage | null>(null);
+  const lightbox = useLightboxTransition<LightboxImage>();
+  const selectedPhoto = lightbox.item;
 
   const { ref: headerRef, isVisible: headerVisible } = useIntersectionObserver<HTMLDivElement>();
   const { ref: introRef, isVisible: introVisible } = useIntersectionObserver<HTMLDivElement>();
@@ -191,22 +193,21 @@ function AProposPage() {
           {/* Directional subtle gradient: deep dark on text side, clear and visible on the right */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#031422]/95 via-[#031422]/80 to-[#031422]/35" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#020d17] via-transparent to-black/40" />
-          <div className="absolute inset-0 bg-[#74a638]/10 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-primary/10 mix-blend-overlay" />
           <div className="grid-pattern absolute inset-0 opacity-15" aria-hidden="true" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
           <div className="max-w-3xl space-y-5">
             <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wider">
-              <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[#8bc34a]">En Savoir Plus</span>
+              <span className="text-brand-light">En Savoir Plus</span>
               <span className="text-white/40">•</span>
               <span className="text-white/80">Portail Officiel RAFT Côte d'Ivoire</span>
             </div>
 
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl leading-[1.12] text-white drop-shadow-md">
               Le RAFT Côte d'Ivoire :{" "}
-              <span className="text-[#8bc34a]">
+              <span className="text-brand-light">
                 l'histoire pionnière
               </span>{" "}
               de la médecine connectée.
@@ -228,7 +229,7 @@ function AProposPage() {
                 <a
                   key={btn.href}
                   href={btn.href}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-3.5 py-1.5 text-xs font-semibold text-white/90 backdrop-blur-md border border-white/20 hover:bg-[#74a638] hover:text-white transition-all shadow-xs"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-3.5 py-1.5 text-xs font-semibold text-white/90 backdrop-blur-md border border-white/20 hover:bg-primary hover:text-white transition shadow-xs"
                 >
                   {btn.label}
                 </a>
@@ -239,7 +240,7 @@ function AProposPage() {
           {/* Key metrics grid */}
           <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 border-t border-white/15 pt-8">
             <div className="rounded-2xl bg-black/40 p-3.5 sm:p-4 border border-white/20 backdrop-blur-md">
-              <div className="text-2xl sm:text-3xl font-black text-[#8bc34a] tracking-tight">2003</div>
+              <div className="text-2xl sm:text-3xl font-black text-brand-light tracking-tight">2003</div>
               <div className="text-xs text-white/80 mt-1 font-semibold">Genèse Panafricaine (Mali)</div>
             </div>
             <div className="rounded-2xl bg-black/40 p-3.5 sm:p-4 border border-white/20 backdrop-blur-md">
@@ -266,8 +267,8 @@ function AProposPage() {
           <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-7 space-y-6">
               <div className="inline-flex items-center gap-2">
-                <span className="h-6 w-1 rounded-full bg-[#5e8c2a]" />
-                <span className="text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a]">
+                <span className="h-6 w-1 rounded-full bg-brand-strong" />
+                <span className="text-xs font-bold uppercase tracking-wider text-brand-strong dark:text-brand-light">
                   En Savoir Plus
                 </span>
               </div>
@@ -276,7 +277,7 @@ function AProposPage() {
                 Le RAFT Côte D'Ivoire
               </h2>
 
-              <div className="relative overflow-hidden rounded-3xl border-l-4 border-[#74a638] bg-surface/90 p-6 sm:p-7 shadow-xs">
+              <div className="relative overflow-hidden rounded-3xl border-l-4 border-primary bg-surface/90 p-6 sm:p-7 shadow-xs">
                 <Quote className="absolute right-4 top-4 h-14 w-14 text-muted-foreground/10 pointer-events-none" />
                 <p className="text-lg sm:text-xl font-semibold leading-relaxed text-foreground">
                   « Le RAFT Côte d'Ivoire. C'est en 2003, que le projet RAFT a débuté ses activités en Afrique. Parti du Mali, le RAFT regroupe aujourd'hui plusieurs pays. La Côte d'Ivoire a intégré le réseau RAFT en 2005. »
@@ -288,9 +289,9 @@ function AProposPage() {
               </p>
 
               <div className="grid sm:grid-cols-2 gap-4 pt-2">
-                <div className="rounded-2xl border border-border/80 bg-card p-5 shadow-xs hover:border-[#74a638]/50 transition-colors">
+                <div className="rounded-2xl border border-border/80 bg-card p-5 shadow-xs hover:border-primary/50 transition">
                   <div className="flex items-center gap-2.5 text-sm font-bold text-foreground mb-1.5">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#74a638]/15 text-[#5e8c2a]">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary/15 text-brand-strong">
                       <CheckCircle2 className="h-4 w-4" />
                     </span>
                     Début au Mali (2003)
@@ -299,9 +300,9 @@ function AProposPage() {
                     Initiative partie de Bamako et Genève, étendue progressivement à plus de 20 pays d'Afrique subsaharienne.
                   </p>
                 </div>
-                <div className="rounded-2xl border border-border/80 bg-card p-5 shadow-xs hover:border-[#74a638]/50 transition-colors">
+                <div className="rounded-2xl border border-border/80 bg-card p-5 shadow-xs hover:border-primary/50 transition">
                   <div className="flex items-center gap-2.5 text-sm font-bold text-foreground mb-1.5">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#74a638]/15 text-[#5e8c2a]">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary/15 text-brand-strong">
                       <CheckCircle2 className="h-4 w-4" />
                     </span>
                     Adhésion Ivoirienne (2005)
@@ -316,8 +317,8 @@ function AProposPage() {
             {/* Photo Card with zoom */}
             <div className="lg:col-span-5">
               <div
-                onClick={() =>
-                  setSelectedPhoto({
+                onClick={(e) =>
+                  lightbox.open(e.currentTarget, {
                     src: images.aproposEquipe,
                     title: "L'équipe pionnière du RAFT Côte d'Ivoire",
                     caption:
@@ -326,18 +327,18 @@ function AProposPage() {
                     credit: "Coordination RAFT Côte d'Ivoire",
                   })
                 }
-                className="group relative cursor-pointer overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft hover:shadow-lift transition-all duration-300"
+                className="group relative cursor-pointer overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft hover:shadow-lift transition duration-300"
               >
                 <div className="relative aspect-4/3 overflow-hidden bg-muted">
                   <img
                     src={images.aproposEquipe}
                     alt="Le RAFT Côte d'Ivoire - Équipe pionnière"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90" />
                   <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-xs">
                     <span className="font-bold flex items-center gap-2">
-                      <Users className="h-4 w-4 text-[#8bc34a]" /> Équipe pionnière RAFT CI
+                      <Users className="h-4 w-4 text-brand-light" /> Équipe pionnière RAFT CI
                     </span>
                     <span className="inline-flex items-center gap-1 rounded-full bg-black/50 px-3 py-1.5 backdrop-blur-md border border-white/20 font-medium">
                       <Maximize2 className="h-3 w-3" /> Agrandir
@@ -355,7 +356,7 @@ function AProposPage() {
         {/* SECTION 2: L'Équipe RAFT Côte d'Ivoire & Gouvernance */}
         <section id="equipe" ref={teamRef} className={cn("scroll-mt-24", teamVisible && "animate-fade-up")}>
           <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
-            <span className="eyebrow text-[#5e8c2a] dark:text-[#8bc34a]">Gouvernance & Leadership</span>
+            <span className="eyebrow text-brand-strong dark:text-brand-light">Gouvernance & Leadership</span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground tracking-tight">
               L'Équipe RAFT Côte d'Ivoire
             </h2>
@@ -367,7 +368,7 @@ function AProposPage() {
           <div className="rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card to-surface/80 p-6 sm:p-10 shadow-soft">
             <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
               <div className="lg:col-span-8 space-y-5">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a]">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-strong dark:text-brand-light">
                   <ShieldCheck className="h-4 w-4" /> Coordination Nationale Officielle
                 </div>
 
@@ -380,14 +381,14 @@ function AProposPage() {
                 </p>
 
                 <div className="flex flex-wrap gap-2.5 pt-2">
-                  <Badge variant="outline" className="text-xs font-semibold py-1.5 px-3.5 rounded-full border-[#74a638]/40 bg-[#74a638]/5">
-                    <Calendar className="mr-1.5 h-3.5 w-3.5 text-[#5e8c2a]" /> 2009 : Congrès VITIB Bassam
+                  <Badge variant="outline" className="text-xs font-semibold py-1.5 px-3.5 rounded-full border-primary/40 bg-primary/5">
+                    <Calendar className="mr-1.5 h-3.5 w-3.5 text-brand-strong" /> 2009 : Congrès VITIB Bassam
                   </Badge>
-                  <Badge variant="outline" className="text-xs font-semibold py-1.5 px-3.5 rounded-full border-[#74a638]/40 bg-[#74a638]/5">
-                    <Award className="mr-1.5 h-3.5 w-3.5 text-[#5e8c2a]" /> 2013 : 10 ans à Krindjabo
+                  <Badge variant="outline" className="text-xs font-semibold py-1.5 px-3.5 rounded-full border-primary/40 bg-primary/5">
+                    <Award className="mr-1.5 h-3.5 w-3.5 text-brand-strong" /> 2013 : 10 ans à Krindjabo
                   </Badge>
-                  <Badge variant="outline" className="text-xs font-semibold py-1.5 px-3.5 rounded-full border-[#74a638]/40 bg-[#74a638]/5">
-                    <Building2 className="mr-1.5 h-3.5 w-3.5 text-[#5e8c2a]" /> Partenariat CSRS
+                  <Badge variant="outline" className="text-xs font-semibold py-1.5 px-3.5 rounded-full border-primary/40 bg-primary/5">
+                    <Building2 className="mr-1.5 h-3.5 w-3.5 text-brand-strong" /> Partenariat CSRS
                   </Badge>
                 </div>
               </div>
@@ -395,8 +396,8 @@ function AProposPage() {
               {/* Studio photo card */}
               <div className="lg:col-span-4">
                 <div
-                  onClick={() =>
-                    setSelectedPhoto({
+                  onClick={(e) =>
+                    lightbox.open(e.currentTarget, {
                       src: images.aproposStudio,
                       title: "Intervention médiatique & plaidoyer e-santé",
                       caption:
@@ -405,20 +406,20 @@ function AProposPage() {
                       credit: "Plateau TV — Sensibilisation RAFT CI",
                     })
                   }
-                  className="group relative cursor-pointer overflow-hidden rounded-2xl border border-border/80 bg-card shadow-soft hover:shadow-lift transition-all"
+                  className="group relative cursor-pointer overflow-hidden rounded-2xl border border-border/80 bg-card shadow-soft hover:shadow-lift transition"
                 >
                   <div className="relative aspect-4/3 overflow-hidden bg-muted">
                     <img
                       src={images.aproposStudio}
                       alt="Intervention télévisée de la coordination RAFT"
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-85" />
                     <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs">
                       <span className="font-bold flex items-center gap-1.5">
-                        <Video className="h-3.5 w-3.5 text-[#8bc34a]" /> Diffusion & Médias
+                        <Video className="h-3.5 w-3.5 text-brand-light" /> Diffusion & Médias
                       </span>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-black/50 px-2.5 py-1 border border-white/20 text-[11px]">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-black/50 px-2.5 py-1 border border-white/20 text-xs">
                         <Maximize2 className="h-3 w-3" /> Voir
                       </span>
                     </div>
@@ -434,20 +435,20 @@ function AProposPage() {
           {/* 3 Pillars Executive Cards */}
           <div className="mt-8 grid gap-6 md:grid-cols-3">
             {teamPillars.map((p) => (
-              <Card key={p.name} className={cn("rounded-3xl border transition-all duration-300 hover:shadow-lift", p.accent)}>
+              <Card key={p.name} className={cn("rounded-3xl border transition duration-300 hover:shadow-lift", p.accent)}>
                 <CardContent className="p-6 sm:p-8 space-y-4">
                   <div className="flex items-center justify-between">
-                    <Badge className="bg-[#74a638] text-white text-xs font-bold px-3 py-1">
+                    <Badge className="bg-primary text-white text-xs font-bold px-3 py-1">
                       {p.tag}
                     </Badge>
-                    <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                       {p.status}
                     </span>
                   </div>
 
                   <div>
                     <h3 className="text-xl font-extrabold text-foreground">{p.name}</h3>
-                    <p className="text-xs font-semibold text-[#5e8c2a] dark:text-[#8bc34a] mt-0.5">{p.title}</p>
+                    <p className="text-xs font-semibold text-brand-strong dark:text-brand-light mt-0.5">{p.title}</p>
                   </div>
 
                   <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed pt-1">
@@ -465,8 +466,8 @@ function AProposPage() {
             {/* High-Res Photo: Geissbuhler & Ehua */}
             <div className="lg:col-span-5 order-2 lg:order-1">
               <div
-                onClick={() =>
-                  setSelectedPhoto({
+                onClick={(e) =>
+                  lightbox.open(e.currentTarget, {
                     src: images.aproposGeissbuhlerEhua,
                     title: "Prof. Antoine Geissbuhler & Prof. EHUA Somian Francis",
                     caption:
@@ -475,23 +476,23 @@ function AProposPage() {
                     credit: "HUG Genève × RAFT Côte d'Ivoire",
                   })
                 }
-                className="group relative cursor-pointer overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft hover:shadow-lift transition-all duration-300"
+                className="group relative cursor-pointer overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft hover:shadow-lift transition duration-300"
               >
                 <div className="relative aspect-4/5 max-h-[520px] overflow-hidden bg-muted">
                   <img
                     src={images.aproposGeissbuhlerEhua}
                     alt="Prof Antoine Geissbuhler et Prof Francis Ehua"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90" />
                   <div className="absolute top-4 left-4">
-                    <Badge className="bg-[#74a638] text-white text-xs font-bold shadow-md">
+                    <Badge className="bg-primary text-white text-xs font-bold shadow-md">
                       Pionniers Mondiaux
                     </Badge>
                   </div>
                   <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-xs">
                     <span className="font-bold flex items-center gap-1.5">
-                      <Award className="h-4 w-4 text-[#8bc34a]" /> HUG Genève & RAFT Côte d'Ivoire
+                      <Award className="h-4 w-4 text-brand-light" /> HUG Genève & RAFT Côte d'Ivoire
                     </span>
                     <span className="inline-flex items-center gap-1 rounded-full bg-black/50 px-3 py-1.5 backdrop-blur-md border border-white/20 font-medium">
                       <Maximize2 className="h-3 w-3" /> Agrandir
@@ -507,8 +508,8 @@ function AProposPage() {
             {/* Content text verbatim */}
             <div className="lg:col-span-7 space-y-6 order-1 lg:order-2">
               <div className="inline-flex items-center gap-2">
-                <span className="h-6 w-1 rounded-full bg-[#5e8c2a]" />
-                <span className="text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a]">
+                <span className="h-6 w-1 rounded-full bg-brand-strong" />
+                <span className="text-xs font-bold uppercase tracking-wider text-brand-strong dark:text-brand-light">
                   Mission Fondamentale
                 </span>
               </div>
@@ -517,16 +518,16 @@ function AProposPage() {
                 Objectifs Du Projet RAFT
               </h2>
 
-              <div className="rounded-3xl border-l-4 border-[#74a638] bg-surface/90 p-6 sm:p-7 shadow-xs">
+              <div className="rounded-3xl border-l-4 border-primary bg-surface/90 p-6 sm:p-7 shadow-xs">
                 <p className="text-lg sm:text-xl font-semibold leading-relaxed text-foreground">
                   « L'objectif principal du RAFT est de lutter contre le désert médical. Ainsi le professionnel de la santé, éloigné des grandes métropoles ne se sent plus isoler. Il voit ses capacités professionnelles renforcées à travers les cours de télé enseignement diffusés chaque jeudis à partir de 09h TU. Ces E-cours ne nécessitant pas de grand débit de la connexion Internet est suivi par des milliers de professionnels de la santé. »
                 </p>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-border/80 bg-card p-5 space-y-2 shadow-xs hover:border-[#74a638]/50 transition-colors">
+                <div className="rounded-2xl border border-border/80 bg-card p-5 space-y-2 shadow-xs hover:border-primary/50 transition">
                   <div className="flex items-center gap-2.5 font-bold text-foreground text-sm">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#74a638]/15 text-[#5e8c2a]">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary/15 text-brand-strong">
                       <BookOpen className="h-4 w-4" />
                     </span>
                     E-cours chaque jeudi (09h TU)
@@ -536,9 +537,9 @@ function AProposPage() {
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-border/80 bg-card p-5 space-y-2 shadow-xs hover:border-[#74a638]/50 transition-colors">
+                <div className="rounded-2xl border border-border/80 bg-card p-5 space-y-2 shadow-xs hover:border-primary/50 transition">
                   <div className="flex items-center gap-2.5 font-bold text-foreground text-sm">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-[#74a638]/15 text-[#5e8c2a]">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-primary/15 text-brand-strong">
                       <Network className="h-4 w-4" />
                     </span>
                     Optimisation bas débit (DUDAL)
@@ -557,8 +558,8 @@ function AProposPage() {
           <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-7 space-y-6">
               <div className="inline-flex items-center gap-2">
-                <span className="h-6 w-1 rounded-full bg-[#5e8c2a]" />
-                <span className="text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a]">
+                <span className="h-6 w-1 rounded-full bg-brand-strong" />
+                <span className="text-xs font-bold uppercase tracking-wider text-brand-strong dark:text-brand-light">
                   Déploiement Matériel & Clinique
                 </span>
               </div>
@@ -567,14 +568,14 @@ function AProposPage() {
                 Équipement des Structures & Phase Pilote Télé-ECG
               </h2>
 
-              <div className="rounded-3xl border-l-4 border-[#74a638] bg-surface/90 p-6 sm:p-7 shadow-xs">
+              <div className="rounded-3xl border-l-4 border-primary bg-surface/90 p-6 sm:p-7 shadow-xs">
                 <p className="text-base sm:text-lg font-semibold leading-relaxed text-foreground">
                   « Grace au financement du RAFT, en Côte d'Ivoire, plus de 10 structures de santé ont été équipées en matériel pour les activités de télé formation. Chaque site bénéficiaire a reçu un ordinateur portable, un vidéo projecteur, un onduleur, une Webcam, un casque et un écran de projection. »
                 </p>
               </div>
 
               <div className="rounded-3xl border border-border/80 bg-card p-6 sm:p-7 text-sm text-foreground space-y-3 shadow-xs">
-                <div className="flex items-center gap-2 font-bold text-base text-[#5e8c2a] dark:text-[#8bc34a]">
+                <div className="flex items-center gap-2 font-bold text-base text-brand-strong dark:text-brand-light">
                   <HeartPulse className="h-5 w-5" /> Phase Pilote 2014 au Centre de Télémédecine du CHU de Yopougon
                 </div>
                 <p className="leading-relaxed text-muted-foreground text-sm sm:text-base">
@@ -589,8 +590,8 @@ function AProposPage() {
             {/* Photo Ehua on the field - Full High-Res Portrait */}
             <div className="lg:col-span-5">
               <div
-                onClick={() =>
-                  setSelectedPhoto({
+                onClick={(e) =>
+                  lightbox.open(e.currentTarget, {
                     src: images.aproposEhuaTerrain,
                     title: "Prof. EHUA Somian Francis sur le terrain",
                     caption:
@@ -599,23 +600,23 @@ function AProposPage() {
                     credit: "Archives Coordination RAFT Côte d'Ivoire",
                   })
                 }
-                className="group relative cursor-pointer overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft hover:shadow-lift transition-all duration-300"
+                className="group relative cursor-pointer overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft hover:shadow-lift transition duration-300"
               >
                 <div className="relative aspect-4/5 max-h-[520px] overflow-hidden bg-muted">
                   <img
                     src={images.aproposEhuaTerrain}
                     alt="Prof Francis Ehua en mission de terrain"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90" />
                   <div className="absolute top-4 left-4">
-                    <Badge className="bg-[#74a638] text-white text-xs font-bold shadow-md">
+                    <Badge className="bg-primary text-white text-xs font-bold shadow-md">
                       Engagement de Terrain
                     </Badge>
                   </div>
                   <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-xs">
                     <span className="font-bold flex items-center gap-1.5">
-                      <MapPin className="h-4 w-4 text-[#8bc34a]" /> Mission de terrain RAFT CI
+                      <MapPin className="h-4 w-4 text-brand-light" /> Mission de terrain RAFT CI
                     </span>
                     <span className="inline-flex items-center gap-1 rounded-full bg-black/50 px-3 py-1.5 backdrop-blur-md border border-white/20 font-medium">
                       <Maximize2 className="h-3 w-3" /> Agrandir
@@ -633,13 +634,13 @@ function AProposPage() {
         {/* SECTION 5: CHRONOLOGIE VERTICALE INTÉGRALE — Clean Vertical Timeline Only */}
         <section id="chronologie" ref={timeRef} className={cn("scroll-mt-24", timeVisible && "animate-fade-up")}>
           <div className="rounded-3xl border border-border/80 bg-card p-6 sm:p-10 lg:p-12 shadow-soft relative overflow-hidden">
-            <div className="absolute -top-24 -right-24 h-80 w-80 rounded-full bg-[#74a638]/10 blur-3xl pointer-events-none" />
+            <div className="absolute -top-24 -right-24 h-80 w-80 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
             <div className="absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
 
             {/* Header */}
             <div className="space-y-3 max-w-3xl pb-10 border-b border-border/80">
-              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#5e8c2a] dark:text-[#8bc34a]">
-                <Calendar className="h-4 w-4 text-[#74a638]" />
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-strong dark:text-brand-light">
+                <Calendar className="h-4 w-4 text-primary" />
                 <span>Ligne du Temps</span>
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-foreground tracking-tight">
@@ -652,19 +653,19 @@ function AProposPage() {
 
             {/* Pure Vertical Timeline */}
             <div className="pt-10">
-              <div className="relative border-l-2 border-[#74a638]/40 pl-6 sm:pl-10 space-y-10 max-w-4xl mx-auto">
+              <div className="relative border-l-2 border-primary/40 pl-6 sm:pl-10 space-y-10 max-w-4xl mx-auto">
                 {timelineMilestones.map((m) => {
                   const Icon = m.icon;
                   return (
                     <div key={m.year} className="relative group">
                       {/* Node indicator */}
-                      <div className="absolute -left-[31px] sm:-left-[47px] top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-background border-2 border-[#74a638] text-[#5e8c2a] shadow-xs group-hover:bg-[#74a638] group-hover:text-white transition-colors">
+                      <div className="absolute -left-[31px] sm:-left-[47px] top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-background border-2 border-primary text-brand-strong shadow-xs group-hover:bg-primary group-hover:text-white transition">
                         <span className="h-2 w-2 rounded-full bg-current" />
                       </div>
 
-                      <div className="rounded-3xl border border-border/80 bg-surface/70 p-6 sm:p-8 shadow-xs hover:shadow-soft transition-all">
+                      <div className="rounded-3xl border border-border/80 bg-surface/70 p-6 sm:p-8 shadow-xs hover:shadow-soft transition">
                         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                          <span className="text-2xl sm:text-3xl font-black text-[#5e8c2a] dark:text-[#8bc34a]">
+                          <span className="text-2xl sm:text-3xl font-black text-brand-strong dark:text-brand-light">
                             {m.year}
                           </span>
                           <div className="flex items-center gap-2">
@@ -672,13 +673,13 @@ function AProposPage() {
                               {m.badge}
                             </Badge>
                             <span className="text-xs text-muted-foreground flex items-center gap-1 font-medium">
-                              <MapPin className="h-3 w-3 text-[#5e8c2a]" /> {m.location}
+                              <MapPin className="h-3 w-3 text-brand-strong" /> {m.location}
                             </span>
                           </div>
                         </div>
 
                         <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3 flex items-center gap-2.5">
-                          <Icon className="h-5 w-5 text-[#5e8c2a] shrink-0" /> {m.title}
+                          <Icon className="h-5 w-5 text-brand-strong shrink-0" /> {m.title}
                         </h3>
 
                         <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4">
@@ -686,7 +687,7 @@ function AProposPage() {
                         </p>
 
                         <div className="rounded-2xl bg-card p-4 border border-border/60 text-xs sm:text-sm text-foreground font-medium shadow-2xs">
-                          <span className="font-bold text-[#5e8c2a]">Fait marquant : </span>{m.fact}
+                          <span className="font-bold text-brand-strong">Fait marquant : </span>{m.fact}
                         </div>
                       </div>
                     </div>
@@ -701,7 +702,7 @@ function AProposPage() {
         <section className="rounded-3xl border border-border/80 bg-gradient-to-br from-card via-card to-surface p-8 sm:p-14 shadow-lift relative overflow-hidden">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
             <div className="space-y-4 max-w-2xl">
-              <span className="eyebrow text-[#5e8c2a] dark:text-[#8bc34a]">Participer au réseau</span>
+              <span className="eyebrow text-brand-strong dark:text-brand-light">Participer au réseau</span>
               <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-foreground tracking-tight">
                 Rejoignez le Réseau RAFT Côte d'Ivoire
               </h3>
@@ -711,7 +712,7 @@ function AProposPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 shrink-0">
-              <Button asChild size="lg" className="rounded-full font-bold shadow-soft bg-[#74a638] text-white hover:bg-[#68982f] px-7">
+              <Button asChild size="lg" className="rounded-full font-bold shadow-soft bg-primary text-white hover:bg-brand-hover px-7">
                 <Link to="/contact">
                   Contacter la coordination
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -728,20 +729,21 @@ function AProposPage() {
       </main>
 
       {/* Lightbox Modal for HD Image Viewing */}
-      <Dialog open={!!selectedPhoto} onOpenChange={(open) => !open && setSelectedPhoto(null)}>
-        <DialogContent className="max-w-4xl p-0 overflow-hidden rounded-3xl border-border bg-card/95 backdrop-blur-xl">
+      <Dialog open={!!selectedPhoto} onOpenChange={(open) => !open && lightbox.close()}>
+        <DialogContent style={lightbox.contentStyle} className="max-w-4xl p-0 overflow-hidden rounded-3xl border-border bg-card">
           {selectedPhoto && (
             <div className="flex flex-col">
               <div className="relative aspect-16/10 max-h-[75vh] bg-black/95 overflow-hidden flex items-center justify-center p-2">
                 <img
                   src={selectedPhoto.src}
                   alt={selectedPhoto.title}
+                  style={lightbox.targetStyle}
                   className="w-full h-full object-contain"
                 />
                 <button
                   type="button"
-                  onClick={() => setSelectedPhoto(null)}
-                  className="absolute top-4 right-4 h-9 w-9 rounded-full bg-black/70 text-white hover:bg-black flex items-center justify-center transition-colors border border-white/20 cursor-pointer"
+                  onClick={lightbox.close}
+                  className="absolute top-4 right-4 h-9 w-9 rounded-full bg-black/70 text-white hover:bg-black flex items-center justify-center transition border border-white/20 cursor-pointer"
                 >
                   <X className="h-5 w-5" />
                   <span className="sr-only">Fermer</span>

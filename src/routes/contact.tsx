@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { submitContactRequest } from "@/lib/db";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/contact")({
@@ -49,40 +50,79 @@ const subjects = [
   "Autre demande d'information",
 ];
 
-type Errors = Partial<Record<"name" | "email" | "subject" | "message", string>>;
+type Field = "name" | "email" | "subject" | "message";
+type Errors = Partial<Record<Field, string>>;
+
+const emptyForm = { name: "", email: "", organisation: "", phone: "", subject: "", message: "" };
+
+function fieldError(key: Field, value: string): string | undefined {
+  switch (key) {
+    case "name":
+      return value.trim().length < 2 ? "Indiquez votre nom complet." : undefined;
+    case "email":
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()) ? undefined : "Adresse e-mail invalide.";
+    case "subject":
+      return value ? undefined : "Veuillez choisir un objet.";
+    case "message":
+      return value.trim().length < 20 ? "Décrivez votre demande en 20 caractères minimum." : undefined;
+  }
+}
 
 function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", organisation: "", phone: "", subject: "", message: "" });
+  const [form, setForm] = useState(emptyForm);
   const [errors, setErrors] = useState<Errors>({});
   const [sending, setSending] = useState(false);
 
   function set<K extends keyof typeof form>(key: K, value: string) {
     setForm((f) => ({ ...f, [key]: value }));
+    // Une erreur déjà affichée se met à jour pendant la saisie, pour disparaître dès que c'est corrigé
+    if (key !== "organisation" && key !== "phone" && errors[key as Field]) {
+      setErrors((e) => ({ ...e, [key]: fieldError(key as Field, value) }));
+    }
+  }
+
+  // Validation au moment où l'on quitte un champ, pas seulement à l'envoi
+  function touch(key: Field) {
+    setErrors((e) => ({ ...e, [key]: fieldError(key, form[key]) }));
   }
 
   function validate(): Errors {
     const e: Errors = {};
-    if (form.name.trim().length < 2) e.name = "Indiquez votre nom complet.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = "Adresse e-mail invalide.";
-    if (!form.subject) e.subject = "Veuillez choisir un objet.";
-    if (form.message.trim().length < 20) e.message = "Décrivez votre demande en 20 caractères minimum.";
+    (["name", "email", "subject", "message"] as const).forEach((key) => {
+      const err = fieldError(key, form[key]);
+      if (err) e[key] = err;
+    });
     return e;
   }
 
-  function handleSubmit(ev: React.FormEvent) {
+  async function handleSubmit(ev: React.FormEvent) {
     ev.preventDefault();
     const e = validate();
     setErrors(e);
-    if (Object.keys(e).length > 0) return;
+    const firstInvalid = (Object.keys(e) as Field[])[0];
+    if (firstInvalid) {
+      document.getElementById(firstInvalid)?.focus();
+      return;
+    }
     setSending(true);
-    setTimeout(() => {
-      setSending(false);
-      setForm({ name: "", email: "", organisation: "", phone: "", subject: "", message: "" });
-      toast.success("Demande transmise avec succès", {
-        description: "La coordination technique vous répondra sous 48 heures ouvrées.",
+    const res = await submitContactRequest(form);
+    setSending(false);
+    if (!res.ok) {
+      toast.error("Votre demande n'a pas pu être envoyée", {
+        description: "Réessayez dans un instant, ou contactez directement la coordination au +225 01 73 99 67 82 / info@telemedecine.ci.",
       });
-    }, 800);
+      return;
+    }
+    setForm(emptyForm);
+    toast.success("Demande transmise avec succès", {
+      description: "La coordination technique vous répondra sous 48 heures ouvrées.",
+    });
   }
+
+  const errorProps = (key: Field) => ({
+    "aria-invalid": errors[key] ? true : undefined,
+    "aria-describedby": errors[key] ? `${key}-error` : undefined,
+  });
 
   const { ref: headerRef, isVisible: headerVisible } = useIntersectionObserver<HTMLDivElement>();
   const { ref: formRef, isVisible: formVisible } = useIntersectionObserver<HTMLDivElement>();
@@ -100,7 +140,6 @@ function ContactPage() {
         <div className="grid-pattern absolute inset-0 opacity-20" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 text-xs font-semibold text-accent uppercase tracking-wider">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>Coordination Centrale</span>
           </div>
 
@@ -157,10 +196,12 @@ function ContactPage() {
                   id="name"
                   value={form.name}
                   onChange={(e) => set("name", e.target.value)}
+                  onBlur={() => touch("name")}
+                  {...errorProps("name")}
                   placeholder="Dr. Awa Koné"
                   className="h-11 rounded-2xl border-border/80"
                 />
-                {errors.name && <p className="text-xs text-destructive font-medium">{errors.name}</p>}
+                {errors.name && <p id="name-error" role="alert" className="text-xs text-destructive font-medium">{errors.name}</p>}
               </div>
 
               <div className="space-y-2">
@@ -172,10 +213,12 @@ function ContactPage() {
                   type="email"
                   value={form.email}
                   onChange={(e) => set("email", e.target.value)}
+                  onBlur={() => touch("email")}
+                  {...errorProps("email")}
                   placeholder="nom@chu-treichville.ci"
                   className="h-11 rounded-2xl border-border/80"
                 />
-                {errors.email && <p className="text-xs text-destructive font-medium">{errors.email}</p>}
+                {errors.email && <p id="email-error" role="alert" className="text-xs text-destructive font-medium">{errors.email}</p>}
               </div>
 
               <div className="space-y-2">
@@ -209,8 +252,8 @@ function ContactPage() {
                 <Label htmlFor="subject" className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Objet de la demande *
                 </Label>
-                <Select value={form.subject} onValueChange={(v) => set("subject", v)}>
-                  <SelectTrigger id="subject" className="h-11 rounded-2xl border-border/80">
+                <Select value={form.subject} onValueChange={(v) => { set("subject", v); setErrors(({ subject: _subject, ...rest }) => rest); }}>
+                  <SelectTrigger id="subject" {...errorProps("subject")} className="h-11 rounded-2xl border-border/80">
                     <SelectValue placeholder="Sélectionnez l'objet de votre démarche" />
                   </SelectTrigger>
                   <SelectContent className="rounded-2xl">
@@ -221,7 +264,7 @@ function ContactPage() {
                     ))}
                   </SelectContent>
                 </Select>
-                {errors.subject && <p className="text-xs text-destructive font-medium">{errors.subject}</p>}
+                {errors.subject && <p id="subject-error" role="alert" className="text-xs text-destructive font-medium">{errors.subject}</p>}
               </div>
 
               <div className="space-y-2 sm:col-span-2">
@@ -233,10 +276,12 @@ function ContactPage() {
                   rows={5}
                   value={form.message}
                   onChange={(e) => set("message", e.target.value)}
+                  onBlur={() => touch("message")}
+                  {...errorProps("message")}
                   placeholder="Précisez votre plateau technique actuel, votre besoin de télé-expertise ou votre question..."
                   className="rounded-2xl border-border/80"
                 />
-                {errors.message && <p className="text-xs text-destructive font-medium">{errors.message}</p>}
+                {errors.message && <p id="message-error" role="alert" className="text-xs text-destructive font-medium">{errors.message}</p>}
               </div>
             </div>
 
@@ -250,7 +295,7 @@ function ContactPage() {
             <Button
               type="submit"
               size="lg"
-              className="mt-6 rounded-full px-8 font-semibold shadow-soft hover:shadow-glow transition-all"
+              className="mt-6 rounded-full px-8 font-semibold shadow-soft hover:shadow-glow transition"
               disabled={sending}
             >
               {sending ? "Transmission en cours..." : "Envoyer le message"}
@@ -298,7 +343,7 @@ function ContactPage() {
                   >
                     +225 07 49 42 30 73
                   </a>
-                  <p className="text-[0.7rem] text-muted-foreground mt-0.5">Astreinte cardiologique 24h/24 7j/7</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Astreinte cardiologique 24h/24 7j/7</p>
                 </div>
               </div>
 

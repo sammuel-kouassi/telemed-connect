@@ -98,7 +98,7 @@ export function ImageUploadField({
           {label} {required && <span className="text-red-500">*</span>}
         </label>
         {isSupabaseUrl && (
-          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#74a638] bg-[#74a638]/10 px-2 py-0.5 rounded-full border border-[#74a638]/20">
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
             <Check className="h-3 w-3" /> Supabase Storage CDN
           </span>
         )}
@@ -121,8 +121,8 @@ export function ImageUploadField({
         }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        className={`flex items-center gap-2 rounded-xl transition-all ${
-          isDragging ? "ring-2 ring-[#74a638] bg-[#74a638]/5" : ""
+        className={`flex items-center gap-2 rounded-xl transition ${
+          isDragging ? "ring-2 ring-primary bg-primary/5" : ""
         }`}
       >
         <div className="relative flex-1">
@@ -130,7 +130,7 @@ export function ImageUploadField({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
-            className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-[#74a638] focus-visible:border-[#74a638] text-xs h-9 pr-8"
+            className="bg-slate-50/50 border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary focus-visible:border-primary text-xs h-9 pr-8"
           />
           {value && (
             <button
@@ -149,16 +149,16 @@ export function ImageUploadField({
           variant="outline"
           disabled={isUploading}
           onClick={() => fileInputRef.current?.click()}
-          className="border-slate-300 bg-white hover:bg-[#74a638]/10 hover:border-[#74a638]/40 hover:text-[#74a638] text-slate-700 text-xs h-9 px-3 shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer font-medium transition-colors"
+          className="border-slate-300 bg-white hover:bg-primary/10 hover:border-primary/40 hover:text-primary text-slate-700 text-xs h-9 px-3 shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer font-medium transition"
         >
           {isUploading ? (
             <>
-              <Loader2 className="h-3.5 w-3.5 animate-spin text-[#74a638]" />
+              <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
               <span className="hidden sm:inline">Envoi...</span>
             </>
           ) : (
             <>
-              <Upload className="h-3.5 w-3.5 text-[#74a638]" />
+              <Upload className="h-3.5 w-3.5 text-primary" />
               <span>Depuis le PC</span>
             </>
           )}
@@ -182,8 +182,8 @@ export function ImageUploadField({
           </div>
 
           <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-medium text-slate-700 truncate">{value}</p>
-            <p className="text-[10px] text-slate-400 mt-0.5">
+            <p className="text-xs font-medium text-slate-700 truncate">{value}</p>
+            <p className="text-xs text-slate-400 mt-0.5">
               {isSupabaseUrl ? "Fichier hébergé dans le cloud Supabase" : "Lien externe ou ressource locale"}
             </p>
           </div>

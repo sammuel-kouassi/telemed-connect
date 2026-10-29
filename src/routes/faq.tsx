@@ -75,20 +75,19 @@ function FaqPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#031422]/95 via-[#031422]/80 to-[#031422]/35" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#020d17] via-transparent to-black/40" />
-          <div className="absolute inset-0 bg-[#74a638]/10 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-primary/10 mix-blend-overlay" />
           <div className="grid-pattern absolute inset-0 opacity-15" aria-hidden="true" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
           <div className="max-w-3xl space-y-5">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md">
-              <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
               <span>Centre d'Aide & Questions Fréquentes</span>
             </div>
 
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-white leading-tight drop-shadow-md">
               Toutes les réponses à vos questions sur{" "}
-              <span className="text-[#8bc34a]">
+              <span className="text-brand-light">
                 la télémédecine.
               </span>
             </h1>
@@ -99,7 +98,7 @@ function FaqPage() {
 
             <div className="flex flex-wrap gap-3 pt-2 text-xs font-medium text-white/95">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
-                <CheckCircle2 className="h-3.5 w-3.5 text-[#8bc34a]" /> {faqItems.length} Réponses officielles validées
+                <CheckCircle2 className="h-3.5 w-3.5 text-brand-light" /> {faqItems.length} Réponses officielles validées
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
                 <MessageSquare className="h-3.5 w-3.5 text-cyan-300" /> Support & Orientation 24/7
@@ -141,7 +140,7 @@ function FaqPage() {
               variant={category === c ? "default" : "outline"}
               onClick={() => setCategory(c)}
               aria-pressed={category === c}
-              className="rounded-full transition-all text-xs"
+              className="rounded-full transition text-xs"
             >
               {c}
             </Button>
@@ -154,10 +153,9 @@ function FaqPage() {
             <AccordionItem
               key={f.question}
               value={`item-${i}`}
-              className="rounded-3xl border border-border/80 bg-card px-6 py-1 shadow-soft transition-all hover:border-accent/40"
-              style={{ animationDelay: `${i * 40}ms` }}
+              className="rounded-3xl border border-border/80 bg-card px-6 py-1 shadow-soft transition hover:border-accent/40"
             >
-              <AccordionTrigger className="text-left text-base sm:text-lg font-bold text-foreground hover:no-underline hover:text-accent transition-colors py-4">
+              <AccordionTrigger className="text-left text-base sm:text-lg font-bold text-foreground hover:no-underline hover:text-accent transition py-4">
                 {f.question}
               </AccordionTrigger>
               <AccordionContent className="text-sm sm:text-base leading-relaxed text-muted-foreground pb-5 pt-1">

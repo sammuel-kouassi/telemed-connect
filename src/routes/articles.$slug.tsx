@@ -68,7 +68,7 @@ function ArticlePage() {
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <Link
             to="/articles"
-            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary-foreground/75 hover:text-primary-foreground transition-colors mb-6 group"
+            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary-foreground/75 hover:text-primary-foreground transition mb-6 group"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" /> Retour aux actualités
           </Link>
@@ -131,12 +131,12 @@ function ArticlePage() {
                 <div className="my-8 overflow-hidden rounded-3xl border border-border/80 bg-muted/30 shadow-soft">
                   <img
                     src={article.secondaryImage}
-                    alt={`${article.title} - Illustration`}
+                    alt={article.secondaryCaption ?? `${article.title} - Illustration`}
                     loading="lazy"
                     className="w-full max-h-[500px] object-cover"
                   />
                   <div className="p-3 text-center text-xs text-muted-foreground border-t border-border/60 bg-card/60">
-                    Dispositif et acquisition en temps réel — Réseau Télémédecine Côte d'Ivoire
+                    {article.secondaryCaption ?? "Dispositif et acquisition en temps réel — Réseau Télémédecine Côte d'Ivoire"}
                   </div>
                 </div>
               )}
@@ -180,7 +180,6 @@ function ArticlePage() {
               to="/articles/$slug"
               params={{ slug: a.slug }}
               className="card-hover group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft"
-              style={{ animationDelay: `${i * 80}ms` }}
             >
               <div>
                 <div className="aspect-16/10 overflow-hidden bg-muted">
@@ -190,14 +189,14 @@ function ArticlePage() {
                     loading="lazy"
                     width={1200}
                     height={800}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
                 <div className="p-6 space-y-2.5">
                   <Badge variant="secondary" className="font-semibold text-xs">
                     {a.category}
                   </Badge>
-                  <h3 className="text-base font-bold leading-snug text-foreground group-hover:text-accent transition-colors">
+                  <h3 className="text-base font-bold leading-snug text-foreground group-hover:text-accent transition">
                     {a.title}
                   </h3>
                 </div>

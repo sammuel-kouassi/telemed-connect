@@ -7,7 +7,7 @@ export function Logo({ className, inverted = false }: { className?: string; inve
     <Link
       to="/"
       className={cn(
-        "group flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#74a638] rounded-xl transition-opacity hover:opacity-95",
+        "group flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl transition-opacity hover:opacity-95",
         className
       )}
       aria-label="Accueil du portail de télémédecine"

@@ -199,7 +199,7 @@ export default function LeafletMap({
         `
         <div class="font-sans px-2 py-1">
           <strong class="block text-sm font-bold text-foreground leading-tight">${site.city}</strong>
-          <span class="text-[10px] text-primary font-bold uppercase tracking-wider">${site.program} · ${site.structures} structure(s)</span>
+          <span class="text-xs text-primary font-bold uppercase tracking-wider">${site.program} · ${site.structures} structure(s)</span>
         </div>
         `,
         {
@@ -218,11 +218,11 @@ export default function LeafletMap({
           <div class="p-4 font-sans min-w-[220px] max-w-[260px]">
             <div class="flex items-center gap-1.5 mb-2">
               <span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color: ${color}"></span>
-              <span class="text-[10px] uppercase font-bold tracking-wider text-accent">${site.program}</span>
+              <span class="text-xs uppercase font-bold tracking-wider text-accent">${site.program}</span>
             </div>
             <h3 class="text-base font-extrabold text-foreground m-0 mb-1 leading-tight">${site.city}</h3>
             <p class="text-xs text-muted-foreground m-0 mb-3 leading-relaxed">${site.detail}</p>
-            <div class="grid grid-cols-2 gap-2 text-[10px] border-t border-border/80 pt-2 mb-3">
+            <div class="grid grid-cols-2 gap-2 text-xs border-t border-border/80 pt-2 mb-3">
               <div>
                 <span class="block text-muted-foreground">Structures</span>
                 <strong class="font-bold text-foreground text-sm">${site.structures}</strong>
@@ -351,7 +351,7 @@ export default function LeafletMap({
         type="button"
         onClick={handleRecenter}
         title="Recentrer la carte sur la Côte d'Ivoire"
-        className="absolute top-3.5 left-3.5 z-[999] flex items-center gap-2 rounded-xl border border-border/80 bg-card/90 px-3 py-2 text-xs font-bold text-foreground shadow-lift backdrop-blur-md transition-all hover:bg-secondary hover:text-primary active:scale-95 cursor-pointer"
+        className="absolute top-3.5 left-3.5 z-[999] flex items-center gap-2 rounded-xl border border-border/80 bg-card/90 px-3 py-2 text-xs font-bold text-foreground shadow-lift backdrop-blur-md transition hover:bg-secondary hover:text-primary active:scale-95 cursor-pointer"
       >
         <Compass className="h-3.5 w-3.5 text-primary animate-spin-slow" />
         <span className="hidden sm:inline">Recentrer Côte d'Ivoire</span>
@@ -361,14 +361,14 @@ export default function LeafletMap({
       {/* Floating Legend Overlay (Bottom Left) */}
       <div className="absolute bottom-3.5 left-3.5 z-[999] rounded-2xl border border-border/80 bg-card/95 p-3 shadow-lift backdrop-blur-md max-w-[210px] text-xs">
         <div className="font-bold mb-2 text-foreground flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="h-2 w-2 rounded-full bg-emerald-500" />
           <span>Filières RAFT CI</span>
         </div>
         <div className="space-y-1.5">
           {Object.entries(programColors).map(([program, color]) => (
             <div key={program} className="flex items-center gap-2">
               <span className="h-2.5 w-2.5 shrink-0 rounded-full border border-card shadow-xs" style={{ backgroundColor: color }} />
-              <span className="text-muted-foreground font-medium text-[11px] leading-tight">{program}</span>
+              <span className="text-muted-foreground font-medium text-xs leading-tight">{program}</span>
             </div>
           ))}
         </div>

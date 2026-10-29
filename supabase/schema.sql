@@ -150,3 +150,24 @@ CREATE POLICY "Admin write partners" ON public.partners FOR ALL TO authenticated
 CREATE POLICY "Admin write faq_items" ON public.faq_items FOR ALL TO authenticated USING (true) WITH CHECK (true);
 CREATE POLICY "Admin write team_members" ON public.team_members FOR ALL TO authenticated USING (true) WITH CHECK (true);
 CREATE POLICY "Admin write testimonials" ON public.testimonials FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+-- ==============================================================================
+-- 9. Table: Demandes de contact & de raccordement (formulaire /contact)
+-- Les visiteurs peuvent seulement déposer une demande ; seuls les admins la lisent.
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.contact_requests (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL CHECK (char_length(name) BETWEEN 2 AND 200),
+    email TEXT NOT NULL CHECK (char_length(email) <= 320),
+    organisation TEXT CHECK (char_length(organisation) <= 300),
+    phone TEXT CHECK (char_length(phone) <= 50),
+    subject TEXT NOT NULL CHECK (char_length(subject) <= 200),
+    message TEXT NOT NULL CHECK (char_length(message) BETWEEN 20 AND 5000),
+    status TEXT NOT NULL DEFAULT 'nouveau',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE public.contact_requests ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public insert contact_requests" ON public.contact_requests FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Admin read contact_requests" ON public.contact_requests FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Admin update contact_requests" ON public.contact_requests FOR UPDATE TO authenticated USING (true) WITH CHECK (true);

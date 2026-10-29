@@ -25,6 +25,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { mediaThemes, type MediaItem } from "@/data/site";
 import { useMediaItems } from "@/hooks/useData";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useLightboxTransition } from "@/hooks/useLightboxTransition";
 import { cn } from "@/lib/utils";
 import heroMediatheque from "@/assets/hero_mediatheque.jpg";
 
@@ -58,7 +59,9 @@ function MediathequePage() {
   const [theme, setTheme] = useState("Tous");
   const [type, setType] = useState<"Tous" | MediaItem["type"]>("Tous");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selected, setSelected] = useState<MediaItem | null>(null);
+  const media = useLightboxTransition<MediaItem>();
+  const selected = media.item;
+  const openMedia = (el: HTMLElement, m: MediaItem) => media.open(el, m, !(m.type === "Vidéo" && m.youtubeId));
   const [isPlayingHeroVideo, setIsPlayingHeroVideo] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -123,20 +126,19 @@ function MediathequePage() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#031422]/95 via-[#031422]/80 to-[#031422]/35" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#020d17] via-transparent to-black/40" />
-          <div className="absolute inset-0 bg-[#74a638]/10 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-primary/10 mix-blend-overlay" />
           <div className="grid-pattern absolute inset-0 opacity-15" aria-hidden="true" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
           <div className="max-w-3xl space-y-5">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md">
-              <span className="flex h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
               <span>Fonds Audiovisuel & Pédagogique Officiel · RAFT CI</span>
             </div>
 
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-white leading-tight drop-shadow-md">
               Médiathèque, reportages &{" "}
-              <span className="text-[#8bc34a]">
+              <span className="text-brand-light">
                 replays cliniques.
               </span>
             </h1>
@@ -148,7 +150,7 @@ function MediathequePage() {
 
             <div className="flex flex-wrap gap-2.5 pt-2 text-xs font-semibold text-white/95">
               <span className="inline-flex items-center gap-2 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
-                <Tv className="h-4 w-4 text-[#8bc34a]" /> Grand reportage Medi1TV
+                <Tv className="h-4 w-4 text-brand-light" /> Grand reportage Medi1TV
               </span>
               <span className="inline-flex items-center gap-2 rounded-full bg-black/40 px-3.5 py-1.5 backdrop-blur-md border border-white/20 shadow-xs">
                 <Film className="h-4 w-4 text-cyan-300" /> {mediaItems.filter((m) => m.type === "Vidéo").length} Replays & Séminaires
@@ -185,14 +187,13 @@ function MediathequePage() {
                       <img
                         src={featuredVideo.image}
                         alt={featuredVideo.title}
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-90"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-90"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/20" />
 
                       {/* Play Beacon Button */}
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="relative flex items-center justify-center">
-                          <span className="absolute h-20 w-20 rounded-full bg-primary/40 animate-ping opacity-75" />
                           <div className="relative flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-primary text-white shadow-2xl transition-transform duration-300 group-hover:scale-110">
                             <Play className="h-8 w-8 sm:h-9 sm:w-9 ml-1 fill-white" />
                           </div>
@@ -202,7 +203,7 @@ function MediathequePage() {
                       {/* Video overlay badge */}
                       <div className="absolute top-4 left-4 flex items-center gap-2">
                         <span className="rounded-full bg-red-600 px-3 py-1 text-xs font-bold text-white shadow-sm flex items-center gap-1.5">
-                          <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+                          <span className="h-2 w-2 rounded-full bg-white" />
                           Vidéo Documentaire
                         </span>
                         {featuredVideo.duration && (
@@ -292,7 +293,7 @@ function MediathequePage() {
                     onClick={() => setType(t)}
                     aria-pressed={isActive}
                     className={cn(
-                      "rounded-full gap-2 transition-all font-semibold whitespace-nowrap",
+                      "rounded-full gap-2 transition font-semibold whitespace-nowrap",
                       isActive
                         ? "bg-primary text-primary-foreground shadow-sm"
                         : "hover:border-primary/40 hover:bg-secondary",
@@ -302,7 +303,7 @@ function MediathequePage() {
                     <span>{t === "Tous" ? "Tous les formats" : t}</span>
                     <span
                       className={cn(
-                        "rounded-full px-2 py-0.5 text-[0.7rem] font-bold",
+                        "rounded-full px-2 py-0.5 text-xs font-bold",
                         isActive ? "bg-primary-foreground/20 text-primary-foreground" : "bg-muted text-muted-foreground",
                       )}
                     >
@@ -321,7 +322,7 @@ function MediathequePage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Rechercher une vidéo, photo, cours DUDAL..."
-                className="w-full rounded-full border border-border/80 bg-surface/80 py-2 pl-9 pr-9 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/80 focus:border-primary focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                className="w-full rounded-full border border-border/80 bg-surface/80 py-2 pl-9 pr-9 text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/80 focus:border-primary focus:bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 transition"
               />
               {searchQuery && (
                 <button
@@ -347,7 +348,7 @@ function MediathequePage() {
                 type="button"
                 onClick={() => setTheme(t)}
                 className={cn(
-                  "rounded-full px-3 py-1 transition-all cursor-pointer font-medium",
+                  "rounded-full px-3 py-1 transition cursor-pointer font-medium",
                   theme === t
                     ? "bg-secondary text-primary font-bold ring-1 ring-primary/40 shadow-xs"
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary/60",
@@ -367,7 +368,7 @@ function MediathequePage() {
                 {mediaItems.length}
               </span>
               {(theme !== "Tous" || type !== "Tous" || searchQuery) && (
-                <span className="text-[11px] text-muted-foreground font-medium">
+                <span className="text-xs text-muted-foreground font-medium">
                   ({type !== "Tous" ? type : ""}
                   {type !== "Tous" && theme !== "Tous" ? " · " : ""}
                   {theme !== "Tous" ? theme : ""}
@@ -398,15 +399,14 @@ function MediathequePage() {
             return (
               <div
                 key={m.id}
-                onClick={() => setSelected(m)}
-                className="card-hover group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card text-left shadow-soft cursor-pointer transition-all hover:border-primary/40 hover:shadow-lift"
-                style={{ animationDelay: `${i * 60}ms` }}
+                onClick={(e) => openMedia(e.currentTarget, m)}
+                className="card-hover group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card text-left shadow-soft cursor-pointer transition hover:border-primary/40 hover:shadow-lift"
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    setSelected(m);
+                    openMedia(e.currentTarget, m);
                   }
                 }}
               >
@@ -417,7 +417,7 @@ function MediathequePage() {
                       src={m.image}
                       alt={m.title}
                       loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
 
                     {/* Format Badge Overlay */}
@@ -436,7 +436,7 @@ function MediathequePage() {
 
                     {/* Duration badge for video */}
                     {m.duration && (
-                      <span className="absolute top-3.5 right-3.5 inline-flex items-center gap-1 rounded-full bg-black/70 px-2.5 py-0.5 text-[11px] font-mono font-bold text-white backdrop-blur-md">
+                      <span className="absolute top-3.5 right-3.5 inline-flex items-center gap-1 rounded-full bg-black/70 px-2.5 py-0.5 text-xs font-mono font-bold text-white backdrop-blur-md">
                         <Clock className="h-3 w-3" />
                         {m.duration}
                       </span>
@@ -455,16 +455,16 @@ function MediathequePage() {
                   {/* Card Content */}
                   <div className="p-6">
                     <div className="flex items-center justify-between text-xs mb-2.5">
-                      <Badge variant="secondary" className="font-bold text-[0.7rem]">
+                      <Badge variant="secondary" className="font-bold text-xs">
                         {m.theme}
                       </Badge>
-                      <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+                      <span className="text-xs text-muted-foreground flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
                         {new Date(m.date).toLocaleDateString("fr-FR", { month: "short", year: "numeric" })}
                       </span>
                     </div>
 
-                    <h3 className="text-base font-bold leading-snug text-foreground group-hover:text-primary transition-colors">
+                    <h3 className="text-base font-bold leading-snug text-foreground group-hover:text-primary transition">
                       {m.title}
                     </h3>
                     <p className="mt-2 line-clamp-2 text-xs text-muted-foreground leading-relaxed">
@@ -472,7 +472,7 @@ function MediathequePage() {
                     </p>
 
                     {m.source && (
-                      <p className="mt-2 text-[11px] font-semibold text-primary flex items-center gap-1">
+                      <p className="mt-2 text-xs font-semibold text-primary flex items-center gap-1">
                         <CheckCircle2 className="h-3 w-3" /> Source : {m.source}
                       </p>
                     )}
@@ -504,8 +504,8 @@ function MediathequePage() {
       </section>
 
       {/* Media Detail & Player Modal */}
-      <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
-        <DialogContent className="max-w-3xl max-h-[90vh] w-[95vw] flex flex-col p-0 rounded-3xl border border-border/80 bg-card shadow-2xl overflow-hidden my-auto">
+      <Dialog open={!!selected} onOpenChange={(o) => !o && media.close()}>
+        <DialogContent style={media.contentStyle} className="max-w-3xl max-h-[90vh] w-[95vw] flex flex-col p-0 rounded-3xl border border-border/80 bg-card shadow-2xl overflow-hidden my-auto">
           {selected && (
             <>
               {/* Media viewer container: Full image visibility without cropping */}
@@ -525,6 +525,7 @@ function MediathequePage() {
                     <img
                       src={selected.image}
                       alt={selected.title}
+                      style={media.targetStyle}
                       className="max-h-[40vh] max-w-full w-auto object-contain rounded-xl shadow-2xl"
                     />
                   </div>
@@ -533,8 +534,8 @@ function MediathequePage() {
                 {/* Floating dismiss button */}
                 <button
                   type="button"
-                  onClick={() => setSelected(null)}
-                  className="absolute top-3 right-3 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-md hover:bg-black/90 transition-colors cursor-pointer shadow-md"
+                  onClick={media.close}
+                  className="absolute top-3 right-3 z-50 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-md hover:bg-black/90 transition cursor-pointer shadow-md"
                   title="Fermer"
                 >
                   <X className="h-4 w-4" />
@@ -577,7 +578,7 @@ function MediathequePage() {
                 )}
 
                 <div className="pt-3 border-t border-border flex flex-wrap items-center justify-between gap-3">
-                  <Button variant="outline" onClick={() => setSelected(null)} className="rounded-full text-xs">
+                  <Button variant="outline" onClick={media.close} className="rounded-full text-xs">
                     Fermer
                   </Button>
 

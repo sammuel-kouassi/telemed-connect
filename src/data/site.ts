@@ -28,6 +28,8 @@ import aproposEquipeRaft from "@/assets/apropos_equipe_raft.jpg";
 import aproposStudioInterview from "@/assets/apropos_studio_interview.jpg";
 import aproposGeissbuhlerEhua from "@/assets/apropos_geissbuhler_ehua.jpg";
 import aproposEhuaTerrain from "@/assets/apropos_ehua_terrain.jpg";
+import tableRondePanel from "@/assets/table_ronde_sante_digitale_panel.jpg";
+import tableRondeRkpon from "@/assets/table_ronde_sante_digitale_rkpon.jpg";
 
 export const images = {
   hero: heroImg,
@@ -72,10 +74,31 @@ export type Article = {
   author: string;
   image: string;
   secondaryImage?: string | undefined;
+  /** Légende de la photo secondaire (sinon une légende générique est affichée) */
+  secondaryCaption?: string | undefined;
   body: string[];
 };
 
 export const articles: Article[] = [
+  {
+    slug: "table-ronde-sante-digitale-fondation-pierre-fabre-2026",
+    title: "Santé digitale en Côte d'Ivoire : le RAFT à la table ronde de la Fondation Pierre Fabre",
+    excerpt:
+      "Le 15 octobre 2026, Roger Kpon, coordonnateur technique du RAFT en Côte d'Ivoire, a partagé plus de vingt ans de retour d'expérience lors d'une table ronde consacrée aux enjeux de la santé digitale, organisée par la Fondation Pierre Fabre.",
+    category: "Actualité",
+    date: "2026-10-15",
+    readingTime: "2 min",
+    author: "Coordination RAFT Côte d'Ivoire",
+    image: tableRondePanel,
+    secondaryImage: tableRondeRkpon,
+    secondaryCaption: "Roger Kpon lors de la table ronde sur la santé digitale — Fondation Pierre Fabre, 15 octobre 2026",
+    body: [
+      "Le 15 octobre 2026, M. Roger Kpon, ingénieur informaticien et coordonnateur technique du Réseau en Afrique Francophone pour la Télémédecine (RAFT) en Côte d'Ivoire, a pris part, sur invitation de la Fondation Pierre Fabre, à une table ronde consacrée aux enjeux de la santé digitale en Côte d'Ivoire.",
+      "Organisée en marge de la conférence internationale de l'Observatoire de la santé numérique dans les pays du Sud, cette rencontre a réuni les acteurs de l'écosystème ivoirien de la santé autour des défis et des perspectives de la e-santé.",
+      "Au cours du panel, Roger Kpon a partagé son retour d'expérience après plus de deux décennies de coordination technique du RAFT et de participation au projet de télé-expertise en cardiologie, le projet TÉLÉ-ECG.",
+      "La keynote d'ouverture a été prononcée par le Professeur Simplice Dion. À l'issue du panel, Roger Kpon a eu l'honneur d'échanger avec l'éminent universitaire et d'exposer sa vision holistique de la e-santé dans les pays du Sud.",
+    ],
+  },
   {
     slug: "outils-du-raft",
     title: "Outils Du RAFT",
